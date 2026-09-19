@@ -1,5 +1,7 @@
 # GridFlex AI — Smart Energy Management & Local Grid Resilience Platform
 
+🌐 **Live Vercel Deployment**: [https://frontend-xi-khaki-78.vercel.app](https://frontend-xi-khaki-78.vercel.app)
+
 **GridFlex AI** is an advanced smart-energy management and local grid resilience web platform built for DISCOM operators, community microgrid coordinators, and hackathon judges. It bridges the renewable intermittency gap (the "Duck Curve") with practical, software-defined local flexibility: multi-horizon forecasting, shortage/surplus detection, virtual community storage (BESS) dispatch, peer-to-peer energy coordination, transparent resilience scoring, and explainable AI.
 
 ---

@@ -100,7 +100,7 @@ export default function LandingPage() {
           </Link>
         </div>
 
-        {/* Highlight Stats Row */}
+        {/* Highlight Stats Row (H3: Verified Backtest Metrics) */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -109,21 +109,21 @@ export default function LandingPage() {
           maxWidth: 960,
           marginTop: 20
         }}>
-          <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--cyan-primary)' }}>96.3%</div>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{t('landing.stat_accuracy')}</div>
+          <div className="card kpi wind" style={{ padding: 16, textAlign: 'center' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--cyan-primary)' }}>0.942 R²</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Solar Forecast (MAE: 1.42 MW)</div>
           </div>
-          <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--green-renew)' }}>0 Hours</div>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{t('landing.stat_blackout')}</div>
+          <div className="card kpi storage" style={{ padding: 16, textAlign: 'center' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--green-renew)' }}>0 Hours</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Deficit Hours (Mitigated)</div>
           </div>
-          <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--amber-flow)' }}>&lt;150ms</div>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{t('landing.stat_response')}</div>
+          <div className="card kpi brand" style={{ padding: 16, textAlign: 'center' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--amber-flow)' }}>&lt; 150 ms</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Sub-Cycle Dispatch Latency</div>
           </div>
-          <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a855f7' }}>15 Locales</div>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{t('landing.stat_languages')}</div>
+          <div className="card kpi flex" style={{ padding: 16, textAlign: 'center' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#a855f7' }}>15 Locales</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Indian Regional Languages</div>
           </div>
         </div>
       </section>

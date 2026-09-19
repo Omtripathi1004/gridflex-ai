@@ -80,7 +80,7 @@ def get_live_telemetry():
             "action_type": "BESS Discharge & Flexible EV Shifting" if net_balance < 0 else "BESS Charging & Thermal Pre-cooling",
             "reason": f"Projected net balance is {net_balance} MW. Grid risk level is {risk_level}.",
             "target_power_mw": abs(min(net_balance, 0.0)) if net_balance < 0 else round(min(net_balance, 8.0), 2),
-            "expected_impact": "Prevents feeder overload and eliminates $12,400 peak dispatch penalty.",
+            "expected_impact": "Prevents feeder overload and eliminates ₹1,42,500 DSM peak deviation penalty.",
             "confidence": 0.94
         }
     }

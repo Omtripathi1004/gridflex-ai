@@ -7,8 +7,9 @@ import { Footer } from '../components/Footer';
 import { GlobalChatWidget } from '../components/GlobalChatWidget';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://frontend-xi-khaki-78.vercel.app'),
   title: 'GridFlex AI — Smart Energy Management & Local Grid Resilience Platform',
-  description: 'Production-grade smart energy management platform with ML forecasting, virtual BESS dispatch, P2P trading, digital twin simulation, explainable AI, and 15-language i18n.',
+  description: 'Smart energy management platform with ML forecasting, virtual BESS dispatch, P2P trading, digital twin simulation, explainable AI, and 15-language i18n.',
   keywords: 'smart grid, energy management, DISCOM, ML forecasting, BESS, battery storage, P2P energy, renewable, solar, LightGBM, XGBoost, digital twin, explainable AI, India',
   authors: [{ name: 'Om Tripathi', url: 'https://github.com/Omtripathi1004' }],
   robots: 'index, follow',

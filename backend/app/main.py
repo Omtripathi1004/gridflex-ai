@@ -14,6 +14,7 @@ from app.routers import (
     discom,
     scenario,
     auth,
+    gov_data,
 )
 
 app = FastAPI(
@@ -44,6 +45,7 @@ app.include_router(copilot.router, prefix="/api/copilot", tags=["AI Copilot"])
 app.include_router(discom.router, prefix="/api/discom", tags=["DISCOM Control"])
 app.include_router(scenario.router, prefix="/api/scenario", tags=["Scenarios"])
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication & Audit"])
+app.include_router(gov_data.router, prefix="/api/gov", tags=["Government & Public Data"])
 
 @app.get("/health")
 def health_check():

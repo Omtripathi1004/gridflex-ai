@@ -57,6 +57,54 @@
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
   --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* =========================================================================
+     APPENDIX A7 SEMANTIC MULTICOLOR PALETTE
+     Domain-Specific Color Mapping: One Hue Per Energy Domain
+     ========================================================================= */
+  --brand: #4F46E5;
+  --solar: #F59E0B;
+  --wind: #06B6D4;
+  --load: #F43F5E;
+  --storage: #10B981;
+  --flex: #8B5CF6;
+  --market: #D946EF;
+
+  /* Risk States (Always paired with icon & label, never color alone) */
+  --risk-safe: #22C55E;
+  --risk-watch: #EAB308;
+  --risk-alert: #F97316;
+  --risk-critical: #DC2626;
+
+  --surface: #111832;
+  --border: #1F2A4A;
+  --text: #E6EAF5;
+  --muted: #94A3B8;
+}
+
+/* KPI Domain Accent Styling (Appendix A7) */
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--kpi, var(--brand));
+  border-radius: 12px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.kpi.solar { --kpi: var(--solar); }
+.kpi.wind { --kpi: var(--wind); }
+.kpi.load { --kpi: var(--load); }
+.kpi.storage { --kpi: var(--storage); }
+.kpi.flex { --kpi: var(--flex); }
+.kpi.market { --kpi: var(--market); }
+.kpi.brand { --kpi: var(--brand); }
+
+.hero-gradient {
+  background: linear-gradient(135deg, var(--brand), var(--wind) 55%, var(--storage));
 }
 
 /* Reset & Global Defaults */

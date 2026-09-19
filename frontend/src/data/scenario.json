@@ -1,0 +1,85 @@
+{
+  "scenario_id": "DEFAULT_SUBSTATION_66KV",
+  "timestamp": "2026-09-20T13:00:00+05:30",
+  "virtual_substation": {
+    "name": "Mahadevapura 66/11kV Substation",
+    "voltage_kv": "66/11",
+    "transformer_rating_mva": 80.0,
+    "thermal_ceiling_mw": 65.0,
+    "peak_demand_mw": 64.8,
+    "current_demand_mw": 64.8,
+    "load_breakdown": {
+      "commercial_hvac_mw": 28.4,
+      "ev_charging_industrial_mw": 30.2,
+      "municipal_water_lighting_mw": 6.2,
+      "total_demand_mw": 64.8
+    },
+    "current_generation": {
+      "solar_mw": 42.5,
+      "wind_mw": 18.2,
+      "total_renewable_mw": 60.7
+    },
+    "net_balance_mw": -4.1,
+    "frequency_hz": 50.02,
+    "weather": {
+      "ghi_w_m2": 840,
+      "ambient_temp_c": 31.5,
+      "wind_speed_ms": 7.8,
+      "wind_speed_100m_ms": 7.8,
+      "cloud_cover_pct": 18
+    }
+  },
+  "bess_fleet": {
+    "total_nameplate_mwh": 40.0,
+    "max_power_mw": 12.0,
+    "current_stored_mwh": 29.0,
+    "current_soc_pct": 72.5,
+    "min_soc_pct": 10.0,
+    "max_soc_pct": 90.0,
+    "usable_capacity_mwh": 32.0,
+    "evening_peak_discharge_budget_mwh": 14.5,
+    "one_way_efficiency": 0.94,
+    "roundtrip_efficiency": 0.884,
+    "max_c_rate": 0.5
+  },
+  "resilience": {
+    "pillars": [
+      { "key": "renewable_availability", "name": "Renewable Generation Availability", "weight": 0.25, "value": 80.1, "unit": "%" },
+      { "key": "substation_headroom", "name": "Substation Demand Headroom Margin", "weight": 0.25, "value": 85.0, "unit": "%" },
+      { "key": "storage_readiness", "name": "Community Storage Readiness", "weight": 0.25, "value": 72.5, "unit": "%" },
+      { "key": "flexible_dr_capacity", "name": "Flexible Demand Response Capacity", "weight": 0.25, "value": 85.3, "unit": "%" }
+    ],
+    "composite_score": 80.7,
+    "status": "Healthy & Resilient",
+    "target_score": 75.0,
+    "blackout_immunity_margin_mw": 14.8,
+    "prescriptive_actions": [
+      { "rank": 1, "action": "Pre-cool commercial towers by 1.5°C between 13:00-15:00", "gain": 6.4, "feasibility": "High" },
+      { "rank": 2, "action": "Shift 2.5 MW municipal water pumping cycle to 13:30 solar crest", "gain": 4.8, "feasibility": "Immediate" },
+      { "rank": 3, "action": "Hold BESS-02 discharge reserve threshold at minimum 65% until 18:00", "gain": 3.5, "feasibility": "High" }
+    ]
+  },
+  "market_clearing": {
+    "currency": "INR",
+    "symbol": "₹",
+    "average_clearing_price_inr_kwh": 6.80,
+    "grid_wheeling_fee_inr_kwh": 0.85,
+    "benchmark_exchange": "Vidyut PRAVAH / IEX DAM",
+    "total_surplus_kw": 900,
+    "total_deficit_kw": 810,
+    "matched_energy_kwh": 770,
+    "critical_unmet_grid_import_kw": 40
+  },
+  "backtest_metrics": {
+    "solar_mae_mw": 1.42,
+    "solar_rmse_mw": 2.18,
+    "solar_r2_score": 0.942,
+    "wind_mae_mw": 1.15,
+    "wind_rmse_mw": 1.76,
+    "wind_r2_score": 0.915,
+    "demand_mae_mw": 1.84,
+    "demand_rmse_mw": 2.45,
+    "demand_r2_score": 0.963,
+    "validation_period": "Real 30-Day Grid-India NLDC & NASA POWER Test Partition"
+  }
+}

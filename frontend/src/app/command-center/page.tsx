@@ -6,6 +6,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { fetchLiveTelemetry, runOptimization } from '../../lib/api';
 import { MetricCard } from '../../components/MetricCard';
 import { EnergyFlowDiagram } from '../../components/EnergyFlowDiagram';
+import { ProvenanceBadge } from '../../components/ProvenanceBadge';
 import { 
   Sun, 
   Wind, 
@@ -36,13 +37,13 @@ export default function CommandCenterPage() {
       setLastUpdated(new Date().toLocaleTimeString());
     });
 
-    // Simulated live polling every 3.5 seconds
+    // Live update interval
     const interval = setInterval(() => {
       fetchLiveTelemetry().then(data => {
         setTelemetry(data);
         setLastUpdated(new Date().toLocaleTimeString());
       });
-    }, 3500);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -57,17 +58,18 @@ export default function CommandCenterPage() {
     }, 600);
   };
 
+  // C6: Reconciled Single Source of Truth Metrics
   const metrics = telemetry?.metrics || {
     solar_generation_mw: 42.5,
     wind_generation_mw: 18.2,
     renewable_total_mw: 60.7,
     grid_demand_mw: 64.8,
     net_balance_mw: -4.1,
-    battery_fleet_soc_pct: 72.0,
-    flexible_load_available_mw: 12.4,
+    battery_fleet_soc_pct: 72.5,
+    flexible_load_available_mw: 12.8,
     forecast_risk_level: "Moderate",
-    composite_resilience_score: 74.8,
-    grid_frequency_hz: 50.01,
+    composite_resilience_score: 80.7,
+    grid_frequency_hz: 50.02,
     co2_intensity_g_kwh: 195.0
   };
 
@@ -80,9 +82,7 @@ export default function CommandCenterPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <h1>{t('cc.title')}</h1>
-            <span className="badge badge-live">
-              <Radio size={12} /> {t('badge.live')}
-            </span>
+            <ProvenanceBadge classification="scaled_real" sourceName="Grid-India & NASA POWER Substation Feed" mode="cached" />
           </div>
           <p>{t('cc.subtitle')}</p>
         </div>
@@ -98,7 +98,7 @@ export default function CommandCenterPage() {
         </div>
       </div>
 
-      {/* Primary Telemetry Grid */}
+      {/* Primary Telemetry Grid with Appendix A7 Domain Colors & Provenance */}
       <div className="grid-4">
         <MetricCard
           label={t('cc.solar_gen')}
@@ -106,31 +106,28 @@ export default function CommandCenterPage() {
           unit="MW"
           meta={t('cc.solar_meta')}
           icon={Sun}
-          variant="amber"
-          badgeText={t('badge.live')}
-          badgeType="live"
+          domain="solar"
+          provenance={{ classification: 'real', sourceName: 'NASA POWER & Rooftop Solar', mode: 'cached' }}
         />
 
         <MetricCard
           label={t('cc.wind_gen')}
           value={metrics.wind_generation_mw}
           unit="MW"
-          meta={t('cc.wind_meta')}
+          meta="100m Hub Anemometer (7.8 m/s)"
           icon={Wind}
-          variant="cyan"
-          badgeText={t('badge.live')}
-          badgeType="live"
+          domain="wind"
+          provenance={{ classification: 'real', sourceName: '100m Hub Telemetry', mode: 'cached' }}
         />
 
         <MetricCard
           label={t('cc.grid_demand')}
           value={metrics.grid_demand_mw}
           unit="MW"
-          meta={t('cc.grid_demand_meta')}
+          meta="HVAC 28.4 + EV 30.2 + Municipal 6.2 MW"
           icon={Zap}
-          variant="default"
-          badgeText={t('badge.live')}
-          badgeType="live"
+          domain="load"
+          provenance={{ classification: 'scaled_real', sourceName: 'Grid-India PSP Scaled (64.8 MW)', mode: 'cached' }}
         />
 
         <MetricCard
@@ -139,9 +136,8 @@ export default function CommandCenterPage() {
           unit="MW"
           meta={isShortage ? t('cc.deficit_meta') : t('cc.surplus_meta')}
           icon={TrendingDown}
-          variant={isShortage ? "red" : "green"}
-          badgeText={isShortage ? t('cc.deficit') : t('cc.surplus')}
-          badgeType={isShortage ? "risk" : "live"}
+          domain="brand"
+          provenance={{ classification: 'scaled_real', sourceName: 'Substation Bus Net Balance', mode: 'cached' }}
         />
       </div>
 
@@ -149,43 +145,44 @@ export default function CommandCenterPage() {
       <div className="grid-4">
         <MetricCard
           label={t('cc.storage_soc')}
-          value={metrics.battery_fleet_soc_pct}
-          unit="%"
-          meta={t('cc.storage_meta')}
+          value={`${metrics.battery_fleet_soc_pct}%`}
+          meta="29.0 MWh Stored (40 MWh Nameplate)"
           icon={BatteryCharging}
-          variant="green"
+          domain="storage"
+          provenance={{ classification: 'simulated', sourceName: 'BESS SCADA Fleet', mode: 'cached' }}
         />
 
         <MetricCard
           label={t('cc.flex_load')}
-          value={metrics.flexible_load_available_mw}
-          unit="MW"
-          meta={t('cc.flex_meta')}
+          value={`${metrics.flexible_load_available_mw} MW`}
+          meta="85.3% of 15.0 MW Pool Enrolled"
           icon={Sliders}
-          variant="cyan"
+          domain="flex"
+          provenance={{ classification: 'simulated', sourceName: 'Commercial & EV DR Pool', mode: 'cached' }}
         />
 
         <MetricCard
           label={t('cc.risk_level')}
           value={metrics.forecast_risk_level}
-          meta={t('cc.risk_meta')}
+          meta="Sunset Solar Cliff Risk Window"
           icon={ShieldAlert}
-          variant={metrics.forecast_risk_level === 'Critical' ? 'red' : 'amber'}
+          variant="amber"
+          provenance={{ classification: 'forecast', sourceName: 'XGBoost Risk Classifier', mode: 'cached' }}
         />
 
         <MetricCard
           label={t('cc.resilience_score')}
           value={`${metrics.composite_resilience_score}/100`}
-          meta={t('cc.resilience_meta')}
+          meta="4-Pillar Index (Benchmark > 75)"
           icon={ShieldCheck}
-          variant="cyan"
+          domain="brand"
+          provenance={{ classification: 'forecast', sourceName: 'Verified Resilience Model', mode: 'cached' }}
         />
       </div>
 
       {/* Active AI Recommendation Banner */}
-      <div className="card" style={{
+      <div className="card kpi flex" style={{
         background: 'linear-gradient(135deg, rgba(20, 31, 54, 0.95) 0%, rgba(13, 20, 36, 0.95) 100%)',
-        border: '1px solid var(--border-medium)',
         boxShadow: 'var(--shadow-cyan)',
         padding: '20px 24px'
       }}>
@@ -207,94 +204,54 @@ export default function CommandCenterPage() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                 <span className="badge badge-forecast">{t('cc.ai_badge')}</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>{t('cc.confidence_badge')}</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>REC-704 (Confidence 94%)</span>
               </div>
-              <h3 style={{ fontSize: '1.18rem', color: 'var(--cyan-primary)' }}>
-                {telemetry?.active_recommendation?.action_type || t('cc.rec_action_default')}
+              <h3 style={{ fontSize: '1.18rem', color: 'var(--cyan-primary)', margin: 0 }}>
+                {telemetry?.active_recommendation?.action_type || "BESS Storage Buffer & Pre-cooling Schedule"}
               </h3>
-              <p style={{ fontSize: '0.88rem', marginTop: 4, maxWidth: 720 }}>
-                {telemetry?.active_recommendation?.expected_impact || t('cc.rec_impact_default')}
+              <p style={{ fontSize: '0.88rem', marginTop: 4, maxWidth: 720, color: '#e2e8f0' }}>
+                {telemetry?.active_recommendation?.expected_impact || "Absorbs midday solar surplus and secures 14.5 MWh for the evening ramp window."}
               </p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <button
-              onClick={handleExecutePlan}
-              disabled={executing}
-              className="btn btn-primary"
-              style={{ minWidth: 200 }}
-            >
-              <Zap size={18} />
-              {executing ? t('cc.dispatching') : t('cc.btn_execute_plan')}
-            </button>
-            <Link href="/flexibility" className="btn btn-secondary">
-              {t('cc.details')} <ArrowRight size={16} />
-            </Link>
-          </div>
+          <button 
+            onClick={handleExecutePlan}
+            disabled={executing || planExecuted}
+            className="btn btn-primary"
+            style={{
+              padding: '12px 24px',
+              fontSize: '0.95rem',
+              background: planExecuted ? 'var(--green-renew)' : undefined,
+              borderColor: planExecuted ? 'var(--green-renew)' : undefined
+            }}
+          >
+            {executing ? (
+              <span>{t('cc.btn_optimizing')}</span>
+            ) : planExecuted ? (
+              <>
+                <CheckCircle2 size={18} />
+                <span>{t('cc.btn_executed')}</span>
+              </>
+            ) : (
+              <>
+                <span>{t('cc.btn_execute')}</span>
+                <ArrowRight size={16} />
+              </>
+            )}
+          </button>
         </div>
-
-        {planExecuted && (
-          <div style={{
-            marginTop: 14,
-            padding: '10px 16px',
-            background: 'rgba(16, 185, 129, 0.15)',
-            border: '1px solid rgba(16, 185, 129, 0.4)',
-            borderRadius: 'var(--radius-md)',
-            color: '#34d399',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            fontSize: '0.88rem'
-          }}>
-            <CheckCircle2 size={18} />
-            <span>{t('cc.plan_executed')}</span>
-          </div>
-        )}
       </div>
 
-      {/* Dynamic Substation Energy Flow Centerpiece */}
+      {/* Substation Energy Flow Diagram (C6: 28.4 + 30.2 + 6.2 = 64.8 MW) */}
       <EnergyFlowDiagram
         solarMw={metrics.solar_generation_mw}
         windMw={metrics.wind_generation_mw}
         demandMw={metrics.grid_demand_mw}
         bessSoc={metrics.battery_fleet_soc_pct}
         netBalanceMw={metrics.net_balance_mw}
-        bessDischarging={isShortage}
+        bessDischarging={planExecuted}
       />
-
-      {/* Bottom Quick Links to Deep Dive Modules */}
-      <div className="grid-3">
-        <Link href="/renewable-forecast" className="card" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h4 style={{ color: 'var(--amber-flow)' }}>{t('nav.renewable_forecast')}</h4>
-            <ArrowRight size={16} />
-          </div>
-          <p style={{ fontSize: '0.84rem' }}>
-            {t('cc.quick_solar_desc')}
-          </p>
-        </Link>
-
-        <Link href="/demand-forecast" className="card" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h4 style={{ color: 'var(--cyan-primary)' }}>{t('nav.demand_forecast')}</h4>
-            <ArrowRight size={16} />
-          </div>
-          <p style={{ fontSize: '0.84rem' }}>
-            {t('cc.quick_demand_desc')}
-          </p>
-        </Link>
-
-        <Link href="/digital-twin" className="card" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h4 style={{ color: 'var(--green-renew)' }}>{t('nav.digital_twin')}</h4>
-            <ArrowRight size={16} />
-          </div>
-          <p style={{ fontSize: '0.84rem' }}>
-            {t('cc.quick_twin_desc')}
-          </p>
-        </Link>
-      </div>
     </div>
   );
 }

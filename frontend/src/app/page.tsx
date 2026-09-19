@@ -16,7 +16,8 @@ import {
   CheckCircle2, 
   HelpCircle,
   Activity,
-  Award
+  Award,
+  Sparkles
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -214,6 +215,250 @@ export default function LandingPage() {
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
           <Link href="/command-center" className="btn btn-secondary">
             <span>Explore Telemetry & Visualizations</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* About & Platform Directory Section */}
+      <section id="about-section" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 28,
+        background: 'linear-gradient(180deg, rgba(13, 20, 36, 0.7) 0%, rgba(16, 25, 45, 0.9) 100%)',
+        border: '1px solid var(--border-medium)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '36px 28px',
+        marginTop: 10
+      }}>
+        {/* Section Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <span className="badge badge-live">
+                <Sparkles size={12} style={{ marginRight: 4 }} />
+                About GridFlex AI
+              </span>
+              <span className="badge badge-sim">System Guide & Directory</span>
+            </div>
+            <h2 style={{ fontSize: '2rem', margin: '4px 0 8px 0', color: 'var(--text-primary)' }}>
+              Complete Platform Overview &amp; Page Navigator
+            </h2>
+            <p style={{ maxWidth: 820, margin: 0, fontSize: '0.96rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              GridFlex AI is an autonomous, hardware-free national energy grid optimizer designed for Indian power grids. Below is a concise breakdown of the tech stack, data provenance types (live, cached, demo), and quick links to help you navigate directly to the right page.
+            </p>
+          </div>
+          <Link href="/about" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>
+            <span>Full 20-Page Catalog &amp; Specs</span>
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+
+        {/* Data Provenance Symbolism Banner */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 16
+        }}>
+          {/* Live Data */}
+          <div style={{
+            background: 'rgba(7, 11, 20, 0.7)',
+            borderRadius: 'var(--radius-md)',
+            padding: '16px 18px',
+            borderLeft: '4px solid #10b981',
+            border: '1px solid rgba(16, 185, 129, 0.25)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
+                <strong style={{ color: '#10b981', fontSize: '1rem' }}>Live Data</strong>
+              </div>
+              <span className="badge badge-live" style={{ fontSize: '0.72rem' }}>REST API &amp; Web Speech</span>
+            </div>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.5 }}>
+              Dynamic API fetches from Open-Meteo NWP and NASA POWER, plus browser Web Speech API audio for 15 Indian languages.
+            </p>
+            <div style={{ fontSize: '0.76rem', color: 'var(--text-tertiary)' }}>
+              Pages: <strong>/command-center</strong>, <strong>/renewable-forecast</strong>, <strong>/sky-vision</strong>, <strong>/incident-copilot</strong>
+            </div>
+          </div>
+
+          {/* Cached Data */}
+          <div style={{
+            background: 'rgba(7, 11, 20, 0.7)',
+            borderRadius: 'var(--radius-md)',
+            padding: '16px 18px',
+            borderLeft: '4px solid var(--cyan-primary)',
+            border: '1px solid rgba(0, 240, 255, 0.25)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: '1rem' }}>⏱️</span>
+                <strong style={{ color: 'var(--cyan-primary)', fontSize: '1rem' }}>Cached National Data</strong>
+              </div>
+              <span className="badge badge-forecast" style={{ fontSize: '0.72rem' }}>Govt Baselines</span>
+            </div>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.5 }}>
+              Real Indian utility profiles (Grid-India NLDC Daily PSP 64.8 MW, Vidyut PRAVAH IEX DAM ₹6.80/kWh, CEA v19) cached for zero latency &amp; 100% offline uptime.
+            </p>
+            <div style={{ fontSize: '0.76rem', color: 'var(--text-tertiary)' }}>
+              Pages: <strong>/demand-forecast</strong>, <strong>/spatial-twin</strong>, <strong>/tariff-engine</strong>, <strong>/explainable-ai</strong>
+            </div>
+          </div>
+
+          {/* Demo / Synthetic Data */}
+          <div style={{
+            background: 'rgba(7, 11, 20, 0.7)',
+            borderRadius: 'var(--radius-md)',
+            padding: '16px 18px',
+            borderLeft: '4px solid var(--amber-flow)',
+            border: '1px solid rgba(251, 191, 36, 0.25)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: '1rem' }}>⚡</span>
+                <strong style={{ color: 'var(--amber-flow)', fontSize: '1rem' }}>Demo / Synthetic Data</strong>
+              </div>
+              <span className="badge badge-sim" style={{ fontSize: '0.72rem' }}>Physics Twin</span>
+            </div>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.5 }}>
+              Physics-constrained mathematical ODEs and MILP optimization algorithms simulating 40 MWh community BESS, fault injections, and microgrid P2P auctions.
+            </p>
+            <div style={{ fontSize: '0.76rem', color: 'var(--text-tertiary)' }}>
+              Pages: <strong>/digital-twin</strong>, <strong>/self-healing</strong>, <strong>/storage</strong>, <strong>/flexibility</strong>, <strong>/p2p</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Tech Stack Pills Strip */}
+        <div style={{
+          background: 'rgba(7, 11, 20, 0.5)',
+          padding: '16px 20px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--border-subtle)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10
+        }}>
+          <div style={{ fontSize: '0.86rem', fontWeight: 700, color: 'var(--cyan-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Cpu size={16} />
+            <span>Under the Hood: Complete Technology &amp; Math Stack</span>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>Next.js 14 App Router (23 Static Routes)</span>
+            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>TypeScript &amp; React 18</span>
+            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>Vanilla CSS Design Tokens</span>
+            <span className="badge" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)' }}>LightGBM Regressor v2.4 (95% CI)</span>
+            <span className="badge" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)' }}>XGBoost Temporal Regressor v3.1</span>
+            <span className="badge" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--amber-flow)' }}>MILP PuLP Flexibility Solver</span>
+            <span className="badge" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--amber-flow)' }}>Farneback Optical-Flow Radar (Canvas)</span>
+            <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--green-renew)' }}>Causal Do-Calculus [P(Y|do(X))] DAG</span>
+            <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--green-renew)' }}>TreeSHAP Feature Attributions</span>
+            <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc' }}>Web Speech API (15 Indian Languages)</span>
+            <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc' }}>CERC DSM Frequency Arbitrage Solver</span>
+          </div>
+        </div>
+
+        {/* Quick Page Navigator Cards */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>
+              Where Should You Go? Quick Directory
+            </h3>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Click any card to launch immediately</span>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 14
+          }}>
+            <Link href="/command-center" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: 'var(--cyan-primary)', fontSize: '0.95rem' }}>⚡ Command Center</span>
+                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Live</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Real-time SCADA telemetry, live grid frequency (50 Hz), generation vs demand, and instant dispatch commands.
+              </p>
+            </Link>
+
+            <Link href="/sky-vision" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>👁️ SkyVision Radar</span>
+                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Live Flow</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Farneback optical-flow canvas tracking cloud vectors to forecast sudden solar drops 15–30 mins in advance.
+              </p>
+            </Link>
+
+            <Link href="/self-healing" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>🛡️ Self-Healing Grid</span>
+                <span className="badge badge-sim" style={{ fontSize: '0.68rem' }}>Causal AI</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Causal Do-Calculus DAG inference isolating faulty feeders and triggering automated DSM bids during trips.
+              </p>
+            </Link>
+
+            <Link href="/spatial-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: '#38bdf8', fontSize: '0.95rem' }}>🗺️ Spatial Twin (3D)</span>
+                <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>Topological</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Topological 3D corridor view of inter-regional transmission lines, loading percentages, and N-1 bottlenecks.
+              </p>
+            </Link>
+
+            <Link href="/tariff-engine" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.95rem' }}>⚖️ Tariff Engine</span>
+                <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>CERC DSM</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                CERC §5.3 deviation penalty solver, Time-of-Use schedule (₹/kWh), and battery arbitrage optimizer.
+              </p>
+            </Link>
+
+            <Link href="/incident-copilot" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: '#c084fc', fontSize: '0.95rem' }}>🎙️ Incident Co-pilot</span>
+                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>15 Locales</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Multilingual AI assistant with native browser voice control in Hindi, Tamil, Telugu, Marathi, and 11 more languages.
+              </p>
+            </Link>
+
+            <Link href="/digital-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>🎛️ Digital Twin Sandbox</span>
+                <span className="badge badge-sim" style={{ fontSize: '0.68rem' }}>64.8 MW</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Safely simulate substation breaker trips, transformer overloads, and cloud bursts with real-time feedback.
+              </p>
+            </Link>
+
+            <Link href="/judge-mode" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>🎯 Judge Mode &amp; Audit</span>
+                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Evaluator</span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Guided evaluation tour with 1-click automated test runner, rubric scores, and mathematical proof documents.
+              </p>
+            </Link>
+          </div>
+        </div>
+
+        {/* Action Link to Full About Page */}
+        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
+          <Link href="/about" className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '0.95rem' }}>
+            <span>Explore All 20 Pages in the Complete About &amp; System Directory</span>
             <ArrowRight size={16} />
           </Link>
         </div>

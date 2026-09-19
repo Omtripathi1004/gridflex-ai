@@ -81,7 +81,8 @@ export const Navbar: React.FC = () => {
       items: [
         { href: '/resilience', label: t('nav.resilience'), icon: ShieldCheck },
         { href: '/explainable-ai', label: t('nav.explainable_ai'), icon: Cpu },
-        { href: '/architecture', label: t('nav.architecture'), icon: Layers }
+        { href: '/architecture', label: t('nav.architecture'), icon: Layers },
+        { href: '/about', label: 'About & Directory', icon: HelpCircle }
       ]
     },
     {
@@ -118,6 +119,13 @@ export const Navbar: React.FC = () => {
               className={`nav-item ${pathname === '/' ? 'active' : ''}`}
             >
               Overview
+            </Link>
+
+            <Link 
+              href="/about" 
+              className={`nav-item ${pathname === '/about' ? 'active' : ''}`}
+            >
+              About
             </Link>
 
             {navGroups.map(group => {
@@ -334,6 +342,26 @@ export const Navbar: React.FC = () => {
             >
               <ShieldCheck size={16} style={{ color: '#10b981' }} /> Data Trust Center
             </button>
+
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-md)',
+                background: pathname === '/' ? 'rgba(0, 240, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+                color: pathname === '/' ? 'var(--cyan-primary)' : 'var(--text-primary)',
+                fontWeight: pathname === '/' ? 700 : 500,
+                fontSize: '0.92rem',
+                border: pathname === '/' ? '1px solid var(--border-medium)' : '1px solid transparent',
+              }}
+            >
+              <Zap size={16} />
+              <span>Overview</span>
+            </Link>
 
             {navGroups.flatMap(g => g.items).map((item) => {
               const Icon = item.icon;

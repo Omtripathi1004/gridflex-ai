@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import '../styles/globals.css';
 import { LanguageProvider } from '../context/LanguageContext';
+import { AuthProvider } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { GlobalChatWidget } from '../components/GlobalChatWidget';
 
 export const metadata: Metadata = {
   title: 'GridFlex AI — Smart Energy Management & Local Grid Resilience Platform',
@@ -18,13 +20,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <LanguageProvider>
-          <div className="app-container">
-            <Navbar />
-            <main className="main-content">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <AuthProvider>
+            <div className="app-container">
+              <Navbar />
+              <main className="main-content">
+                {children}
+              </main>
+              <Footer />
+              <GlobalChatWidget />
+            </div>
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>

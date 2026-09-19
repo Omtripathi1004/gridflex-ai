@@ -86,13 +86,13 @@ export default function DiscomPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <h1>{t('discom.title')}</h1>
-            <span className="badge badge-live">Live Operations Center</span>
+            <span className="badge badge-live">{t('discom.feeder_badge')}</span>
           </div>
           <p>{t('discom.subtitle')}</p>
         </div>
 
         <span className="badge badge-sim">
-          State Distribution Grid Jurisdiction
+          {t('arch.subtitle')}
         </span>
       </div>
 
@@ -101,7 +101,7 @@ export default function DiscomPage() {
         <MetricCard
           label={t('discom.feeders_count')}
           value="4 Feeders"
-          meta="All 11kV Radial Distribution Lines"
+          meta={t('discom.feeders_meta')}
           icon={Building2}
           variant="cyan"
         />
@@ -109,7 +109,7 @@ export default function DiscomPage() {
         <MetricCard
           label={t('discom.avg_loading')}
           value="78.5%"
-          meta="Substation Transformer Buffer: 18.2 MW"
+          meta={t('discom.loading_meta')}
           icon={Activity}
           variant="amber"
         />
@@ -117,7 +117,7 @@ export default function DiscomPage() {
         <MetricCard
           label={t('discom.available_flex')}
           value="12.8 MW"
-          meta="Ready for Immediate Automation"
+          meta={t('discom.flex_meta')}
           icon={Sliders}
           variant="green"
         />
@@ -128,9 +128,9 @@ export default function DiscomPage() {
         <div className="card-header">
           <h3 className="card-title">
             <Zap size={20} style={{ color: 'var(--cyan-primary)' }} />
-            11kV Feeder Operational Telemetry
+            {t('discom.table_title')}
           </h3>
-          <span className="badge badge-live">SCADA Substation Feed</span>
+          <span className="badge badge-live">{t('badge.live')}</span>
         </div>
 
         <div className="table-wrapper">
@@ -138,7 +138,7 @@ export default function DiscomPage() {
             <thead>
               <tr>
                 <th>{t('discom.feeder_name')}</th>
-                <th>Load (MW) / Rating</th>
+                <th>{t('discom.col_rating')}</th>
                 <th>{t('discom.loading')}</th>
                 <th>{t('discom.voltage')}</th>
                 <th>{t('discom.solar_pv')}</th>

@@ -128,16 +128,16 @@ export const EnergyFlowDiagram: React.FC<EnergyFlowProps> = ({
             filter="url(#glowCyan)"
           />
           <text x="400" y="156" textAnchor="middle" fill="#00f0ff" fontSize="13" fontWeight="bold">33/11kV</text>
-          <text x="400" y="174" textAnchor="middle" fill="#94a3b8" fontSize="10">Substation</text>
+          <text x="400" y="174" textAnchor="middle" fill="#94a3b8" fontSize="10">{t('flow.substation')}</text>
 
           {/* Left Node: Solar Farm Array */}
           <circle cx="120" cy="80" r="38" fill="#141c2e" stroke="#fbbf24" strokeWidth="2" filter="url(#glowAmber)" />
-          <text x="120" y="74" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">Solar Farm</text>
+          <text x="120" y="74" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">{t('flow.solar_farm')}</text>
           <text x="120" y="92" textAnchor="middle" fill="#fbbf24" fontSize="12" fontWeight="bold">+{solarMw} MW</text>
 
           {/* Left Node: Wind Farm */}
           <circle cx="120" cy="240" r="38" fill="#141c2e" stroke="#00f0ff" strokeWidth="2" filter="url(#glowCyan)" />
-          <text x="120" y="234" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">Wind Array</text>
+          <text x="120" y="234" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">{t('flow.wind_array')}</text>
           <text x="120" y="252" textAnchor="middle" fill="#00f0ff" fontSize="12" fontWeight="bold">+{windMw} MW</text>
 
           {/* Top Node: Virtual Community BESS */}
@@ -155,17 +155,17 @@ export const EnergyFlowDiagram: React.FC<EnergyFlowProps> = ({
             BESS Fleet ({bessSoc}%)
           </text>
           <text x="400" y="48" textAnchor="middle" fill="#94a3b8" fontSize="10">
-            {bessDischarging ? 'Discharging into Grid' : 'Standby / Charging'}
+            {bessDischarging ? t('flow.bess_discharging') : t('flow.bess_charging')}
           </text>
 
           {/* Right Node: Commercial HVAC */}
           <circle cx="680" cy="80" r="38" fill="#141c2e" stroke="#38bdf8" strokeWidth="2" />
-          <text x="680" y="74" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">HVAC / Towers</text>
+          <text x="680" y="74" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">{t('flow.hvac_towers')}</text>
           <text x="680" y="92" textAnchor="middle" fill="#38bdf8" fontSize="12" fontWeight="bold">-28.4 MW</text>
 
           {/* Right Node: EV Fleet & Industrial */}
           <circle cx="680" cy="240" r="38" fill="#141c2e" stroke="#f59e0b" strokeWidth="2" />
-          <text x="680" y="234" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">EV Hub & Ind.</text>
+          <text x="680" y="234" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold">{t('flow.ev_industrial')}</text>
           <text x="680" y="252" textAnchor="middle" fill="#f59e0b" fontSize="12" fontWeight="bold">-30.2 MW</text>
         </svg>
       </div>

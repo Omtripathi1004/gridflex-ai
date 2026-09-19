@@ -94,7 +94,7 @@ export default function JudgeModePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <h1>{t('judge.title')}</h1>
             <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.4)' }}>
-              Seed Scenario: Evening Renewable Gap
+              {t('judge.step1_title')}
             </span>
           </div>
           <p>{t('judge.subtitle')}</p>
@@ -172,8 +172,8 @@ export default function JudgeModePage() {
         boxShadow: 'var(--shadow-cyan)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <span className="badge badge-forecast">Step 0{activeStep} of 06</span>
-          <span style={{ fontSize: '0.86rem', color: 'var(--text-tertiary)' }}>Traceable Decision Chain</span>
+          <span className="badge badge-forecast">{t('judge.step_label')} 0{activeStep} {t('judge.of')} 06</span>
+          <span style={{ fontSize: '0.86rem', color: 'var(--text-tertiary)' }}>{t('judge.storyboard_badge')}</span>
         </div>
 
         <h2 style={{ fontSize: '1.8rem', color: 'var(--cyan-primary)', marginBottom: 12 }}>
@@ -244,7 +244,7 @@ export default function JudgeModePage() {
           {activeStep === 6 && (
             <div style={{ display: 'flex', gap: 10 }}>
               <Link href="/command-center" className="btn btn-primary">
-                Return to Live Command Center
+                {t('cc.title')}
               </Link>
             </div>
           )}

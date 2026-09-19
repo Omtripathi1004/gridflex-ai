@@ -84,7 +84,7 @@ export default function ResiliencePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <h1>{t('res.title')}</h1>
             <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.4)' }}>
-              Standout Feature B
+              {t('res.formula_badge')}
             </span>
           </div>
           <p>{t('res.subtitle')}</p>
@@ -94,7 +94,7 @@ export default function ResiliencePage() {
           onClick={() => setShowFormulaModal(!showFormulaModal)}
           className="btn btn-secondary btn-sm"
         >
-          <Info size={15} /> Formula Details
+          <Info size={15} /> {t('res.formula_detail_btn')}
         </button>
       </div>
 
@@ -106,7 +106,7 @@ export default function ResiliencePage() {
             Composite = (0.25 × Renewable_Availability) + (0.25 × Substation_Margin) + (0.25 × Storage_SOC) + (0.25 × Flexible_Capacity)
           </code>
           <p style={{ fontSize: '0.8rem', marginTop: 8 }}>
-            No black-box ML weights: each pillar carries exactly 25% transparent allocation per IEEE 1547 and ISO 50001 energy standards.
+            {t('res.formula_explanation')}
           </p>
         </div>
       )}
@@ -123,22 +123,22 @@ export default function ResiliencePage() {
         padding: '28px 32px'
       }}>
         <div>
-          <span className="badge badge-live" style={{ marginBottom: 8 }}>Software-Only Computed Index</span>
+          <span className="badge badge-live" style={{ marginBottom: 8 }}>{t('res.computed_badge')}</span>
           <h2 style={{ fontSize: '2.4rem', color: 'var(--cyan-primary)' }}>
             {compositeScore} <span style={{ fontSize: '1.2rem', color: 'var(--text-tertiary)' }}>/ 100</span>
           </h2>
           <p style={{ marginTop: 6, fontSize: '0.95rem' }}>
-            Current Status: <strong style={{ color: 'var(--green-renew)' }}>Healthy & Resilient Operating Envelope</strong>
+            {t('res.current_status')}: <strong style={{ color: 'var(--green-renew)' }}>{t('res.status_healthy')}</strong>
           </p>
         </div>
 
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
           <div style={{ textAlign: 'center', padding: '12px 18px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: 10 }}>
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>Target Benchmark</span>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>{t('res.target_benchmark')}</span>
             <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>&gt; 75.0</div>
           </div>
           <div style={{ textAlign: 'center', padding: '12px 18px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: 10 }}>
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>Blackout Immunity Margin</span>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>{t('res.blackout_margin')}</span>
             <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--green-renew)' }}>+14.8 MW</div>
           </div>
         </div>
@@ -148,14 +148,14 @@ export default function ResiliencePage() {
       <div>
         <h3 style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
           <ShieldCheck size={20} style={{ color: 'var(--cyan-primary)' }} />
-          The 4 Transparent Pillars Breakdown (25% Weight Each)
+          {t('res.4pillars_title')}
         </h3>
 
         <div className="grid-4">
           {components.map((c: any) => (
             <div key={c.key} className="card" style={{ padding: 20 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <span className="badge badge-sim">Weight: 25%</span>
+                <span className="badge badge-sim">{t('res.pillar_weight')}</span>
                 <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--cyan-primary)' }}>
                   {c.score}
                 </span>
@@ -182,7 +182,7 @@ export default function ResiliencePage() {
             <Clock size={20} style={{ color: 'var(--amber-flow)' }} />
             {t('res.why_title')}
           </h3>
-          <span className="badge badge-live">Traceable Audit Log</span>
+          <span className="badge badge-live">{t('res.audit_badge')}</span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -228,7 +228,7 @@ export default function ResiliencePage() {
             <TrendingUp size={20} style={{ color: 'var(--green-renew)' }} />
             {t('res.prescriptive_title')}
           </h3>
-          <span className="badge badge-forecast">Prescriptive Optimization</span>
+          <span className="badge badge-forecast">{t('res.prescriptive_badge')}</span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -248,13 +248,13 @@ export default function ResiliencePage() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span className="badge badge-sim">Rank #{act.rank}</span>
+                <span className="badge badge-sim">{t('res.rank')}{act.rank}</span>
                 <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{act.action}</span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span className="badge badge-live">{act.potential_gain}</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Feasibility: {act.feasibility}</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>{t('res.feasibility')}: {act.feasibility}</span>
               </div>
             </div>
           ))}

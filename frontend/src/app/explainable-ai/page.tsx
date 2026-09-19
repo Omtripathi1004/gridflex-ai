@@ -71,13 +71,13 @@ export default function ExplainableAIPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <h1>{t('xai.title')}</h1>
-            <span className="badge badge-forecast">TreeSHAP Explainer</span>
+            <span className="badge badge-forecast">{t('xai.explainer_badge')}</span>
           </div>
           <p>{t('xai.subtitle')}</p>
         </div>
 
         <span className="badge badge-live">
-          <CheckCircle2 size={13} /> Additive Feature Attribution
+          <CheckCircle2 size={13} /> {t('xai.tooltip')}
         </span>
       </div>
 
@@ -90,10 +90,10 @@ export default function ExplainableAIPage() {
               {t('xai.solar_title')}
             </h3>
             <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-              Base Expected Value: <strong>{solarShap.base_value_mw} MW</strong> ➔ Final Prediction: <strong style={{ color: 'var(--amber-flow)' }}>{solarShap.predicted_value_mw} MW</strong>
+              {t('xai.base_value')}: <strong>{solarShap.base_value_mw} MW</strong> ➔ {t('xai.predicted_value')}: <strong style={{ color: 'var(--amber-flow)' }}>{solarShap.predicted_value_mw} MW</strong>
             </p>
           </div>
-          <span className="badge badge-sim">Solar Forecast Model</span>
+          <span className="badge badge-sim">{t('xai.solar_model_badge')}</span>
         </div>
 
         {/* Plain English Explanation */}
@@ -107,7 +107,7 @@ export default function ExplainableAIPage() {
           color: '#f8fafc'
         }}>
           <Sparkles size={16} style={{ color: 'var(--amber-flow)', verticalAlign: 'middle', marginRight: 6 }} />
-          <strong>Operator Summary:</strong> {solarShap.plain_english_summary}
+          <strong>{t('xai.operator_summary')}</strong> {solarShap.plain_english_summary}
         </div>
 
         {/* Feature Contribution Horizontal Bar Chart */}
@@ -127,9 +127,9 @@ export default function ExplainableAIPage() {
                   border: '1px solid var(--border-medium)',
                   borderRadius: '8px',
                   color: '#f8fafc' 
-                }}
+                }} 
               />
-              <Bar dataKey="contribution_mw" name="SHAP Contribution (MW)">
+              <Bar dataKey="contribution_mw" name={t('xai.chart_shap')}>
                 {solarShap.features.map((entry: any, index: number) => (
                   <Cell 
                     key={`cell-${index}`} 
@@ -151,10 +151,10 @@ export default function ExplainableAIPage() {
               {t('xai.deficit_title')}
             </h3>
             <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-              Base Expected Value: <strong>{deficitShap.base_value_mw} MW</strong> ➔ Final Prediction: <strong style={{ color: 'var(--red-risk)' }}>{deficitShap.predicted_value_mw} MW</strong>
+              {t('xai.base_value')}: <strong>{deficitShap.base_value_mw} MW</strong> ➔ {t('xai.predicted_value')}: <strong style={{ color: 'var(--red-risk)' }}>{deficitShap.predicted_value_mw} MW</strong>
             </p>
           </div>
-          <span className="badge badge-risk-critical">Evening Cliff (19:30)</span>
+          <span className="badge badge-risk-critical">{t('xai.deficit_model_badge')}</span>
         </div>
 
         {/* Plain English Explanation */}
@@ -168,7 +168,7 @@ export default function ExplainableAIPage() {
           color: '#f8fafc'
         }}>
           <Sparkles size={16} style={{ color: 'var(--red-risk)', verticalAlign: 'middle', marginRight: 6 }} />
-          <strong>Operator Summary:</strong> {deficitShap.plain_english_summary}
+          <strong>{t('xai.operator_summary')}</strong> {deficitShap.plain_english_summary}
         </div>
 
         {/* Feature Contribution Horizontal Bar Chart */}
@@ -188,9 +188,9 @@ export default function ExplainableAIPage() {
                   border: '1px solid var(--border-medium)',
                   borderRadius: '8px',
                   color: '#f8fafc' 
-                }}
+                }} 
               />
-              <Bar dataKey="contribution_mw" name="SHAP Contribution (MW)">
+              <Bar dataKey="contribution_mw" name={t('xai.chart_shap')}>
                 {deficitShap.features.map((entry: any, index: number) => (
                   <Cell 
                     key={`cell-${index}`} 

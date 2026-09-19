@@ -72,7 +72,7 @@ export default function CopilotPage() {
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
           <h1>{t('copilot.title')}</h1>
-          <span className="badge badge-forecast">RAG Architecture</span>
+          <span className="badge badge-forecast">{t('copilot.rag_arch')}</span>
         </div>
         <p>{t('copilot.subtitle')}</p>
       </div>
@@ -134,8 +134,8 @@ export default function CopilotPage() {
               {m.sender === 'copilot' && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6, color: 'var(--cyan-primary)', fontSize: '0.8rem', fontWeight: 600 }}>
                   <Bot size={15} />
-                  <span>GridFlex AI Assistant</span>
-                  <span className="badge badge-sim" style={{ fontSize: '0.66rem', padding: '1px 6px' }}>Deterministic RAG</span>
+                  <span>{t('copilot.assistant_title')}</span>
+                  <span className="badge badge-sim" style={{ fontSize: '0.66rem', padding: '1px 6px' }}>{t('copilot.rag_badge')}</span>
                 </div>
               )}
               {m.text}

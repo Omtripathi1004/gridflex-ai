@@ -58,14 +58,14 @@ export default function FlexibilityPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <h1>{t('flex.title')}</h1>
-            <span className="badge badge-forecast">MILP Solver</span>
+            <span className="badge badge-forecast">{t('flex.solver_badge')}</span>
           </div>
           <p>{t('flex.subtitle')}</p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span className="badge badge-live">
-            <CheckCircle2 size={13} /> Deficit Mitigated
+            <CheckCircle2 size={13} /> {t('flex.deficit_mitigated')}
           </span>
         </div>
       </div>
@@ -76,27 +76,27 @@ export default function FlexibilityPage() {
           label={t('flex.metric_peak_shaved')}
           value={`${scorecard.peak_reduction_mw} MW`}
           unit={`(-${scorecard.peak_reduction_pct}%)`}
-          meta="19:30 Evening Peak Relief"
+          meta={t('flex.peak_shaved_meta')}
           icon={TrendingDown}
           variant="cyan"
-          badgeText="Optimized"
+          badgeText={t('flex.optimized_badge')}
           badgeType="live"
         />
 
         <MetricCard
           label={t('flex.metric_shortage_elim')}
           value={`${scorecard.shortage_hours_before}h → ${scorecard.shortage_hours_after}h`}
-          meta="100% Shortage Elimination"
+          meta={t('flex.shortage_elim_meta')}
           icon={Clock}
           variant="green"
-          badgeText="Zero Deficit"
+          badgeText={t('flex.zero_deficit_badge')}
           badgeType="live"
         />
 
         <MetricCard
           label={t('flex.metric_cost_saved')}
           value={`$${scorecard.estimated_cost_savings_usd.toLocaleString()}`}
-          meta="Avoided Peaker Tariffs"
+          meta={t('flex.cost_saved_meta')}
           icon={DollarSign}
           variant="amber"
         />
@@ -104,7 +104,7 @@ export default function FlexibilityPage() {
         <MetricCard
           label={t('flex.metric_co2')}
           value={`${(scorecard.co2_emissions_avoided_kg / 1000).toFixed(1)} MT`}
-          meta="Avoided Diesel Peaker Run"
+          meta={t('flex.co2_meta')}
           icon={Leaf}
           variant="green"
         />
@@ -119,10 +119,10 @@ export default function FlexibilityPage() {
               {t('flex.before_after_title')}
             </h3>
             <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-              Demonstrating how BESS discharge and dynamic EV load shifting reshape the evening demand cliff to match generation.
+              {t('flex.chart_desc')}
             </p>
           </div>
-          <span className="badge badge-live">MILP Optimum</span>
+          <span className="badge badge-live">{t('flex.optimum_badge')}</span>
         </div>
 
         <div style={{ width: '100%', height: 380, marginTop: 10 }}>
@@ -145,7 +145,7 @@ export default function FlexibilityPage() {
               <Line
                 type="monotone"
                 dataKey="generation_mw"
-                name="Renewable Generation (Solar+Wind MW)"
+                name={t('flex.chart_renewable')}
                 stroke="#fbbf24"
                 strokeWidth={2.5}
                 dot={false}
@@ -155,7 +155,7 @@ export default function FlexibilityPage() {
               <Line
                 type="monotone"
                 dataKey="demand_before_mw"
-                name="Base Demand (Before Flexibility MW)"
+                name={t('flex.chart_base')}
                 stroke="#ef4444"
                 strokeWidth={2}
                 strokeDasharray="4 4"
@@ -166,7 +166,7 @@ export default function FlexibilityPage() {
               <Line
                 type="monotone"
                 dataKey="demand_after_mw"
-                name="Post-Flexibility Demand (MW)"
+                name={t('flex.chart_post')}
                 stroke="#00f0ff"
                 strokeWidth={2.8}
                 dot={false}
@@ -176,7 +176,7 @@ export default function FlexibilityPage() {
               <Line
                 type="monotone"
                 dataKey="net_balance_after_mw"
-                name="Net Balance After (MW)"
+                name={t('flex.chart_balance')}
                 stroke="#10b981"
                 strokeWidth={2}
                 dot={false}
@@ -193,7 +193,7 @@ export default function FlexibilityPage() {
             <CheckCircle2 size={20} style={{ color: 'var(--green-renew)' }} />
             {t('flex.actions_title')}
           </h3>
-          <span className="badge badge-live">Dispatched to Substation</span>
+          <span className="badge badge-live">{t('flex.dispatched_badge')}</span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -217,14 +217,14 @@ export default function FlexibilityPage() {
                 <div>
                   <h4 style={{ color: 'var(--cyan-primary)', fontSize: '1.02rem' }}>{rec.action}</h4>
                   <p style={{ fontSize: '0.84rem', marginTop: 4 }}>
-                    <strong>Asset:</strong> {rec.asset} &nbsp;|&nbsp; <strong>Reason:</strong> {rec.reason}
+                    <strong>{t('flex.asset')}:</strong> {rec.asset} &nbsp;|&nbsp; <strong>{t('flex.reason')}:</strong> {rec.reason}
                   </p>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span className="badge badge-live" style={{ fontSize: '0.78rem' }}>
-                  Confidence {(rec.confidence * 100).toFixed(0)}%
+                  {t('flex.confidence')} {(rec.confidence * 100).toFixed(0)}%
                 </span>
               </div>
             </div>

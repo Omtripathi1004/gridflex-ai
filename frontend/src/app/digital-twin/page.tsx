@@ -117,7 +117,7 @@ export default function DigitalTwinPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <h1>{t('dt.title')}</h1>
             <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.4)' }}>
-              Standout Feature A
+              {t('res.formula_badge')}
             </span>
           </div>
           <p>{t('dt.subtitle')}</p>
@@ -135,7 +135,7 @@ export default function DigitalTwinPage() {
             🔥 {t('dt.preset_storm')}
           </button>
           <button onClick={() => applyPreset('normal')} className="btn btn-secondary btn-sm">
-            <RotateCcw size={14} /> Reset
+            <RotateCcw size={14} /> {t('judge.btn_reset')}
           </button>
         </div>
       </div>
@@ -147,9 +147,9 @@ export default function DigitalTwinPage() {
           <div className="card-header">
             <h3 className="card-title">
               <Sliders size={20} style={{ color: 'var(--cyan-primary)' }} />
-              Operational Parameter Sliders
+              {t('dt.sliders_title')}
             </h3>
-            <span className="badge badge-sim">Real-Time Reactive</span>
+            <span className="badge badge-sim">{t('badge.simulation')}</span>
           </div>
 
           {/* Solar Multiplier */}
@@ -260,21 +260,21 @@ export default function DigitalTwinPage() {
                 className={`btn btn-sm ${weather === 'NORMAL' ? 'btn-primary' : 'btn-secondary'}`}
                 style={{ flex: 1 }}
               >
-                Normal Sky
+                {t('dt.weather_normal')}
               </button>
               <button
                 onClick={() => setWeather('HEATWAVE')}
                 className={`btn btn-sm ${weather === 'HEATWAVE' ? 'btn-amber' : 'btn-secondary'}`}
                 style={{ flex: 1 }}
               >
-                🔥 Heatwave (+25% AC)
+                🔥 {t('dt.weather_heatwave')}
               </button>
               <button
                 onClick={() => setWeather('STORM_FRONT')}
                 className={`btn btn-sm ${weather === 'STORM_FRONT' ? 'btn-secondary' : 'btn-secondary'}`}
                 style={{ flex: 1, borderColor: weather === 'STORM_FRONT' ? 'var(--cyan-primary)' : 'var(--border-subtle)' }}
               >
-                ⛈ Cloud Storm (-75% Solar)
+                ⛈ {t('dt.weather_storm')}
               </button>
             </div>
           </div>
@@ -295,28 +295,28 @@ export default function DigitalTwinPage() {
 
             <div className="grid-2" style={{ gap: 12, marginBottom: 14 }}>
               <div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Peak Deficit Window</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('dt.metric_balance')}</span>
                 <div style={{ fontSize: '1.7rem', fontWeight: 800, color: summary.peak_deficit_mw > 0 ? 'var(--red-risk)' : 'var(--green-renew)' }}>
                   {summary.peak_deficit_mw > 0 ? `-${summary.peak_deficit_mw} MW` : '0.0 MW'}
                 </div>
               </div>
 
               <div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Resilience Index</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('dt.metric_resilience')}</span>
                 <div style={{ fontSize: '1.7rem', fontWeight: 800, color: summary.composite_resilience_score > 70 ? 'var(--green-renew)' : 'var(--amber-flow)' }}>
                   {summary.composite_resilience_score}/100
                 </div>
               </div>
 
               <div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Daily Net Balance</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('dt.metric_balance')}</span>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>
                   {summary.net_daily_balance_mwh > 0 ? `+${summary.net_daily_balance_mwh}` : summary.net_daily_balance_mwh} MWh
                 </div>
               </div>
 
               <div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Shortage Duration</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('flex.metric_shortage_elim')}</span>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: summary.shortage_hours_count > 0 ? 'var(--orange-warn)' : 'var(--green-renew)' }}>
                   {summary.shortage_hours_count} Hours
                 </div>
@@ -349,10 +349,10 @@ export default function DigitalTwinPage() {
               Simulated 24-Hour Energy Balance
             </h3>
             <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-              Graph instantly reflects adjustments made with the sliders above.
+              {t('dt.graph_desc')}
             </p>
           </div>
-          <span className="badge badge-sim">Digital Twin Engine</span>
+          <span className="badge badge-sim">{t('dt.engine_badge')}</span>
         </div>
 
         <div style={{ width: '100%', height: 360, marginTop: 10 }}>
@@ -375,7 +375,7 @@ export default function DigitalTwinPage() {
               <Line
                 type="monotone"
                 dataKey="total_gen_mw"
-                name="Simulated Generation (MW)"
+                name={t('dt.chart_gen')}
                 stroke="#fbbf24"
                 strokeWidth={2.5}
                 dot={false}
@@ -385,7 +385,7 @@ export default function DigitalTwinPage() {
               <Line
                 type="monotone"
                 dataKey="demand_mw"
-                name="Simulated Demand (MW)"
+                name={t('dt.chart_demand')}
                 stroke="#ef4444"
                 strokeWidth={2.2}
                 dot={false}
@@ -395,7 +395,7 @@ export default function DigitalTwinPage() {
               <Line
                 type="monotone"
                 dataKey="net_balance_mw"
-                name="Net Balance (+Surplus / -Deficit MW)"
+                name={t('dt.chart_balance')}
                 stroke="#00f0ff"
                 strokeWidth={2.2}
                 dot={false}

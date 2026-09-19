@@ -13,6 +13,7 @@ from app.routers import (
     copilot,
     discom,
     scenario,
+    auth,
 )
 
 app = FastAPI(
@@ -42,6 +43,7 @@ app.include_router(explainability.router, prefix="/api/explainability", tags=["E
 app.include_router(copilot.router, prefix="/api/copilot", tags=["AI Copilot"])
 app.include_router(discom.router, prefix="/api/discom", tags=["DISCOM Control"])
 app.include_router(scenario.router, prefix="/api/scenario", tags=["Scenarios"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Authentication & Audit"])
 
 @app.get("/health")
 def health_check():

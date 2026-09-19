@@ -81,10 +81,10 @@ export default function LandingPage() {
             fontSize: '0.88rem'
           }}>
             <span className="badge badge-live">{t('badge.live')}</span>
-            <span>Solar: <strong style={{ color: 'var(--amber-flow)' }}>{telemetry.metrics?.solar_generation_mw} MW</strong></span>
-            <span>Wind: <strong style={{ color: 'var(--cyan-primary)' }}>{telemetry.metrics?.wind_generation_mw} MW</strong></span>
-            <span>Demand: <strong>{telemetry.metrics?.grid_demand_mw} MW</strong></span>
-            <span>Resilience: <strong style={{ color: 'var(--green-renew)' }}>{telemetry.metrics?.composite_resilience_score}/100</strong></span>
+            <span>{t('landing.solar_lbl')} <strong style={{ color: 'var(--amber-flow)' }}>{telemetry.metrics?.solar_generation_mw} MW</strong></span>
+            <span>{t('landing.wind_lbl')} <strong style={{ color: 'var(--cyan-primary)' }}>{telemetry.metrics?.wind_generation_mw} MW</strong></span>
+            <span>{t('landing.demand_lbl')} <strong>{telemetry.metrics?.grid_demand_mw} MW</strong></span>
+            <span>{t('landing.resilience_lbl')} <strong style={{ color: 'var(--green-renew)' }}>{telemetry.metrics?.composite_resilience_score}/100</strong></span>
           </div>
         )}
 
@@ -131,7 +131,7 @@ export default function LandingPage() {
       {/* The Problem: Duck Curve & Reliability Gaps */}
       <section style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
-          <span className="badge badge-risk-critical" style={{ marginBottom: 8 }}>The Problem</span>
+          <span className="badge badge-risk-critical" style={{ marginBottom: 8 }}>{t('landing.problem_badge')}</span>
           <h2>{t('landing.problem_title')}</h2>
           <p style={{ marginTop: 6, maxWidth: 800 }}>
             {t('landing.problem_desc')}
@@ -174,7 +174,7 @@ export default function LandingPage() {
       {/* The 8-Step Solution Decision Chain */}
       <section style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
         <div>
-          <span className="badge badge-forecast" style={{ marginBottom: 8 }}>Traceable Architecture</span>
+          <span className="badge badge-forecast" style={{ marginBottom: 8 }}>{t('landing.arch_badge')}</span>
           <h2>{t('landing.chain_title')}</h2>
           <p style={{ marginTop: 6 }}>
             {t('landing.chain_subtitle')}

@@ -90,7 +90,7 @@ export default function CommandCenterPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6 }}>
             <Clock size={15} />
-            <span>Updated: <strong>{lastUpdated || 'Connecting...'}</strong></span>
+            <span>{t('cc.updated')}: <strong>{lastUpdated || t('cc.connecting')}</strong></span>
           </div>
           <Link href="/judge-mode" className="btn btn-amber btn-sm">
             🎯 {t('nav.judge_mode')}
@@ -104,7 +104,7 @@ export default function CommandCenterPage() {
           label={t('cc.solar_gen')}
           value={metrics.solar_generation_mw}
           unit="MW"
-          meta="GHI: 840 W/m² (Peak Day)"
+          meta={t('cc.solar_meta')}
           icon={Sun}
           variant="amber"
           badgeText={t('badge.live')}
@@ -115,7 +115,7 @@ export default function CommandCenterPage() {
           label={t('cc.wind_gen')}
           value={metrics.wind_generation_mw}
           unit="MW"
-          meta="Hub 100m: 7.8 m/s"
+          meta={t('cc.wind_meta')}
           icon={Wind}
           variant="cyan"
           badgeText={t('badge.live')}
@@ -126,7 +126,7 @@ export default function CommandCenterPage() {
           label={t('cc.grid_demand')}
           value={metrics.grid_demand_mw}
           unit="MW"
-          meta="Transformer 82% Rating"
+          meta={t('cc.grid_demand_meta')}
           icon={Zap}
           variant="default"
           badgeText={t('badge.live')}
@@ -137,7 +137,7 @@ export default function CommandCenterPage() {
           label={t('cc.net_balance')}
           value={metrics.net_balance_mw > 0 ? `+${metrics.net_balance_mw}` : metrics.net_balance_mw}
           unit="MW"
-          meta={isShortage ? "Shortage Deficit Window" : "Midday Solar Surplus"}
+          meta={isShortage ? t('cc.deficit_meta') : t('cc.surplus_meta')}
           icon={TrendingDown}
           variant={isShortage ? "red" : "green"}
           badgeText={isShortage ? t('cc.deficit') : t('cc.surplus')}
@@ -151,7 +151,7 @@ export default function CommandCenterPage() {
           label={t('cc.storage_soc')}
           value={metrics.battery_fleet_soc_pct}
           unit="%"
-          meta="Fleet Total: 40.0 MWh"
+          meta={t('cc.storage_meta')}
           icon={BatteryCharging}
           variant="green"
         />
@@ -160,7 +160,7 @@ export default function CommandCenterPage() {
           label={t('cc.flex_load')}
           value={metrics.flexible_load_available_mw}
           unit="MW"
-          meta="EV Depot & HVAC Enrolled"
+          meta={t('cc.flex_meta')}
           icon={Sliders}
           variant="cyan"
         />
@@ -168,7 +168,7 @@ export default function CommandCenterPage() {
         <MetricCard
           label={t('cc.risk_level')}
           value={metrics.forecast_risk_level}
-          meta="18:00 - 21:30 Peak Window"
+          meta={t('cc.risk_meta')}
           icon={ShieldAlert}
           variant={metrics.forecast_risk_level === 'Critical' ? 'red' : 'amber'}
         />
@@ -176,7 +176,7 @@ export default function CommandCenterPage() {
         <MetricCard
           label={t('cc.resilience_score')}
           value={`${metrics.composite_resilience_score}/100`}
-          meta="4-Pillar Software Calculation"
+          meta={t('cc.resilience_meta')}
           icon={ShieldCheck}
           variant="cyan"
         />
@@ -206,14 +206,14 @@ export default function CommandCenterPage() {
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <span className="badge badge-forecast">AI Decision Engine</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>REC-704 (Confidence 94%)</span>
+                <span className="badge badge-forecast">{t('cc.ai_badge')}</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>{t('cc.confidence_badge')}</span>
               </div>
               <h3 style={{ fontSize: '1.18rem', color: 'var(--cyan-primary)' }}>
-                {telemetry?.active_recommendation?.action_type || "BESS Dispatch & Flexible Load Shifting"}
+                {telemetry?.active_recommendation?.action_type || t('cc.rec_action_default')}
               </h3>
               <p style={{ fontSize: '0.88rem', marginTop: 4, maxWidth: 720 }}>
-                {telemetry?.active_recommendation?.expected_impact || "Absorb midday solar surplus and secure 14.5 MWh for evening peak demand relief."}
+                {telemetry?.active_recommendation?.expected_impact || t('cc.rec_impact_default')}
               </p>
             </div>
           </div>
@@ -226,10 +226,10 @@ export default function CommandCenterPage() {
               style={{ minWidth: 200 }}
             >
               <Zap size={18} />
-              {executing ? 'Dispatching...' : t('cc.btn_execute_plan')}
+              {executing ? t('cc.dispatching') : t('cc.btn_execute_plan')}
             </button>
             <Link href="/flexibility" className="btn btn-secondary">
-              Details <ArrowRight size={16} />
+              {t('cc.details')} <ArrowRight size={16} />
             </Link>
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function CommandCenterPage() {
             <ArrowRight size={16} />
           </div>
           <p style={{ fontSize: '0.84rem' }}>
-            24h & 48h solar and wind prediction curves with 95% confidence intervals and weather inputs.
+            {t('cc.quick_solar_desc')}
           </p>
         </Link>
 
@@ -281,7 +281,7 @@ export default function CommandCenterPage() {
             <ArrowRight size={16} />
           </div>
           <p style={{ fontSize: '0.84rem' }}>
-            Hourly load forecasts, 18:00-22:00 peak windows, and residential vs commercial segments.
+            {t('cc.quick_demand_desc')}
           </p>
         </Link>
 
@@ -291,7 +291,7 @@ export default function CommandCenterPage() {
             <ArrowRight size={16} />
           </div>
           <p style={{ fontSize: '0.84rem' }}>
-            Interactive what-if sliders: simulate renewable drops and watch the system recalculate balance.
+            {t('cc.quick_twin_desc')}
           </p>
         </Link>
       </div>

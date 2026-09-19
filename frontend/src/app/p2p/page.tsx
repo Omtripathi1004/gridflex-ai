@@ -63,7 +63,7 @@ export default function P2PPage() {
         </div>
 
         <span className="badge badge-sim">
-          <ShieldAlert size={14} /> Explicitly Labeled: Software Simulation Sandbox
+          <ShieldAlert size={14} /> {t('p2p.disclaimer_badge')}
         </span>
       </div>
 
@@ -73,7 +73,7 @@ export default function P2PPage() {
           label={t('p2p.matched_volume')}
           value={`${summary.matched_energy_kw}`}
           unit="kW"
-          meta="100% Local Solar Absorption"
+          meta={t('p2p.matched_vol_meta')}
           icon={ArrowRightLeft}
           variant="cyan"
         />
@@ -82,7 +82,7 @@ export default function P2PPage() {
           label={t('p2p.clearing_price')}
           value={`$${summary.average_clearing_price_usd}`}
           unit="/kWh"
-          meta="Double Auction Clearing"
+          meta={t('p2p.clearing_price_meta')}
           icon={DollarSign}
           variant="green"
         />
@@ -91,15 +91,15 @@ export default function P2PPage() {
           label={t('p2p.wheeling_fee')}
           value={`$${summary.grid_wheeling_fee_usd_kwh}`}
           unit="/kWh"
-          meta="Paid to DISCOM Distribution"
+          meta={t('p2p.wheeling_meta')}
           icon={DollarSign}
           variant="amber"
         />
 
         <MetricCard
-          label="Active Participants"
+          label={t('p2p.active_participants')}
           value={`${summary.active_prosumers + summary.active_consumers}`}
-          meta="3 Prosumers, 3 Consumers"
+          meta={t('p2p.participants_meta')}
           icon={Users}
           variant="default"
         />
@@ -112,19 +112,19 @@ export default function P2PPage() {
             <Users size={20} style={{ color: 'var(--cyan-primary)' }} />
             {t('p2p.order_book')}
           </h3>
-          <span className="badge badge-sim">Distribution Locational Marginal Pricing</span>
+          <span className="badge badge-sim">{t('badge.simulation')}</span>
         </div>
 
         <div className="table-wrapper">
           <table className="custom-table">
             <thead>
               <tr>
-                <th>Participant ID & Name</th>
-                <th>Classification</th>
-                <th>Generation (kW)</th>
-                <th>Demand (kW)</th>
-                <th>Surplus / Deficit</th>
-                <th>Price Bid/Ask</th>
+                <th>{t('p2p.order_entity')}</th>
+                <th>{t('p2p.order_type')}</th>
+                <th>{t('p2p.order_qty')}</th>
+                <th>{t('p2p.order_qty')}</th>
+                <th>{t('cc.net_balance')}</th>
+                <th>{t('p2p.order_price')}</th>
               </tr>
             </thead>
             <tbody>
@@ -173,13 +173,13 @@ export default function P2PPage() {
           <table className="custom-table">
             <thead>
               <tr>
-                <th>{t('p2p.tx_hash')}</th>
-                <th>Timestamp</th>
+                <th>{t('p2p.col_hash')}</th>
+                <th>{t('p2p.col_time')}</th>
                 <th>{t('p2p.seller')}</th>
                 <th>{t('p2p.buyer')}</th>
                 <th>{t('p2p.volume')}</th>
-                <th>Clearing Price</th>
-                <th>{t('p2p.status')}</th>
+                <th>{t('p2p.col_price')}</th>
+                <th>{t('p2p.col_status')}</th>
               </tr>
             </thead>
             <tbody>

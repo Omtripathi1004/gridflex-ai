@@ -70,13 +70,13 @@ export default function RenewableForecastPage() {
             onClick={() => setHorizon(24)}
             className={`btn btn-sm ${horizon === 24 ? 'btn-primary' : 'btn-secondary'}`}
           >
-            24-Hour Horizon
+            {t('rf.horizon_24')}
           </button>
           <button
             onClick={() => setHorizon(48)}
             className={`btn btn-sm ${horizon === 48 ? 'btn-primary' : 'btn-secondary'}`}
           >
-            48-Hour Horizon
+            {t('rf.horizon_48')}
           </button>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function RenewableForecastPage() {
           label={`${t('rf.mae')} (Solar / Wind)`}
           value={`${metrics.solar_mae_mw} / ${metrics.wind_mae_mw}`}
           unit="MW"
-          meta="Tested against 2026 validation split"
+          meta={t('rf.mae_meta')}
           icon={Gauge}
           variant="cyan"
         />
@@ -95,14 +95,14 @@ export default function RenewableForecastPage() {
           label={`${t('rf.rmse')} (Solar / Wind)`}
           value={`${metrics.solar_rmse_mw} / ${metrics.wind_rmse_mw}`}
           unit="MW"
-          meta="Outlier penalty normalized"
+          meta={t('rf.rmse_meta')}
           icon={LineChart}
           variant="amber"
         />
         <MetricCard
-          label={`${t('rf.r2')} Score`}
+          label={t('rf.r2_label')}
           value={`${metrics.solar_r2_score}`}
-          meta="Variance explained: 94.2%"
+          meta={t('rf.r2_meta')}
           icon={Info}
           variant="green"
         />
@@ -117,10 +117,10 @@ export default function RenewableForecastPage() {
               {t('rf.chart_title')}
             </h3>
             <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-              Showing LightGBM day-ahead solar & wind forecast, 95% upper/lower confidence bounds, and recorded actuals.
+              {t('rf.chart_desc')}
             </p>
           </div>
-          <span className="badge badge-forecast">LightGBM v2.4</span>
+          <span className="badge badge-forecast">{t('rf.model_badge')}</span>
         </div>
 
         <div style={{ width: '100%', height: 380, marginTop: 10 }}>
@@ -143,14 +143,14 @@ export default function RenewableForecastPage() {
               <Area
                 type="monotone"
                 dataKey="solar_upper_95"
-                name="Solar 95% Upper Bound"
+                name={t('rf.chart_solar_upper')}
                 stroke="transparent"
                 fill="rgba(251, 191, 36, 0.12)"
               />
               <Area
                 type="monotone"
                 dataKey="solar_lower_95"
-                name="Solar 95% Lower Bound"
+                name={t('rf.chart_solar_lower')}
                 stroke="transparent"
                 fill="transparent"
               />
@@ -159,7 +159,7 @@ export default function RenewableForecastPage() {
               <Line
                 type="monotone"
                 dataKey="solar_predicted"
-                name="Solar Predicted (MW)"
+                name={t('rf.chart_solar_pred')}
                 stroke="#fbbf24"
                 strokeWidth={2.5}
                 dot={false}
@@ -169,7 +169,7 @@ export default function RenewableForecastPage() {
               <Line
                 type="monotone"
                 dataKey="solar_actual"
-                name="Solar Actual (Recorded MW)"
+                name={t('rf.chart_solar_act')}
                 stroke="#10b981"
                 strokeWidth={2}
                 strokeDasharray="4 4"
@@ -180,7 +180,7 @@ export default function RenewableForecastPage() {
               <Line
                 type="monotone"
                 dataKey="wind_predicted"
-                name="Wind Predicted (MW)"
+                name={t('rf.chart_wind_pred')}
                 stroke="#00f0ff"
                 strokeWidth={2}
                 dot={false}
@@ -197,7 +197,7 @@ export default function RenewableForecastPage() {
             <CloudRain size={20} style={{ color: 'var(--blue-bright)' }} />
             {t('rf.weather_title')}
           </h3>
-          <span className="badge badge-live">Live NWP Station Telemetry</span>
+          <span className="badge badge-live">{t('rf.weather_badge')}</span>
         </div>
 
         <div className="grid-4">
@@ -207,7 +207,7 @@ export default function RenewableForecastPage() {
               <span className="metric-value" style={{ color: 'var(--amber-flow)' }}>{currentWeather.ghi_w_m2}</span>
               <span className="metric-unit">W/m²</span>
             </div>
-            <span className="metric-meta">Clear sky index: 0.92</span>
+             <span className="metric-meta">{t('rf.clear_sky')}: 0.92</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(56, 189, 248, 0.3)' }}>
@@ -216,7 +216,7 @@ export default function RenewableForecastPage() {
               <span className="metric-value" style={{ color: '#38bdf8' }}>{currentWeather.temperature_c}</span>
               <span className="metric-unit">°C</span>
             </div>
-            <span className="metric-meta">Cell derating: -2.1%</span>
+             <span className="metric-meta">{t('rf.cell_derating')}: -2.1%</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(148, 163, 184, 0.3)' }}>
@@ -225,7 +225,7 @@ export default function RenewableForecastPage() {
               <span className="metric-value">{currentWeather.cloud_cover_pct}</span>
               <span className="metric-unit">%</span>
             </div>
-            <span className="metric-meta">Cirrus & Cumulus scatter</span>
+             <span className="metric-meta">{t('rf.cloud_scatter')}</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(0, 240, 255, 0.3)' }}>
@@ -234,7 +234,7 @@ export default function RenewableForecastPage() {
               <span className="metric-value" style={{ color: 'var(--cyan-primary)' }}>{currentWeather.wind_speed_ms}</span>
               <span className="metric-unit">m/s</span>
             </div>
-            <span className="metric-meta">Hub height 100m anemometer</span>
+             <span className="metric-meta">{t('rf.hub_height')}</span>
           </div>
         </div>
       </div>

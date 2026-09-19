@@ -96,27 +96,27 @@ export default function ArchitecturePage() {
           marginTop: 10
         }}>
           <div className="metric-card" style={{ borderColor: 'var(--border-medium)' }}>
-            <span className="metric-label"><Layout size={16} style={{ color: 'var(--cyan-primary)' }} /> Frontend Layer</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>Next.js 14 App Router</div>
-            <span className="metric-meta">Pure Vanilla CSS, Recharts, 15 Locales</span>
+            <span className="metric-label"><Layout size={16} style={{ color: 'var(--cyan-primary)' }} /> {t('arch.layer_frontend')}</span>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_nextjs')}</div>
+            <span className="metric-meta">{t('arch.layer_frontend_desc')}</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'var(--border-amber)' }}>
-            <span className="metric-label"><Server size={16} style={{ color: 'var(--amber-flow)' }} /> Backend API</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>Python FastAPI v0.115</div>
-            <span className="metric-meta">Modular Routers, Live Telemetry Streaming</span>
+            <span className="metric-label"><Server size={16} style={{ color: 'var(--amber-flow)' }} /> {t('arch.layer_backend')}</span>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_fastapi')}</div>
+            <span className="metric-meta">{t('arch.layer_backend_desc')}</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(16, 185, 129, 0.4)' }}>
-            <span className="metric-label"><Cpu size={16} style={{ color: 'var(--green-renew)' }} /> Machine Learning</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>LightGBM & XGBoost</div>
-            <span className="metric-meta">TreeSHAP Explainability & MILP Solver</span>
+            <span className="metric-label"><Cpu size={16} style={{ color: 'var(--green-renew)' }} /> {t('arch.layer_ml')}</span>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_ml_tech')}</div>
+            <span className="metric-meta">{t('arch.layer_ml_desc')}</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(168, 85, 247, 0.4)' }}>
-            <span className="metric-label"><Database size={16} style={{ color: '#a855f7' }} /> Knowledge Engine</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>RAG + Deterministic</div>
-            <span className="metric-meta">Zero External API Keys Needed</span>
+            <span className="metric-label"><Database size={16} style={{ color: '#a855f7' }} /> {t('arch.layer_knowledge')}</span>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_rag_tech')}</div>
+            <span className="metric-meta">{t('arch.layer_knowledge_desc')}</span>
           </div>
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function ArchitecturePage() {
             <ShieldCheck size={20} style={{ color: 'var(--green-renew)' }} />
             {t('arch.integrity_title')}
           </h3>
-          <span className="badge badge-sim">Honest Data Disclosure</span>
+          <span className="badge badge-sim">{t('arch.disclosure_title')}</span>
         </div>
 
         <div className="table-wrapper">

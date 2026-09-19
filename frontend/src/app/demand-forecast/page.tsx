@@ -69,10 +69,10 @@ export default function DemandForecastPage() {
         <MetricCard
           label={t('df.peak_window')}
           value={metrics.peak_window_hours}
-          meta="Stressed Feeder F-02 Window"
+          meta={t('df.peak_meta')}
           icon={Clock}
           variant="red"
-          badgeText="Critical"
+          badgeText={t('df.peak_badge')}
           badgeType="risk"
         />
 
@@ -80,17 +80,17 @@ export default function DemandForecastPage() {
           label={t('df.peak_reduction')}
           value={metrics.curtailment_avoidance_potential_mw}
           unit="MW"
-          meta="Load shifting & BESS capacity"
+          meta={t('df.reduction_meta')}
           icon={Zap}
           variant="green"
-          badgeText="High Value"
+          badgeText={t('df.high_value')}
           badgeType="live"
         />
 
         <MetricCard
-          label="Model R² & MAE"
+          label={t('df.r2_label')}
           value={`R² ${metrics.load_r2_score}`}
-          meta={`MAE: ${metrics.load_mae_mw} MW (XGBoost v3.1)`}
+          meta={`MAE: ${metrics.load_mae_mw} MW (${t('df.model_badge')})`}
           icon={TrendingUp}
           variant="cyan"
         />
@@ -105,10 +105,10 @@ export default function DemandForecastPage() {
               {t('df.chart_title')}
             </h3>
             <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-              Day-ahead load profile showing the evening peak surge (18:00–22:00) against recorded telemetry actuals.
+              {t('df.chart_desc')}
             </p>
           </div>
-          <span className="badge badge-forecast">XGBoost Day-Ahead</span>
+          <span className="badge badge-forecast">{t('df.model_badge')}</span>
         </div>
 
         <div style={{ width: '100%', height: 380, marginTop: 10 }}>
@@ -131,7 +131,7 @@ export default function DemandForecastPage() {
               <Area
                 type="monotone"
                 dataKey="demand_predicted"
-                name="Total Forecast Demand (MW)"
+                name={t('df.chart_forecast')}
                 stroke="#00f0ff"
                 strokeWidth={2.5}
                 fill="rgba(0, 240, 255, 0.09)"
@@ -141,7 +141,7 @@ export default function DemandForecastPage() {
               <Line
                 type="monotone"
                 dataKey="demand_actual"
-                name="Actual Demand (Recorded MW)"
+                name={t('df.chart_actual')}
                 stroke="#10b981"
                 strokeWidth={2.2}
                 strokeDasharray="4 4"
@@ -168,7 +168,7 @@ export default function DemandForecastPage() {
             <div className="metric-val-row">
               <span className="metric-value" style={{ color: 'var(--red-risk)' }}>42%</span>
             </div>
-            <span className="metric-meta">Spikes post 18:00 (HVAC + Cooking)</span>
+             <span className="metric-meta">{t('df.segment_residential_meta')}</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(56, 189, 248, 0.3)' }}>
@@ -176,7 +176,7 @@ export default function DemandForecastPage() {
             <div className="metric-val-row">
               <span className="metric-value" style={{ color: '#38bdf8' }}>26%</span>
             </div>
-            <span className="metric-meta">Office chillers (High shift potential)</span>
+             <span className="metric-meta">{t('df.segment_commercial_meta')}</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(251, 191, 36, 0.3)' }}>
@@ -184,7 +184,7 @@ export default function DemandForecastPage() {
             <div className="metric-val-row">
               <span className="metric-value" style={{ color: 'var(--amber-flow)' }}>20%</span>
             </div>
-            <span className="metric-meta">Municipal water pumping & cold storage</span>
+             <span className="metric-meta">{t('df.segment_industrial_meta')}</span>
           </div>
 
           <div className="metric-card" style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}>
@@ -192,7 +192,7 @@ export default function DemandForecastPage() {
             <div className="metric-val-row">
               <span className="metric-value" style={{ color: 'var(--green-renew)' }}>12%</span>
             </div>
-            <span className="metric-meta">Managed Smart EV Charging Hub</span>
+             <span className="metric-meta">{t('df.segment_ev_meta')}</span>
           </div>
         </div>
       </div>

@@ -104,7 +104,7 @@ export default function StoragePage() {
         </div>
 
         <span className="badge badge-live">
-          <ShieldCheck size={14} /> Software Digital Model — No Hardware Reqd
+          <ShieldCheck size={14} /> {t('bess.software_badge')}
         </span>
       </div>
 
@@ -130,7 +130,7 @@ export default function StoragePage() {
           label={t('bess.fleet_capacity')}
           value="40.0"
           unit="MWh"
-          meta="4 Distributed Nodes"
+          meta={t('bess.fleet_cap_meta')}
           icon={BatteryCharging}
           variant="cyan"
         />
@@ -139,7 +139,7 @@ export default function StoragePage() {
           label={t('bess.fleet_power')}
           value="12.0"
           unit="MW"
-          meta="C-rate 0.3C - 0.5C"
+          meta={t('bess.fleet_pow_meta')}
           icon={Zap}
           variant="amber"
         />
@@ -147,7 +147,7 @@ export default function StoragePage() {
         <MetricCard
           label={t('bess.weighted_soc')}
           value="72.5%"
-          meta="29.0 MWh Energy in Reserve"
+          meta={t('bess.soc_meta')}
           icon={BatteryCharging}
           variant="green"
         />
@@ -155,7 +155,7 @@ export default function StoragePage() {
         <MetricCard
           label={t('bess.response_latency')}
           value="120ms"
-          meta="Inverter Sub-Cycle Trigger"
+          meta={t('bess.latency_meta')}
           icon={Clock}
           variant="cyan"
         />
@@ -166,9 +166,9 @@ export default function StoragePage() {
         <div className="card-header">
           <h3 className="card-title">
             <BatteryCharging size={20} style={{ color: 'var(--green-renew)' }} />
-            Active Community Storage Units
+            {t('bess.units_title')}
           </h3>
-          <span className="badge badge-live">4 Distributed BESS Units Online</span>
+          <span className="badge badge-live">{t('bess.units_badge')}</span>
         </div>
 
         <div className="grid-2">
@@ -188,7 +188,7 @@ export default function StoragePage() {
                   <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--green-renew)' }}>
                     {b.current_soc_pct}%
                   </div>
-                  <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>State of Charge</span>
+                  <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>{t('bess.soc_label')}</span>
                 </div>
               </div>
 
@@ -204,16 +204,16 @@ export default function StoragePage() {
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, fontSize: '0.82rem', marginBottom: 14 }}>
                 <div>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Capacity:</span> <strong>{b.capacity_mwh} MWh</strong>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{t('bess.capacity')}:</span> <strong>{b.capacity_mwh} MWh</strong>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Max Power:</span> <strong>{b.max_power_mw} MW</strong>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{t('bess.max_power')}:</span> <strong>{b.max_power_mw} MW</strong>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Chemistry:</span> <span>{b.chemistry}</span>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{t('bess.chemistry')}:</span> <span>{b.chemistry}</span>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Cycle Life:</span> <strong>{b.cycle_life_remaining_pct}%</strong>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{t('bess.cycle_life')}:</span> <strong>{b.cycle_life_remaining_pct}%</strong>
                 </div>
               </div>
 
@@ -224,21 +224,21 @@ export default function StoragePage() {
                   className="btn btn-secondary btn-sm"
                   style={{ flex: 1, fontSize: '0.78rem' }}
                 >
-                  ⚡ Discharge
+                  {t('bess.override_discharge')}
                 </button>
                 <button
                   onClick={() => handleManualOverride(b.id, 'CHARGE')}
                   className="btn btn-secondary btn-sm"
                   style={{ flex: 1, fontSize: '0.78rem' }}
                 >
-                  📥 Charge
+                  {t('bess.override_charge')}
                 </button>
                 <button
                   onClick={() => handleManualOverride(b.id, 'STANDBY')}
                   className="btn btn-secondary btn-sm"
                   style={{ flex: 1, fontSize: '0.78rem' }}
                 >
-                  ⏸ Standby
+                  {t('bess.override_standby')}
                 </button>
               </div>
             </div>
@@ -253,17 +253,17 @@ export default function StoragePage() {
             <Clock size={20} style={{ color: 'var(--amber-flow)' }} />
             {t('bess.schedule_title')}
           </h3>
-          <span className="badge badge-sim">Dynamic MILP Dispatch</span>
+          <span className="badge badge-sim">{t('bess.schedule_badge')}</span>
         </div>
 
         <div className="table-wrapper">
           <table className="custom-table">
             <thead>
               <tr>
-                <th>Time Window</th>
-                <th>Mode</th>
-                <th>Target Fleet Power</th>
-                <th>Operational Rationale</th>
+                <th>{t('bess.col_time')}</th>
+                <th>{t('bess.col_mode')}</th>
+                <th>{t('bess.col_power')}</th>
+                <th>{t('bess.col_reason')}</th>
               </tr>
             </thead>
             <tbody>
@@ -277,7 +277,7 @@ export default function StoragePage() {
                   </td>
                   <td>
                     <strong style={{ color: slot.power_mw > 0 ? 'var(--green-renew)' : (slot.power_mw < 0 ? 'var(--amber-flow)' : 'var(--text-secondary)') }}>
-                      {slot.power_mw > 0 ? `+${slot.power_mw} MW (Discharge)` : (slot.power_mw < 0 ? `${slot.power_mw} MW (Charge)` : '0.0 MW (Reserve)')}
+                      {slot.power_mw > 0 ? `+${slot.power_mw} MW (${t('bess.mode_discharge')})` : (slot.power_mw < 0 ? `${slot.power_mw} MW (${t('bess.mode_charge')})` : `0.0 MW (${t('bess.mode_reserve')})}`)}
                     </strong>
                   </td>
                   <td style={{ color: 'var(--text-secondary)' }}>{slot.reason}</td>

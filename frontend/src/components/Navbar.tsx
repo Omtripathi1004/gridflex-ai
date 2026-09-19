@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import { checkBackendHealth } from '../lib/api';
 import { 
   Zap, 
@@ -21,12 +22,15 @@ import {
   Layers, 
   HelpCircle, 
   MessageSquare, 
-  Building2 
+  Building2,
+  User as UserIcon,
+  KeyRound
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const { language, setLanguage, t, supportedLanguages, currentLanguageMeta } = useLanguage();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
 
@@ -53,6 +57,7 @@ export const Navbar: React.FC = () => {
     { href: '/judge-mode', label: t('nav.judge_mode'), icon: HelpCircle },
     { href: '/copilot', label: t('nav.copilot'), icon: MessageSquare },
     { href: '/architecture', label: t('nav.architecture'), icon: Layers },
+    { href: '/login', label: t('nav.login', 'Sign In / Portal'), icon: KeyRound },
   ];
 
   return (
@@ -112,6 +117,49 @@ export const Navbar: React.FC = () => {
             {backendOnline ? t('badge.api_connected') : t('badge.api_offline')}
           </div>
 
+          {/* User Auth Profile Pill / Login */}
+          {user ? (
+            <Link
+              href="/login"
+              className="desktop-only"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '5px 12px',
+                borderRadius: 20,
+                background: 'rgba(0, 240, 255, 0.12)',
+                border: '1px solid var(--border-medium)',
+                color: 'var(--cyan-primary)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                textDecoration: 'none'
+              }}
+              title={`Signed in as ${user.full_name} (${user.role})`}
+            >
+              <UserIcon size={14} />
+              <span>{user.full_name.split(' ')[0]}</span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                ({user.role.includes('Judge') ? 'Judge' : user.role.includes('Operator') ? 'Operator' : 'User'})
+              </span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="desktop-only btn btn-sm btn-secondary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: '0.8rem',
+                padding: '5px 12px'
+              }}
+            >
+              <KeyRound size={14} color="var(--amber-flow)" />
+              <span>{t('nav.login', 'Sign In')}</span>
+            </Link>
+          )}
+
           {/* 15-Language Selector */}
           <div className="lang-selector-wrapper">
             <Globe size={16} style={{ position: 'absolute', left: 10, pointerEvents: 'none', color: 'var(--cyan-primary)' }} />
@@ -120,7 +168,7 @@ export const Navbar: React.FC = () => {
               onChange={(e) => setLanguage(e.target.value as any)}
               className="lang-select"
               style={{ paddingLeft: 32 }}
-              aria-label="Select Language (15 Languages Supported)"
+              aria-label={t('nav.lang_label')}
             >
               {supportedLanguages.map((lang) => (
                 <option key={lang.code} value={lang.code}>
@@ -141,7 +189,7 @@ export const Navbar: React.FC = () => {
               display: 'flex',
               padding: 6,
             }}
-            aria-label="Toggle navigation menu"
+            aria-label={t('nav.toggle_menu')}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

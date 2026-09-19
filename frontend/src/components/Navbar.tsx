@@ -24,7 +24,12 @@ import {
   HelpCircle, 
   KeyRound,
   User as UserIcon,
-  ChevronDown
+  ChevronDown,
+  Eye,
+  Map,
+  Scale,
+  MessageSquare,
+  Radio
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -77,6 +82,17 @@ export const Navbar: React.FC = () => {
         { href: '/resilience', label: t('nav.resilience'), icon: ShieldCheck },
         { href: '/explainable-ai', label: t('nav.explainable_ai'), icon: Cpu },
         { href: '/architecture', label: t('nav.architecture'), icon: Layers }
+      ]
+    },
+    {
+      key: 'engines',
+      label: 'AI Engines',
+      items: [
+        { href: '/sky-vision', label: 'SkyVision Radar', icon: Eye },
+        { href: '/self-healing', label: 'Self-Healing Grid', icon: Radio },
+        { href: '/spatial-twin', label: 'Spatial Twin', icon: Map },
+        { href: '/tariff-engine', label: 'Tariff Engine', icon: Scale },
+        { href: '/incident-copilot', label: 'Incident Co-pilot', icon: MessageSquare }
       ]
     }
   ];

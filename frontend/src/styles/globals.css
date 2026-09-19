@@ -602,3 +602,127 @@ input[type="range"]::-webkit-slider-thumb:hover {
 @media (max-width: 480px) {
   .btn { width: 100%; }
 }
+
+/* =========================================================================
+   MICRO-ANIMATIONS — Enhanced UX layer
+   ========================================================================= */
+
+/* Slide-in for cards on page load */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger delay for grid children */
+.grid-4 > *:nth-child(1) { animation-delay: 0ms; }
+.grid-4 > *:nth-child(2) { animation-delay: 60ms; }
+.grid-4 > *:nth-child(3) { animation-delay: 120ms; }
+.grid-4 > *:nth-child(4) { animation-delay: 180ms; }
+.grid-3 > *:nth-child(1) { animation-delay: 0ms; }
+.grid-3 > *:nth-child(2) { animation-delay: 80ms; }
+.grid-3 > *:nth-child(3) { animation-delay: 160ms; }
+
+/* Shimmer glow for key metric values */
+@keyframes shimmer-glow {
+  0% { text-shadow: none; }
+  50% { text-shadow: 0 0 14px currentColor; }
+  100% { text-shadow: none; }
+}
+
+.metric-value {
+  animation: shimmer-glow 3.5s ease-in-out infinite;
+}
+
+/* Floating pulse for live badge dot */
+@keyframes float-pulse {
+  0%, 100% {
+    box-shadow: 0 0 6px currentColor;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 14px currentColor, 0 0 28px currentColor;
+    transform: scale(1.15);
+  }
+}
+
+.badge-live::before,
+.badge-live .pulse-dot {
+  animation: float-pulse 2s ease-in-out infinite;
+}
+
+/* Chart container fade-in */
+@keyframes chartFadeIn {
+  from { opacity: 0; transform: scaleY(0.96); }
+  to   { opacity: 1; transform: scaleY(1); }
+}
+
+.recharts-responsive-container {
+  animation: chartFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Hover lift for interactive cards */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 240, 255, 0.1);
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+/* Glowing border on metric card focus areas */
+.metric-card-inner:focus-within {
+  outline: 2px solid rgba(0, 240, 255, 0.4);
+  outline-offset: 2px;
+}
+
+/* Skeleton loading pulse */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.skeleton {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* Scan line animation for brand icon */
+@keyframes scan-line {
+  0% { transform: translateY(-100%); opacity: 0.6; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.brand-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, transparent 30%, rgba(0, 240, 255, 0.3) 50%, transparent 70%);
+  animation: scan-line 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Spinner for loading states */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 240, 255, 0.2);
+  border-top-color: var(--cyan-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}

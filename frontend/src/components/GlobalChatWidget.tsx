@@ -13,9 +13,14 @@ import {
   User, 
   FileText,
   Copy,
-  Check
+  Check,
+  Key,
+  Settings,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { parseMarkdown } from '../lib/markdown';
 
 interface Message {
   id: string;
@@ -46,6 +51,8 @@ export const GlobalChatWidget: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -94,7 +101,8 @@ export const GlobalChatWidget: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: textToSend,
-          conversation_history: historyPayload
+          conversation_history: historyPayload,
+          api_key: apiKey.trim() || undefined
         })
       });
 
@@ -255,7 +263,7 @@ export const GlobalChatWidget: React.FC = () => {
                   />
                 </div>
                 <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                  High-Capacity RAG & ChatGPT Engine
+                  Contextual RAG Engine • Zero API key needed
                 </div>
               </div>
             </div>
@@ -283,6 +291,56 @@ export const GlobalChatWidget: React.FC = () => {
                 <X size={18} />
               </button>
             </div>
+          </div>
+
+          {/* API Key Collapsible */}
+          <div style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+            <button
+              onClick={() => setShowApiKey(v => !v)}
+              style={{
+                width: '100%',
+                background: 'rgba(0,240,255,0.04)',
+                border: 'none',
+                padding: '6px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                color: apiKey ? 'var(--green-optimal)' : 'var(--text-secondary)',
+                fontSize: '0.72rem',
+                cursor: 'pointer',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Key size={12} />
+                {apiKey ? '🟢 Gemini API Key Active (Live LLM Mode)' : '🔑 Add Gemini API Key for live responses (optional)'}
+              </span>
+              {showApiKey ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            </button>
+            {showApiKey && (
+              <div style={{ padding: '8px 14px', background: 'rgba(0,0,0,0.3)' }}>
+                <input
+                  type="password"
+                  value={apiKey}
+                  onChange={e => setApiKey(e.target.value)}
+                  placeholder="AIza... (Gemini API Key)"
+                  style={{
+                    width: '100%',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: `1px solid ${apiKey ? 'var(--green-optimal)' : 'var(--border-subtle)'}`,
+                    borderRadius: 6,
+                    padding: '6px 10px',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.8rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+                <p style={{ fontSize: '0.68rem', color: 'var(--text-tertiary)', marginTop: 4 }}>
+                  Key is used only client-side for this session and never stored.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Prompt Chips */}
@@ -378,10 +436,13 @@ export const GlobalChatWidget: React.FC = () => {
                         color: 'var(--text-primary)',
                         fontSize: '0.86rem',
                         lineHeight: 1.55,
-                        whiteSpace: 'pre-wrap',
                       }}
                     >
-                      {m.text}
+                      {isUser ? (
+                        <span style={{ whiteSpace: 'pre-wrap' }}>{m.text}</span>
+                      ) : (
+                        <div dangerouslySetInnerHTML={{ __html: parseMarkdown(m.text) }} />
+                      )}
 
                       {/* Attached Knowledge References */}
                       {m.references && m.references.length > 0 && (

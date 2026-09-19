@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SupportedLanguage, SUPPORTED_LANGUAGES, translations, LanguageMeta } from '../i18n/translations';
+import { COMMON_GLOSSARY } from '../i18n/glossary';
 
 interface LanguageContextType {
   language: SupportedLanguage;
@@ -43,15 +44,30 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language, dir]);
 
   const t = (key: string, fallback?: string): string => {
+    // 1. Direct translation key lookup
     const langDict = translations[language];
     if (langDict && langDict[key]) {
       return langDict[key];
     }
-    // Fallback to English
+
+    // 2. Glossary direct lookup for key or fallback
+    const glossary = COMMON_GLOSSARY[language];
+    if (glossary) {
+      if (glossary[key]) return glossary[key];
+      if (fallback && glossary[fallback]) return glossary[fallback];
+    }
+
+    // 3. Fallback to English dictionary
     const enDict = translations['en'];
     if (enDict && enDict[key]) {
+      // If user selected non-English language, try glossary on the English translation value
+      if (language !== 'en' && glossary && glossary[enDict[key]]) {
+        return glossary[enDict[key]];
+      }
       return enDict[key];
     }
+
+    // 4. Return fallback or key
     return fallback || key;
   };
 

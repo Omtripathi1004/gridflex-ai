@@ -298,100 +298,256 @@ export const Navbar: React.FC = () => {
               </select>
             </div>
 
-            {/* Mobile Menu Toggle */}
+            {/* Dedicated Sidewise 3-Dot Quick Navigator Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                display: 'flex',
-                padding: 6,
-              }}
-              aria-label={t('nav.toggle_menu')}
-            >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Drawer */}
-        {mobileMenuOpen && (
-          <div
-            style={{
-              position: 'fixed',
-              top: 'var(--header-height)',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'rgba(7, 11, 20, 0.98)',
-              zIndex: 999,
-              padding: '20px',
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 8,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => { setTrustCenterOpen(true); setMobileMenuOpen(false); }}
-              className="btn btn-secondary"
-              style={{ justifyContent: 'center', marginBottom: 8 }}
-            >
-              <ShieldCheck size={16} style={{ color: '#10b981' }} /> Data Trust Center
-            </button>
-
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
+              className="btn btn-secondary btn-sm"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 12,
-                padding: '10px 14px',
-                borderRadius: 'var(--radius-md)',
-                background: pathname === '/' ? 'rgba(0, 240, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
-                color: pathname === '/' ? 'var(--cyan-primary)' : 'var(--text-primary)',
-                fontWeight: pathname === '/' ? 700 : 500,
-                fontSize: '0.92rem',
-                border: pathname === '/' ? '1px solid var(--border-medium)' : '1px solid transparent',
+                gap: 6,
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-full)',
+                border: mobileMenuOpen ? '1px solid var(--cyan-primary)' : '1px solid var(--border-medium)',
+                background: mobileMenuOpen ? 'rgba(0, 240, 255, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                color: 'var(--text-primary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
               }}
+              title="All Pages & Modules Navigator"
+              aria-label={t('nav.toggle_menu', 'Toggle Navigation Drawer')}
             >
-              <Zap size={16} />
-              <span>Overview</span>
-            </Link>
+              <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+                <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--cyan-primary)' }} />
+                <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--amber-flow)' }} />
+                <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--pink-accent)' }} />
+              </div>
+              <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>Menu</span>
+            </button>
+          </div>
+        </div>
+      </header>
 
-            {navGroups.flatMap(g => g.items).map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
+      {/* Full-Screen Side Navigation Drawer (Mounted outside header to bypass backdrop-filter bug) */}
+      {mobileMenuOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            background: 'rgba(3, 7, 18, 0.75)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)'
+          }}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            style={{
+              width: 'min(440px, 94vw)',
+              height: '100%',
+              background: 'linear-gradient(180deg, #0d1424 0%, #070b14 100%)',
+              borderLeft: '1px solid rgba(0, 240, 255, 0.25)',
+              boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.7)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Drawer Header */}
+            <div style={{ 
+              padding: '20px 24px', 
+              borderBottom: '1px solid var(--border-subtle)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'rgba(0, 240, 255, 0.04)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background: 'linear-gradient(135deg, #00f0ff 0%, #a855f7 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#070b14'
+                }}>
+                  <Zap size={18} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0 }}>GridFlex AI</h3>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Master Platform Directory</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '50%',
+                  width: 32,
+                  height: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer'
+                }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Quick Action Shortcuts */}
+            <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <Link
+                href="/judge-mode"
+                onClick={() => setMobileMenuOpen(false)}
+                className="btn btn-amber btn-sm"
+                style={{ justifyContent: 'center', fontSize: '0.8rem' }}
+              >
+                🎯 Judge Tour
+              </Link>
+              <button
+                type="button"
+                onClick={() => { setTrustCenterOpen(true); setMobileMenuOpen(false); }}
+                className="btn btn-emerald btn-sm"
+                style={{ justifyContent: 'center', fontSize: '0.8rem' }}
+              >
+                🛡️ Trust Center
+              </button>
+            </div>
+
+            {/* Scrollable Nav Groups */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Primary Direct Links */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  href="/"
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 12,
+                    gap: 8,
                     padding: '10px 14px',
                     borderRadius: 'var(--radius-md)',
-                    background: isActive ? 'rgba(0, 240, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
-                    color: isActive ? 'var(--cyan-primary)' : 'var(--text-primary)',
-                    fontWeight: isActive ? 700 : 500,
-                    fontSize: '0.92rem',
-                    border: isActive ? '1px solid var(--border-medium)' : '1px solid transparent',
+                    background: pathname === '/' ? 'rgba(0, 240, 255, 0.15)' : 'rgba(255, 255, 255, 0.04)',
+                    color: pathname === '/' ? 'var(--cyan-primary)' : 'var(--text-primary)',
+                    fontWeight: 600,
+                    fontSize: '0.86rem',
+                    border: pathname === '/' ? '1px solid var(--cyan-primary)' : '1px solid var(--border-subtle)'
                   }}
                 >
-                  <Icon size={16} />
-                  <span>{item.label}</span>
+                  <Zap size={15} color="var(--cyan-primary)" />
+                  <span>Overview</span>
                 </Link>
-              );
-            })}
+
+                <Link
+                  href="/about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md)',
+                    background: pathname === '/about' ? 'rgba(168, 85, 247, 0.15)' : 'rgba(255, 255, 255, 0.04)',
+                    color: pathname === '/about' ? '#c084fc' : 'var(--text-primary)',
+                    fontWeight: 600,
+                    fontSize: '0.86rem',
+                    border: pathname === '/about' ? '1px solid #a855f7' : '1px solid var(--border-subtle)'
+                  }}
+                >
+                  <HelpCircle size={15} color="#c084fc" />
+                  <span>About & Guide</span>
+                </Link>
+              </div>
+
+              {/* Categorized Modules */}
+              {navGroups.map((group) => (
+                <div key={group.key}>
+                  <div style={{ 
+                    fontSize: '0.72rem', 
+                    fontWeight: 700, 
+                    textTransform: 'uppercase', 
+                    letterSpacing: '0.08em',
+                    color: 'var(--text-tertiary)',
+                    marginBottom: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <span>{group.label}</span>
+                    <span style={{ fontSize: '0.68rem', opacity: 0.6 }}>{group.items.length} Modules</span>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '10px 14px',
+                            borderRadius: 'var(--radius-md)',
+                            background: isActive ? 'linear-gradient(90deg, rgba(0, 240, 255, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)' : 'rgba(255, 255, 255, 0.03)',
+                            color: isActive ? 'var(--cyan-primary)' : 'var(--text-primary)',
+                            fontWeight: isActive ? 700 : 500,
+                            fontSize: '0.88rem',
+                            border: isActive ? '1px solid var(--cyan-primary)' : '1px solid transparent',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <Icon size={16} style={{ color: isActive ? 'var(--cyan-primary)' : 'var(--text-secondary)' }} />
+                            <span>{item.label}</span>
+                          </div>
+                          {isActive && <span style={{ fontSize: '0.7rem', color: 'var(--cyan-primary)' }}>● Active</span>}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* Login / Portal Link in Drawer */}
+              <div style={{ marginTop: 'auto', paddingTop: 16, borderTop: '1px solid var(--border-subtle)' }}>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    padding: '12px',
+                    borderRadius: 'var(--radius-md)',
+                    background: 'rgba(251, 191, 36, 0.12)',
+                    border: '1px solid var(--border-amber)',
+                    color: 'var(--amber-flow)',
+                    fontWeight: 700,
+                    fontSize: '0.88rem'
+                  }}
+                >
+                  <KeyRound size={16} />
+                  <span>{user ? `Logged in: ${user.full_name}` : 'Operator Portal & Instant Demo Login'}</span>
+                </Link>
+              </div>
+            </div>
           </div>
-        )}
-      </header>
+        </div>
+      )}
 
       {/* Data Trust Center Modal */}
       <DataTrustCenterModal

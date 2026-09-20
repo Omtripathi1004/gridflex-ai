@@ -19,23 +19,7 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // Phase 1 route consolidations — all old routes redirect to closest new equivalent
-      { source: '/command-center', destination: '/neighbourhood', permanent: false },
-      { source: '/renewable-forecast', destination: '/neighbourhood', permanent: false },
-      { source: '/demand-forecast', destination: '/neighbourhood', permanent: false },
-      { source: '/resilience', destination: '/neighbourhood', permanent: false },
-      { source: '/flexibility', destination: '/digital-twin', permanent: false },
-      { source: '/storage', destination: '/digital-twin', permanent: false },
-      { source: '/p2p', destination: '/affordability', permanent: false },
-      { source: '/explainable-ai', destination: '/validation', permanent: false },
-      { source: '/architecture', destination: '/validation', permanent: false },
-      { source: '/about', destination: '/validation', permanent: false },
-      { source: '/sky-vision', destination: '/neighbourhood', permanent: false },
-      { source: '/self-healing', destination: '/discom', permanent: false },
-      { source: '/spatial-twin', destination: '/digital-twin', permanent: false },
-      { source: '/tariff-engine', destination: '/affordability', permanent: false },
-      { source: '/incident-copilot', destination: '/', permanent: false },
-      { source: '/copilot', destination: '/', permanent: false },
+      // Redirects will be enabled as new consolidated routes are built in Phases 2 and 3
     ];
   },
 };

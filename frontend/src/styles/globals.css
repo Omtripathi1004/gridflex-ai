@@ -1174,3 +1174,33 @@ input[type="range"]::-webkit-slider-thumb:hover {
 /* green-optimal alias for auth success states */
 :root { --green-optimal: #10b981; --red-alert: #ef4444; }
 
+/* Digital Twin Responsive Ordering (Mobile: header, presets, results summary, inputs, chart, recommendation) */
+@media (min-width: 900px) {
+  .twin-layout-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "inputs results"
+      "inputs recommendation"
+      "chart  chart";
+    gap: 24px;
+    align-items: start;
+  }
+  .twin-order-inputs { grid-area: inputs; }
+  .twin-order-results { grid-area: results; }
+  .twin-order-recommendation { grid-area: recommendation; }
+  .twin-order-chart { grid-area: chart; }
+}
+
+@media (max-width: 899px) {
+  .twin-layout-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .twin-order-results { order: 1; }
+  .twin-order-inputs { order: 2; }
+  .twin-order-chart { order: 3; }
+  .twin-order-recommendation { order: 4; }
+}
+

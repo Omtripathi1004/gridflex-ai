@@ -1,37 +1,12 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { runDigitalTwinSimulation } from '../../lib/api';
-import { MetricCard } from '../../components/MetricCard';
-import { ProvenanceBadge } from '../../components/ProvenanceBadge';
-import { 
-  Sliders, 
-  Sparkles, 
-  RotateCcw, 
-  ShieldAlert, 
-  ShieldCheck, 
-  TrendingDown, 
-  Sun, 
-  Wind, 
-  Zap, 
-  BatteryCharging,
-  CloudLightning,
-  Flame,
-  CheckCircle2,
-  Share2,
-  AlertTriangle,
-  Activity,
-  Layers,
-  Copy,
-  ExternalLink,
-  Cpu
-} from 'lucide-react';
 import {
   ResponsiveContainer,
   ComposedChart,
-  Area,
   Line,
   XAxis,
   YAxis,
@@ -42,10 +17,10 @@ import {
 } from 'recharts';
 
 export default function DigitalTwinPage() {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
   const [searchParams] = useSearchParams();
 
-  // F11: Initialize slider states from URL permalink if present
+  // Initialize slider states from URL parameters if present
   const initSolar = searchParams.get('solar') ? parseFloat(searchParams.get('solar')!) / 100 : 1.0;
   const initWind = searchParams.get('wind') ? parseFloat(searchParams.get('wind')!) / 100 : 1.0;
   const initDemand = searchParams.get('demand') ? parseFloat(searchParams.get('demand')!) / 100 : 1.0;
@@ -53,33 +28,22 @@ export default function DigitalTwinPage() {
   const initFlex = searchParams.get('flex') ? parseFloat(searchParams.get('flex')!) : 100.0;
   const initWx = searchParams.get('wx') || 'NORMAL';
 
-  // Slider States
   const [solarMult, setSolarMult] = useState<number>(initSolar);
   const [windMult, setWindMult] = useState<number>(initWind);
   const [demandMult, setDemandMult] = useState<number>(initDemand);
   const [batteryPct, setBatteryPct] = useState<number>(initBess);
   const [flexPct, setFlexPct] = useState<number>(initFlex);
   const [weather, setWeather] = useState<string>(initWx);
+  const [activePreset, setActivePreset] = useState<'evening_gap' | 'solar_surge' | 'heatwave' | null>(null);
 
-  // F4: N-1 Contingency Trip State
-  const [trippedAsset, setTrippedAsset] = useState<string | null>(null);
-  const [tripLog, setTripLog] = useState<string>('');
-
-  // Simulation Results
   const [simResult, setSimResult] = useState<any>(null);
-  const [copiedLink, setCopiedLink] = useState(false);
 
   const executeSimulation = async () => {
-    // Incorporate N-1 asset trip penalties
-    const effectiveBess = trippedAsset === 'BESS-01' ? Math.max(0, batteryPct - 25) : batteryPct;
-    const effectiveSolar = trippedAsset === 'SOLAR-01' ? Math.max(0, solarMult * 0.70) : solarMult;
-    const effectiveDemand = trippedAsset === 'FEEDER-02' ? demandMult * 1.15 : demandMult;
-
     const res = await runDigitalTwinSimulation({
-      solar_multiplier: effectiveSolar,
+      solar_multiplier: solarMult,
       wind_multiplier: windMult,
-      demand_multiplier: effectiveDemand,
-      battery_capacity_pct: effectiveBess,
+      demand_multiplier: demandMult,
+      battery_capacity_pct: batteryPct,
       flexible_load_pct: flexPct,
       weather_severity: weather
     });
@@ -90,12 +54,10 @@ export default function DigitalTwinPage() {
 
   useEffect(() => {
     executeSimulation();
-  }, [solarMult, windMult, demandMult, batteryPct, flexPct, weather, trippedAsset]);
+  }, [solarMult, windMult, demandMult, batteryPct, flexPct, weather]);
 
-  // Presets & Real Analog Days (F1)
-  const applyPreset = (preset: 'evening_gap' | 'solar_surge' | 'heatwave' | 'monsoon' | 'normal') => {
-    setTrippedAsset(null);
-    setTripLog('');
+  const applyPreset = (preset: 'evening_gap' | 'solar_surge' | 'heatwave') => {
+    setActivePreset(preset);
     if (preset === 'evening_gap') {
       setSolarMult(0.65);
       setWindMult(0.9);
@@ -117,88 +79,22 @@ export default function DigitalTwinPage() {
       setBatteryPct(70);
       setFlexPct(75);
       setWeather('HEATWAVE');
-    } else if (preset === 'monsoon') {
-      setSolarMult(0.35);
-      setWindMult(1.4);
-      setDemandMult(1.05);
-      setBatteryPct(80);
-      setFlexPct(80);
-      setWeather('STORM_FRONT');
-    } else {
-      setSolarMult(1.0);
-      setWindMult(1.0);
-      setDemandMult(1.0);
-      setBatteryPct(100);
-      setFlexPct(100);
-      setWeather('NORMAL');
     }
   };
 
-  // Reset Sliders
   const resetSliders = () => {
+    setActivePreset(null);
     setSolarMult(1.0);
     setWindMult(1.0);
     setDemandMult(1.0);
     setBatteryPct(100);
     setFlexPct(100);
     setWeather('NORMAL');
-    setTrippedAsset(null);
-    setTripLog('');
   };
 
-  // F4: N-1 Contingency Trigger
-  const triggerN1Trip = (asset: 'BESS-01' | 'SOLAR-01' | 'FEEDER-02') => {
-    if (trippedAsset === asset) {
-      setTrippedAsset(null);
-      setTripLog('N-1 contingency cleared. Substation restored to nominal dispatch.');
-    } else {
-      setTrippedAsset(asset);
-      if (asset === 'BESS-01') {
-        setTripLog('⚠️ ALERT: Substation BESS-01 (5 MW) TRIPPED offline! GridFlex AI instantly invoked emergency 2.5 MW demand response; District Hospital protected with zero interruption.');
-      } else if (asset === 'SOLAR-01') {
-        setTripLog('⚠️ ALERT: North 15 MW Solar Collector TRIPPED! BESS-02 & BESS-03 ramped to 8.5 MW discharge within 120 ms.');
-      } else {
-        setTripLog('⚠️ ALERT: Commercial Feeder F-02 overloaded! Substation automated islanding & load shedding engaged.');
-      }
-    }
-    setTimeout(() => setTripLog(''), 7000);
-  };
-
-  // F11: Share Scenario to X & Copy Permalink
-  const getScenarioPermalink = () => {
-    if (typeof window === 'undefined') return '';
-    const qs = new URLSearchParams({
-      solar: (solarMult * 100).toFixed(0),
-      wind: (windMult * 100).toFixed(0),
-      demand: (demandMult * 100).toFixed(0),
-      bess: batteryPct.toString(),
-      flex: flexPct.toString(),
-      wx: weather
-    });
-    return `${window.location.origin}/digital-twin?${qs}`;
-  };
-
-  const shareToX = () => {
-    const permalink = getScenarioPermalink();
-    const text = `Simulated 64.8 MW Substation stress scenario on GridFlex AI: Solar ${Math.round(solarMult*100)}%, Demand ${Math.round(demandMult*100)}%. Net Deficit: ${summary.peak_deficit_mw} MW mitigated to 0h blackout!`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(permalink)}&hashtags=GridFlexAI,EnergyTransition,SmartGrid`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  const copyPermalink = () => {
-    navigator.clipboard.writeText(getScenarioPermalink());
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 3000);
-  };
-
-  // Base Summary
+  // Base Summary calculations
   const baseDeficit = Number((18.2 * demandMult - (solarMult * 8.0 + windMult * 4.0)).toFixed(1));
   const peakDeficit = Math.max(0, baseDeficit);
-
-  // F3: Probabilistic Risk Fan Calculation (Monte Carlo error model)
-  const shortfallProbability = Math.min(99, Math.max(2, Math.round(
-    ((demandMult * 1.2 - (solarMult * 0.7 + windMult * 0.3) * (batteryPct / 100)) * 45) + (weather === 'HEATWAVE' ? 25 : weather === 'STORM_FRONT' ? 15 : 0)
-  )));
 
   const summary = simResult?.summary || {
     total_daily_generation_mwh: Number((1240.5 * (solarMult * 0.7 + windMult * 0.3)).toFixed(1)),
@@ -207,470 +103,585 @@ export default function DigitalTwinPage() {
     peak_deficit_mw: peakDeficit,
     shortage_hours_unmitigated: 4,
     shortage_hours_mitigated: peakDeficit > 22 ? 1 : 0,
-    risk_classification: peakDeficit > 20 ? "Elevated Deficit Risk" : "Stable Operating Envelope",
+    risk_classification: peakDeficit > 20 ? (language === 'hi' ? 'उच्च घाटा जोखिम' : 'Elevated deficit risk') : (language === 'hi' ? 'स्थिर परिचालन' : 'Stable operating envelope'),
     composite_resilience_score: Math.max(45, Math.min(98, Math.round(80.7 - (demandMult - 1.0) * 20 + (solarMult - 1.0) * 10 - (100 - batteryPct) * 0.15))),
-    recommended_operational_action: `Schedule BESS evening discharge (${(batteryPct * 0.1).toFixed(1)} MW) and shift ${(flexPct * 0.045).toFixed(1)} MW commercial HVAC loads to solar crest.`
+    recommended_operational_action: language === 'hi'
+      ? `शाम के समय बैटरी से ${(batteryPct * 0.1).toFixed(1)} MW बिजली की आपूर्ति करें और सौर उत्पादन चरम पर होने के दौरान ${(flexPct * 0.045).toFixed(1)} MW व्यावसायिक एसी लोड को स्थानांतरित करें।`
+      : `Schedule BESS evening discharge of ${(batteryPct * 0.1).toFixed(1)} MW and shift ${(flexPct * 0.045).toFixed(1)} MW of commercial cooling load to the midday solar peak.`
   };
 
-  // F3: 24h curve with P10/P50/P90 error bands & unmitigated vs mitigated overlay
+  const shortageHoursEliminated = Math.max(0, summary.shortage_hours_unmitigated - summary.shortage_hours_mitigated);
+
+  // 24-hour simulation curve
   const curve = Array.from({ length: 24 }, (_, h) => {
     const solar = (h >= 6 && h <= 18) ? Math.sin(Math.PI * (h - 6) / 12) * 52.0 * solarMult : 0;
     const wind = (16.0 + 5.0 * Math.cos(h / 3.8)) * windMult;
     const demand = (45.0 + 18.0 * Math.exp(-Math.pow(h - 10, 2) / 6) + 26.0 * Math.exp(-Math.pow(h - 20, 2) / 8)) * demandMult;
     const unmitigatedBalance = Number((solar + wind - demand).toFixed(2));
     
-    // GridFlex mitigation via BESS and flexible load
     const bessDischarge = (h >= 18 && h <= 21) ? Math.min(demand - solar - wind, 6.5 * (batteryPct / 100)) : 0;
     const loadShift = (h >= 18 && h <= 21) ? 3.5 * (flexPct / 100) : ((h >= 11 && h <= 14) ? -3.5 * (flexPct / 100) : 0);
     const mitigatedBalance = Number((solar + wind + bessDischarge - (demand - loadShift)).toFixed(2));
 
-    // Uncertainty fan
     const sigma = 2.5 + Math.abs(solar * 0.12);
     const p10 = Number((mitigatedBalance - 1.645 * sigma).toFixed(2));
     const p90 = Number((mitigatedBalance + 1.645 * sigma).toFixed(2));
 
     return {
       hour: `${h.toString().padStart(2, '0')}:00`,
-      generation: Number((solar + wind).toFixed(2)),
-      demand: Number(demand.toFixed(2)),
       unmitigated_balance: unmitigatedBalance,
       mitigated_balance: mitigatedBalance,
       p10_lower: p10,
-      p90_upper: p90,
-      shortage_zone: unmitigatedBalance < 0 ? unmitigatedBalance : 0
+      p90_upper: p90
     };
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Page Header with High-Contrast Themed Badges */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14 }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
-            <span className="badge badge-live" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)', border: '1px solid var(--cyan-primary)' }}>
-              <Sliders size={14} style={{ marginRight: 4 }} />
-              Physics-Constrained Digital Twin
-            </span>
-            <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--gold-accent)', border: '1px solid var(--gold-accent)' }}>
-              33/11kV Substation Model
-            </span>
-            <ProvenanceBadge classification="scaled_real" sourceName="Calibrated vs Grid-India PSP (MAE: 1.15 MW)" mode="cached" />
-          </div>
-          <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: 6 }}>
-            <span className="text-gradient-cyan">Digital Twin</span> Substation <span className="text-gradient-gold">Grid Simulator</span>
-          </h1>
-          <p style={{ maxWidth: 840, fontSize: '0.96rem', color: 'var(--text-secondary)' }}>
-            Physics-constrained what-if scenario engine calibrated against real 64.8 MW Mahadevapura substation benchmark data with sub-cycle contingency stress testing.
-          </p>
-        </div>
-
-        {/* Action Controls: Presets, Share to X, Reset */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-          <Link to="/explainable-ai" className="btn btn-purple btn-sm">
-            <Cpu size={13} /> XAI Rationale
-          </Link>
-          <button onClick={resetSliders} className="btn btn-secondary btn-sm" title="Reset all sliders to baseline 100%">
-            <RotateCcw size={13} /> Reset Sliders
-          </button>
-          <button onClick={copyPermalink} className="btn btn-secondary btn-sm" style={{ color: '#00f0ff' }}>
-            <Copy size={13} /> {copiedLink ? 'Link Copied! ✅' : 'Copy Scenario Link'}
-          </button>
-          <button onClick={shareToX} className="btn btn-primary btn-sm" style={{ background: '#1d9bf0', borderColor: '#1d9bf0', color: '#fff' }}>
-            <Share2 size={13} /> Share to X
-          </button>
-        </div>
+    <div style={{
+      maxWidth: 1100,
+      margin: '0 auto',
+      padding: '24px 16px 40px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 24,
+      color: 'var(--text-primary)'
+    }}>
+      {/* 1. Header */}
+      <div>
+        <h1 style={{
+          fontSize: '1.75rem',
+          fontWeight: 700,
+          margin: '0 0 6px 0',
+          letterSpacing: '-0.01em'
+        }}>
+          {language === 'hi' ? 'डिजिटल ट्विन: व्हाट-इफ ग्रिड सिम्युलेटर' : 'Digital Twin: What-If Grid Simulator'}
+        </h1>
+        <p style={{
+          fontSize: '0.92rem',
+          color: 'var(--text-secondary)',
+          margin: 0,
+          lineHeight: 1.5
+        }}>
+          {language === 'hi'
+            ? '24 घंटों में ग्रिड कैसे व्यवहार करता है, यह देखने के लिए स्लाइडर्स बदलें।'
+            : 'Change the sliders to see how the grid behaves over 24 hours.'}
+        </p>
       </div>
 
-      {/* Preset & Real-Day Analog Selectors (F1) */}
+      {/* 2. Scenario Presets */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 8,
-        padding: '10px 16px',
-        background: 'rgba(20, 31, 54, 0.6)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: 10,
-        flexWrap: 'wrap'
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: 12
       }}>
-        <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-          Real-Day Analogs & Presets:
-        </span>
-        <button onClick={() => applyPreset('evening_gap')} className="btn btn-secondary btn-sm" style={{ fontSize: '0.76rem', borderColor: 'var(--amber-flow)', color: 'var(--amber-flow)' }}>
-          🌅 Evening Ramp Deficit
-        </button>
-        <button onClick={() => applyPreset('solar_surge')} className="btn btn-secondary btn-sm" style={{ fontSize: '0.76rem', borderColor: 'var(--cyan-primary)', color: 'var(--cyan-primary)' }}>
-          ☀️ Midday Solar Surge (+40%)
-        </button>
-        <button onClick={() => applyPreset('heatwave')} className="btn btn-secondary btn-sm" style={{ fontSize: '0.76rem', borderColor: 'var(--red-risk)', color: 'var(--red-risk)' }}>
-          🔥 Summer Heatwave (May 15)
-        </button>
-        <button onClick={() => applyPreset('monsoon')} className="btn btn-secondary btn-sm" style={{ fontSize: '0.76rem', borderColor: '#38bdf8', color: '#38bdf8' }}>
-          ⛈ Monsoon Solar Drop (July 22)
+        {/* Segmented Control */}
+        <div style={{
+          display: 'inline-flex',
+          borderRadius: 6,
+          border: '1px solid var(--border-subtle)',
+          background: 'var(--bg-secondary)',
+          padding: 2,
+          gap: 2,
+          flexWrap: 'wrap'
+        }}>
+          <button
+            type="button"
+            onClick={() => applyPreset('evening_gap')}
+            style={{
+              padding: '6px 12px',
+              borderRadius: 4,
+              border: 'none',
+              background: activePreset === 'evening_gap' ? 'var(--cyan-primary)' : 'transparent',
+              color: activePreset === 'evening_gap' ? '#070b14' : 'var(--text-secondary)',
+              fontWeight: activePreset === 'evening_gap' ? 600 : 500,
+              fontSize: '0.82rem',
+              cursor: 'pointer'
+            }}
+          >
+            {language === 'hi' ? 'शाम का नवीकरणीय अंतर' : 'Evening Renewable Gap'}
+          </button>
+          <button
+            type="button"
+            onClick={() => applyPreset('solar_surge')}
+            style={{
+              padding: '6px 12px',
+              borderRadius: 4,
+              border: 'none',
+              background: activePreset === 'solar_surge' ? 'var(--cyan-primary)' : 'transparent',
+              color: activePreset === 'solar_surge' ? '#070b14' : 'var(--text-secondary)',
+              fontWeight: activePreset === 'solar_surge' ? 600 : 500,
+              fontSize: '0.82rem',
+              cursor: 'pointer'
+            }}
+          >
+            {language === 'hi' ? 'दोपहर का सौर उछाल' : 'Midday Solar Surge'}
+          </button>
+          <button
+            type="button"
+            onClick={() => applyPreset('heatwave')}
+            style={{
+              padding: '6px 12px',
+              borderRadius: 4,
+              border: 'none',
+              background: activePreset === 'heatwave' ? 'var(--cyan-primary)' : 'transparent',
+              color: activePreset === 'heatwave' ? '#070b14' : 'var(--text-secondary)',
+              fontWeight: activePreset === 'heatwave' ? 600 : 500,
+              fontSize: '0.82rem',
+              cursor: 'pointer'
+            }}
+          >
+            {language === 'hi' ? 'हीटवेव और ग्रिड तनाव' : 'Heatwave and Grid Stress'}
+          </button>
+        </div>
+
+        {/* Reset text button */}
+        <button
+          type="button"
+          onClick={resetSliders}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--text-secondary)',
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+            padding: '6px 10px',
+            textDecoration: 'underline'
+          }}
+        >
+          {language === 'hi' ? 'रीसेट' : 'Reset'}
         </button>
       </div>
 
-      {/* F4: N-1 Contingency Drill Alert Banner */}
-      {tripLog && (
+      {/* 3. Main Area: Two columns on laptop (Inputs vs Results + Recommendation) */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 480px), 1fr))',
+        gap: 24,
+        alignItems: 'start'
+      }}>
+        {/* Left Column: Inputs Card */}
         <div style={{
-          padding: '12px 18px',
-          background: trippedAsset ? 'rgba(239, 68, 68, 0.15)' : 'rgba(34, 197, 94, 0.15)',
-          border: trippedAsset ? '1px solid var(--red-risk)' : '1px solid var(--green-renew)',
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-subtle)',
           borderRadius: 8,
-          fontSize: '0.86rem',
-          color: trippedAsset ? '#fca5a5' : '#86efac',
+          padding: 20,
           display: 'flex',
-          alignItems: 'center',
-          gap: 10
+          flexDirection: 'column',
+          gap: 18
         }}>
-          <AlertTriangle size={18} />
-          <span>{tripLog}</span>
-        </div>
-      )}
+          <h2 style={{
+            fontSize: '1.05rem',
+            fontWeight: 600,
+            margin: 0,
+            paddingBottom: 8,
+            borderBottom: '1px solid var(--border-subtle)'
+          }}>
+            {language === 'hi' ? 'इनपुट्स' : 'Inputs'}
+          </h2>
 
-      {/* Main 2-Column Console */}
-      <div className="grid-2">
-        {/* Left: Interactive Sliders Console */}
-        <div className="card-purple" style={{ padding: 22, borderRadius: 'var(--radius-lg)' }}>
-          <div className="card-header">
-            <h3 className="card-title">
-              <Sliders size={20} style={{ color: 'var(--cyan-primary)' }} />
-              Virtual Substation Stress Sliders
-            </h3>
-            <span className="badge badge-sim">Real-Time Compute</span>
-          </div>
-
-          {/* Solar Multiplier */}
-          <div className="slider-container" style={{ marginBottom: 14 }}>
-            <div className="slider-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span className="slider-label" style={{ fontSize: '0.84rem' }}>
-                <Sun size={14} style={{ verticalAlign: 'middle', marginRight: 4, color: 'var(--solar, #f59e0b)' }} />
-                Solar Irradiance Multiplier
+          {/* Slider 1: Solar */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
+              <label htmlFor="solar-slider" style={{ color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'सौर उत्पादन गुणक' : 'Solar generation multiplier'}
+              </label>
+              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+                {(solarMult * 100).toFixed(0)}%
               </span>
-              <span className="slider-value" style={{ fontWeight: 700, color: 'var(--solar, #f59e0b)' }}>{(solarMult * 100).toFixed(0)}%</span>
             </div>
             <input
+              id="solar-slider"
               type="range"
               min="0"
               max="1.5"
               step="0.05"
               value={solarMult}
-              aria-label="Solar multiplier"
-              aria-valuetext={`${(solarMult * 100).toFixed(0)} percent`}
-              onChange={(e) => setSolarMult(parseFloat(e.target.value))}
+              onChange={(e) => {
+                setSolarMult(parseFloat(e.target.value));
+                setActivePreset(null);
+              }}
+              style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* Wind Multiplier */}
-          <div className="slider-container" style={{ marginBottom: 14 }}>
-            <div className="slider-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span className="slider-label" style={{ fontSize: '0.84rem' }}>
-                <Wind size={14} style={{ verticalAlign: 'middle', marginRight: 4, color: 'var(--wind, #06b6d4)' }} />
-                Wind Velocity Multiplier
+          {/* Slider 2: Wind */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
+              <label htmlFor="wind-slider" style={{ color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'पवन उत्पादन गुणक' : 'Wind generation multiplier'}
+              </label>
+              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+                {(windMult * 100).toFixed(0)}%
               </span>
-              <span className="slider-value" style={{ fontWeight: 700, color: 'var(--wind, #06b6d4)' }}>{(windMult * 100).toFixed(0)}%</span>
             </div>
             <input
+              id="wind-slider"
               type="range"
               min="0"
               max="1.5"
               step="0.05"
               value={windMult}
-              aria-label="Wind multiplier"
-              aria-valuetext={`${(windMult * 100).toFixed(0)} percent`}
-              onChange={(e) => setWindMult(parseFloat(e.target.value))}
+              onChange={(e) => {
+                setWindMult(parseFloat(e.target.value));
+                setActivePreset(null);
+              }}
+              style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* Demand Stress Multiplier */}
-          <div className="slider-container" style={{ marginBottom: 14 }}>
-            <div className="slider-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span className="slider-label" style={{ fontSize: '0.84rem' }}>
-                <Zap size={14} style={{ verticalAlign: 'middle', marginRight: 4, color: 'var(--load, #f43f5e)' }} />
-                Substation Peak Demand Load
-              </span>
-              <span className="slider-value" style={{ fontWeight: 700, color: demandMult > 1.1 ? 'var(--red-risk)' : 'var(--cyan-primary)' }}>
+          {/* Slider 3: Demand */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
+              <label htmlFor="demand-slider" style={{ color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'पीक मांग लोड' : 'Peak demand load'}
+              </label>
+              <span style={{ fontWeight: 600, minWidth: 120, textAlign: 'right', fontFamily: 'monospace' }}>
                 {(demandMult * 64.8).toFixed(1)} MW ({(demandMult * 100).toFixed(0)}%)
               </span>
             </div>
             <input
+              id="demand-slider"
               type="range"
               min="0.7"
               max="1.5"
               step="0.05"
               value={demandMult}
-              aria-label="Demand multiplier"
-              aria-valuetext={`${(demandMult * 100).toFixed(0)} percent`}
-              onChange={(e) => setDemandMult(parseFloat(e.target.value))}
+              onChange={(e) => {
+                setDemandMult(parseFloat(e.target.value));
+                setActivePreset(null);
+              }}
+              style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* Battery Fleet Availability */}
-          <div className="slider-container" style={{ marginBottom: 14 }}>
-            <div className="slider-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span className="slider-label" style={{ fontSize: '0.84rem' }}>
-                <BatteryCharging size={14} style={{ verticalAlign: 'middle', marginRight: 4, color: 'var(--storage, #10b981)' }} />
-                Battery Fleet Availability (40 MWh Nameplate)
+          {/* Slider 4: Battery */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
+              <label htmlFor="battery-slider" style={{ color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'बैटरी उपलब्धता (40 MWh)' : 'Battery availability (40 MWh)'}
+              </label>
+              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+                {batteryPct}%
               </span>
-              <span className="slider-value" style={{ fontWeight: 700, color: 'var(--storage, #10b981)' }}>{batteryPct}%</span>
             </div>
             <input
+              id="battery-slider"
               type="range"
               min="0"
               max="100"
               step="5"
               value={batteryPct}
-              aria-label="Battery availability"
-              aria-valuetext={`${batteryPct} percent`}
-              onChange={(e) => setBatteryPct(parseFloat(e.target.value))}
+              onChange={(e) => {
+                setBatteryPct(parseFloat(e.target.value));
+                setActivePreset(null);
+              }}
+              style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* Flexible Load Participation */}
-          <div className="slider-container" style={{ marginBottom: 14 }}>
-            <div className="slider-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span className="slider-label" style={{ fontSize: '0.84rem' }}>
-                <Sliders size={14} style={{ verticalAlign: 'middle', marginRight: 4, color: 'var(--flex, #8b5cf6)' }} />
-                Flexible Demand Response Enrolled (15 MW Pool)
+          {/* Slider 5: Flexible Load */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
+              <label htmlFor="flex-slider" style={{ color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'लचीली मांग भागीदारी' : 'Flexible load participation'}
+              </label>
+              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+                {flexPct}%
               </span>
-              <span className="slider-value" style={{ fontWeight: 700, color: 'var(--flex, #8b5cf6)' }}>{flexPct}%</span>
             </div>
             <input
+              id="flex-slider"
               type="range"
               min="0"
               max="100"
               step="5"
               value={flexPct}
-              aria-label="Flexible load participation"
-              aria-valuetext={`${flexPct} percent`}
-              onChange={(e) => setFlexPct(parseFloat(e.target.value))}
+              onChange={(e) => {
+                setFlexPct(parseFloat(e.target.value));
+                setActivePreset(null);
+              }}
+              style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* F4: N-1 Contingency Drill Buttons ("Break Something") */}
-          <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid var(--border-subtle)' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--red-risk)', display: 'block', marginBottom: 8 }}>
-              🚨 F4: N-1 Contingency Drill ("Break Something"):
+          {/* Weather Selector (No emoji) */}
+          <div style={{ paddingTop: 6 }}>
+            <span style={{ display: 'block', marginBottom: 8, fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+              {language === 'hi' ? 'मौसम मोड' : 'Weather mode'}
             </span>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={() => triggerN1Trip('BESS-01')}
-                className="btn btn-sm"
-                style={{
-                  flex: 1,
-                  fontSize: '0.74rem',
-                  background: trippedAsset === 'BESS-01' ? 'var(--red-risk)' : 'rgba(239, 68, 68, 0.12)',
-                  borderColor: 'var(--red-risk)',
-                  color: '#fff'
-                }}
-              >
-                {trippedAsset === 'BESS-01' ? 'Restore BESS-01' : 'Trip BESS-01 (-5MW)'}
-              </button>
-              <button
-                type="button"
-                onClick={() => triggerN1Trip('SOLAR-01')}
-                className="btn btn-sm"
-                style={{
-                  flex: 1,
-                  fontSize: '0.74rem',
-                  background: trippedAsset === 'SOLAR-01' ? 'var(--red-risk)' : 'rgba(239, 68, 68, 0.12)',
-                  borderColor: 'var(--red-risk)',
-                  color: '#fff'
-                }}
-              >
-                {trippedAsset === 'SOLAR-01' ? 'Restore Solar' : 'Trip Solar Array'}
-              </button>
-              <button
-                type="button"
-                onClick={() => triggerN1Trip('FEEDER-02')}
-                className="btn btn-sm"
-                style={{
-                  flex: 1,
-                  fontSize: '0.74rem',
-                  background: trippedAsset === 'FEEDER-02' ? 'var(--red-risk)' : 'rgba(239, 68, 68, 0.12)',
-                  borderColor: 'var(--red-risk)',
-                  color: '#fff'
-                }}
-              >
-                {trippedAsset === 'FEEDER-02' ? 'Restore Feeder' : 'Overload Feeder F-02'}
-              </button>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 6
+            }}>
+              {[
+                { key: 'NORMAL', label: language === 'hi' ? 'सामान्य' : 'Normal' },
+                { key: 'HEATWAVE', label: language === 'hi' ? 'हीटवेव' : 'Heatwave' },
+                { key: 'STORM_FRONT', label: language === 'hi' ? 'मानसून तूफान' : 'Monsoon Storm' },
+              ].map(opt => (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => {
+                    setWeather(opt.key);
+                    setActivePreset(null);
+                  }}
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: 6,
+                    border: `1px solid ${weather === opt.key ? 'var(--cyan-primary)' : 'var(--border-subtle)'}`,
+                    background: weather === opt.key ? 'rgba(0, 240, 255, 0.12)' : 'transparent',
+                    color: weather === opt.key ? 'var(--cyan-primary)' : 'var(--text-secondary)',
+                    fontWeight: weather === opt.key ? 600 : 500,
+                    fontSize: '0.8rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Right: Recomputed Metrics & F3 Probabilistic Risk Fan */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div className="card-gold" style={{ padding: 20, borderRadius: 'var(--radius-lg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <span className="badge badge-forecast">Instant Dispatch Response</span>
-              <span className={`badge ${summary.peak_deficit_mw > 20 ? 'badge-risk-critical' : 'badge-live'}`}>
+        {/* Right Column: Results + Recommendation Card */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div style={{
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 8,
+            padding: 20,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 16
+          }}>
+            {/* Results Heading with Risk Badge */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 8,
+              paddingBottom: 8,
+              borderBottom: '1px solid var(--border-subtle)'
+            }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 600, margin: 0 }}>
+                {language === 'hi' ? 'परिणाम' : 'Results'}
+              </h2>
+              <span style={{
+                padding: '3px 8px',
+                borderRadius: 4,
+                fontSize: '0.76rem',
+                fontWeight: 600,
+                background: summary.peak_deficit_mw > 20 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                color: summary.peak_deficit_mw > 20 ? '#ef4444' : '#10b981',
+                border: `1px solid ${summary.peak_deficit_mw > 20 ? '#ef4444' : '#10b981'}`
+              }}>
                 {summary.risk_classification}
               </span>
             </div>
 
-            {/* M1 & M2: Correctly named distinct quantities & side-by-side shortage hours */}
-            <div className="grid-2" style={{ gap: 12, marginBottom: 14 }}>
-              <div>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Peak-Hour Deficit (MW)</span>
-                <div style={{ fontSize: '1.6rem', fontWeight: 800, color: summary.peak_deficit_mw > 0 ? 'var(--red-risk)' : 'var(--green-renew)' }}>
-                  {summary.peak_deficit_mw > 0 ? `-${summary.peak_deficit_mw} MW` : '0.0 MW (Balanced)'}
-                </div>
-              </div>
-
-              <div>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Composite Resilience Score</span>
-                <div style={{ fontSize: '1.6rem', fontWeight: 800, color: summary.composite_resilience_score > 75 ? 'var(--green-renew)' : 'var(--amber-flow)' }}>
-                  {summary.composite_resilience_score} / 100
-                </div>
-              </div>
-
-              <div>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>24h Net Energy Balance (MWh)</span>
-                <div style={{ fontSize: '1.15rem', fontWeight: 700 }}>
-                  {summary.net_daily_balance_mwh > 0 ? `+${summary.net_daily_balance_mwh}` : summary.net_daily_balance_mwh} MWh
-                </div>
-              </div>
-
-              {/* M2: Before & After side-by-side */}
-              <div>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Blackout Hours (Mitigated vs Unmitigated)</span>
-                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#22c55e' }}>
-                  {summary.shortage_hours_unmitigated}h ➔ {summary.shortage_hours_mitigated}h ({summary.shortage_hours_mitigated === 0 ? '100% Protected' : 'Partial Curtailment'})
-                </div>
-              </div>
-            </div>
-
-            {/* F3: Probabilistic Shortfall Meter */}
+            {/* 2x2 Metric Cards Grid */}
             <div style={{
-              background: 'rgba(20, 31, 54, 0.7)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 8,
-              padding: '10px 14px',
-              marginBottom: 12
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: 12
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                  F3: Probability of Evening Shortfall P(Shortfall):
-                </span>
-                <strong style={{ color: shortfallProbability > 50 ? 'var(--red-risk)' : '#22c55e' }}>
-                  {shortfallProbability}% (Monte Carlo P50)
-                </strong>
-              </div>
-              <div style={{ width: '100%', height: 6, background: '#1e293b', borderRadius: 3, overflow: 'hidden' }}>
+              {/* Card 1: Peak Deficit */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 6,
+                padding: '12px 14px'
+              }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                  {language === 'hi' ? 'पीक घाटा' : 'Peak deficit'}
+                </div>
                 <div style={{
-                  width: `${shortfallProbability}%`,
-                  height: '100%',
-                  background: shortfallProbability > 50 ? 'linear-gradient(90deg, #f59e0b, #ef4444)' : 'linear-gradient(90deg, #10b981, #06b6d4)'
-                }} />
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  fontFamily: 'monospace',
+                  color: summary.peak_deficit_mw > 0 ? '#ef4444' : '#10b981'
+                }}>
+                  {summary.peak_deficit_mw > 0 ? `-${summary.peak_deficit_mw}` : '0.0'}{' '}
+                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>MW</span>
+                </div>
               </div>
-            </div>
 
-            {/* Recomputed Action Directive */}
-            <div style={{
-              background: 'rgba(0, 240, 255, 0.06)',
-              border: '1px solid var(--border-medium)',
-              padding: '10px 14px',
-              borderRadius: 8,
-              fontSize: '0.84rem'
-            }}>
-              <Sparkles size={14} style={{ color: 'var(--cyan-primary)', marginRight: 6, verticalAlign: 'middle' }} />
-              <strong>Prescriptive Directive: </strong>{summary.recommended_operational_action}
+              {/* Card 2: Net Energy Balance */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 6,
+                padding: '12px 14px'
+              }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                  {language === 'hi' ? 'शुद्ध ऊर्जा संतुलन' : 'Net energy balance'}
+                </div>
+                <div style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  fontFamily: 'monospace',
+                  color: summary.net_daily_balance_mwh < 0 ? '#f59e0b' : '#10b981'
+                }}>
+                  {summary.net_daily_balance_mwh > 0 ? `+${summary.net_daily_balance_mwh}` : summary.net_daily_balance_mwh}{' '}
+                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>MWh</span>
+                </div>
+              </div>
+
+              {/* Card 3: Resilience Score */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 6,
+                padding: '12px 14px'
+              }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                  {language === 'hi' ? 'लचीलापन स्कोर' : 'Resilience score'}
+                </div>
+                <div style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  fontFamily: 'monospace',
+                  color: summary.composite_resilience_score >= 80 ? '#10b981' : '#f59e0b'
+                }}>
+                  {summary.composite_resilience_score}{' '}
+                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>/ 100</span>
+                </div>
+              </div>
+
+              {/* Card 4: Shortage Hours Eliminated */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 6,
+                padding: '12px 14px'
+              }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                  {language === 'hi' ? 'कमी के घंटे समाप्त' : 'Shortage hours eliminated'}
+                </div>
+                <div style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  fontFamily: 'monospace',
+                  color: '#10b981'
+                }}>
+                  {shortageHoursEliminated}{' '}
+                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
+                    {language === 'hi' ? 'घंटे' : 'hours'}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* F2: Binding Grid Constraints Inspector */}
-          <div className="card" style={{ padding: 18, background: 'rgba(17, 24, 50, 0.95)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <strong style={{ fontSize: '0.86rem', color: '#f8fafc' }}>F2: Binding Constraints Inspector</strong>
-              <span className="badge badge-live" style={{ fontSize: '0.7rem' }}>Physics Respected</span>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, fontSize: '0.76rem' }}>
-              <div>
-                <span style={{ color: '#94a3b8' }}>Battery SoC Window:</span> <strong style={{ color: '#22c55e' }}>10% – 90% (Safe)</strong>
-              </div>
-              <div>
-                <span style={{ color: '#94a3b8' }}>Inverter Max C-Rate:</span> <strong style={{ color: '#00f0ff' }}>0.50 C (12 MW Limit)</strong>
-              </div>
-              <div>
-                <span style={{ color: '#94a3b8' }}>33kV Substation Ceiling:</span> <strong style={{ color: '#22c55e' }}>65.0 MW Thermal</strong>
-              </div>
-              <div>
-                <span style={{ color: '#94a3b8' }}>Feeder Ramp Rate:</span> <strong style={{ color: '#fbbf24' }}>5.0 MW / 15 min</strong>
-              </div>
-            </div>
+          {/* Recommended Action Box */}
+          <div style={{
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 8,
+            padding: 16
+          }}>
+            <h3 style={{
+              fontSize: '0.88rem',
+              fontWeight: 600,
+              margin: '0 0 6px 0',
+              color: 'var(--cyan-primary)'
+            }}>
+              {language === 'hi' ? 'अनुशंसित कार्रवाई' : 'Recommended action'}
+            </h3>
+            <p style={{
+              fontSize: '0.88rem',
+              lineHeight: 1.5,
+              color: 'var(--text-secondary)',
+              margin: 0
+            }}>
+              {summary.recommended_operational_action}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* 24-Hour Energy Balance Chart (Unmitigated vs Mitigated + P10/P90 Fan) */}
-      <div className="card">
-        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h3 className="card-title">
-              <Activity size={20} style={{ color: 'var(--cyan-primary)' }} />
-              24-Hour Simulation Trajectory: Unmitigated vs Mitigated (with P10/P90 Fan)
-            </h3>
-            <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: 4 }}>
-              Red dashed line indicates unmitigated duck-curve shortage. Green curve proves GridFlex BESS + DR eliminates the evening cliff.
-            </p>
-          </div>
-          <span className="badge badge-forecast">Monte Carlo 100 Iterations</span>
+      {/* 4. Chart: Full width below */}
+      <div style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 8,
+        padding: 20
+      }}>
+        <div style={{ marginBottom: 16 }}>
+          <h2 style={{
+            fontSize: '1.05rem',
+            fontWeight: 600,
+            margin: '0 0 4px 0'
+          }}>
+            {language === 'hi' ? '24 घंटे का ऊर्जा संतुलन' : '24-hour energy balance'}
+          </h2>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-tertiary)', margin: 0 }}>
+            {language === 'hi'
+              ? 'अशमित घाटे (लाल रेखा) बनाम ग्रिडफ्लेक्स अनुकूलन (हरी रेखा) का तुलनात्मक विश्लेषण।'
+              : 'Comparison of unmitigated shortfall (red dashed) against GridFlex optimization (green solid).'}
+          </p>
         </div>
 
-        <div style={{ width: '100%', height: 340 }}>
+        <div style={{ width: '100%', height: 320 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={curve} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
-              <XAxis dataKey="hour" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-              <YAxis stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} unit=" MW" />
+            <ComposedChart data={curve} margin={{ top: 10, right: 15, left: -10, bottom: 4 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" />
+              <XAxis 
+                dataKey="hour" 
+                stroke="#64748b" 
+                tick={{ fill: '#94a3b8', fontSize: 11 }} 
+              />
+              <YAxis 
+                stroke="#64748b" 
+                tick={{ fill: '#94a3b8', fontSize: 11 }} 
+                unit=" MW" 
+              />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#0d1424', 
-                  border: '1px solid var(--border-medium)', 
-                  borderRadius: '8px', 
-                  color: '#f8fafc' 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  border: '1px solid var(--border-subtle)', 
+                  borderRadius: '6px', 
+                  color: 'var(--text-primary)',
+                  fontSize: '0.82rem'
                 }} 
               />
-              <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: 10 }} />
-              <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.3)" strokeWidth={1} />
+              <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: 8 }} />
+              <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.2)" strokeWidth={1} />
               
-              {/* Unmitigated Deficit (Duck Curve Shortage) */}
               <Line 
                 type="monotone" 
                 dataKey="unmitigated_balance" 
-                name="Unmitigated Net Balance (Shortage)" 
+                name={language === 'hi' ? 'अशमित संतुलन (घाटा)' : 'Unmitigated balance'} 
                 stroke="#ef4444" 
                 strokeWidth={2} 
                 strokeDasharray="4 4" 
                 dot={false} 
               />
-
-              {/* GridFlex Mitigated Balance */}
               <Line 
                 type="monotone" 
                 dataKey="mitigated_balance" 
-                name="With GridFlex (BESS + DR)" 
+                name={language === 'hi' ? 'ग्रिडफ्लेक्स के साथ' : 'With GridFlex (BESS + DR)'} 
                 stroke="#10b981" 
-                strokeWidth={2.5} 
+                strokeWidth={2} 
                 dot={false} 
               />
-
-              {/* P90 Upper Confidence Band */}
               <Line 
                 type="monotone" 
                 dataKey="p90_upper" 
-                name="P90 Optimistic Band" 
+                name={language === 'hi' ? 'P90 ऊपरी बैंड' : 'P90 optimistic band'} 
                 stroke="#06b6d4" 
                 strokeWidth={1} 
                 strokeDasharray="2 2" 
                 dot={false} 
               />
-
-              {/* P10 Lower Confidence Band */}
               <Line 
                 type="monotone" 
                 dataKey="p10_lower" 
-                name="P10 Stress Band" 
+                name={language === 'hi' ? 'P10 निचला बैंड' : 'P10 stress band'} 
                 stroke="#f59e0b" 
                 strokeWidth={1} 
                 strokeDasharray="2 2" 

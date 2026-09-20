@@ -21,6 +21,8 @@ import {
   ResponsiveContainer,
   ComposedChart,
   Line,
+  Area,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
@@ -188,9 +190,19 @@ export default function FlexibilityPage() {
           <span className="badge badge-live">{t('flex.optimum_badge')}</span>
         </div>
 
-        <div style={{ width: '100%', height: 360, marginTop: 10 }}>
-          <ResponsiveContainer width="100%" height="100%">
+        <div style={{ width: '100%', minHeight: 380, minWidth: 0, marginTop: 10 }}>
+          <ResponsiveContainer width="100%" height={380}>
             <ComposedChart data={balanceSeries} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="renewGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.35}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0.0}/>
+                </linearGradient>
+                <linearGradient id="cyanGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.25}/>
+                  <stop offset="95%" stopColor="#00f0ff" stopOpacity={0.0}/>
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
               <XAxis dataKey="time" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} />
               <YAxis stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} unit=" MW" />
@@ -203,6 +215,14 @@ export default function FlexibilityPage() {
                 }} 
               />
               <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: 10 }} />
+              <Area 
+                type="monotone" 
+                dataKey="renewable_supply" 
+                name="Renewable Generation (Solar + Wind)" 
+                stroke="#10b981" 
+                strokeWidth={2} 
+                fill="url(#renewGrad)" 
+              />
               <Line 
                 type="monotone" 
                 dataKey="original_demand" 
@@ -220,14 +240,43 @@ export default function FlexibilityPage() {
                 strokeWidth={2.5} 
                 dot={false} 
               />
-              <Line 
-                type="monotone" 
-                dataKey="renewable_supply" 
-                name="Renewable Generation (Solar + Wind)" 
-                stroke="#10b981" 
-                strokeWidth={2} 
-                dot={false} 
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Dispatch Actions Breakdown Chart (BESS & Load Shifting Schedule) */}
+      <div className="card-emerald" style={{ padding: 24, borderRadius: 'var(--radius-lg)' }}>
+        <div className="card-header">
+          <div>
+            <h3 className="card-title">
+              <BatteryCharging size={20} style={{ color: 'var(--green-renew)' }} />
+              <span className="text-gradient-emerald">Coordinated Dispatch Schedule: BESS &amp; Flexible Shift (MW)</span>
+            </h3>
+            <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: 4 }}>
+              Negative values indicate solar surplus absorption (charging/pre-cooling); positive values indicate evening deficit support.
+            </p>
+          </div>
+          <span className="badge badge-live" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981' }}>MILP Coordinated</span>
+        </div>
+
+        <div style={{ width: '100%', minHeight: 300, minWidth: 0, marginTop: 10 }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <ComposedChart data={balanceSeries} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
+              <XAxis dataKey="time" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <YAxis stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} unit=" MW" />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#0d1424', 
+                  border: '1px solid var(--border-medium)',
+                  borderRadius: '8px',
+                  color: '#f8fafc' 
+                }} 
               />
+              <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: 10 }} />
+              <Bar dataKey="bess_dispatch" name="BESS Dispatch (MW)" fill="#fbbf24" radius={[4, 4, 0, 0]} />
+              <Line type="monotone" dataKey="optimized_demand" name="Optimized Load (MW)" stroke="#00f0ff" strokeWidth={2} dot={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>

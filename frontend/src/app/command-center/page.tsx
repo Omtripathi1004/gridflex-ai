@@ -21,7 +21,8 @@ import {
   TrendingDown,
   Clock,
   Radio,
-  Cpu
+  Cpu,
+  RefreshCw
 } from 'lucide-react';
 
 export default function CommandCenterPage() {
@@ -30,21 +31,27 @@ export default function CommandCenterPage() {
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [planExecuted, setPlanExecuted] = useState<boolean>(false);
   const [executing, setExecuting] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  useEffect(() => {
-    // Initial fetch
+  const loadTelemetry = (isManual = false) => {
+    if (isManual) setRefreshing(true);
     fetchLiveTelemetry().then(data => {
       setTelemetry(data);
       setLastUpdated(new Date().toLocaleTimeString());
+      if (isManual) setTimeout(() => setRefreshing(false), 400);
+    }).catch(() => {
+      if (isManual) setRefreshing(false);
     });
+  };
 
-    // Gentle live update interval: every 60 seconds instead of 5 seconds
+  useEffect(() => {
+    // Initial fetch
+    loadTelemetry(false);
+
+    // Non-disruptive gentle background interval: 300 seconds (5 minutes) to avoid scroll interruptions
     const interval = setInterval(() => {
-      fetchLiveTelemetry().then(data => {
-        setTelemetry(data);
-        setLastUpdated(new Date().toLocaleTimeString());
-      });
-    }, 60000);
+      loadTelemetry(false);
+    }, 300000);
 
     return () => clearInterval(interval);
   }, []);
@@ -102,6 +109,16 @@ export default function CommandCenterPage() {
             <Clock size={15} />
             <span>{t('cc.updated')}: <strong>{lastUpdated || t('cc.connecting')}</strong></span>
           </div>
+          <button
+            onClick={() => loadTelemetry(true)}
+            disabled={refreshing}
+            className="btn btn-secondary btn-sm"
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', fontSize: '0.8rem' }}
+            title="Refresh live telemetry on demand without auto-scrolling"
+          >
+            <RefreshCw size={13} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
+            <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
+          </button>
           <Link to="/explainable-ai" className="btn btn-purple btn-sm">
             <Cpu size={14} style={{ marginRight: 4 }} /> Inspect XAI Rationale
           </Link>

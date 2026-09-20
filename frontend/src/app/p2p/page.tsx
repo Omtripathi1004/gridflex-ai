@@ -13,8 +13,23 @@ import {
   Users, 
   CheckCircle2,
   Building2,
-  Zap
+  Zap,
+  Activity,
+  BarChart3,
+  TrendingUp
 } from 'lucide-react';
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Bar,
+  Line,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid
+} from 'recharts';
 
 export default function P2PPage() {
   const { t } = useLanguage();
@@ -144,6 +159,64 @@ export default function P2PPage() {
         <span className="badge badge-live" style={{ color: '#22c55e' }}>
           <CheckCircle2 size={12} /> 100% Critical Load Served
         </span>
+      </div>
+
+      {/* P2P Double-Auction Market Clearing Dynamics & Clearing Rate Chart */}
+      <div className="card-market" style={{ padding: 24, borderRadius: 'var(--radius-lg)' }}>
+        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h3 className="card-title">
+              <Activity size={20} style={{ color: '#d946ef' }} />
+              <span className="text-gradient-market">Peer-to-Peer Double-Auction Market Clearing Dynamics</span>
+            </h3>
+            <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: 4 }}>
+              Visualizing continuous matching: Prosumer solar generation (kW), Consumer deficit demand (kW), matched volume (kWh), and dynamic clearing rate (₹/kWh).
+            </p>
+          </div>
+          <span className="badge badge-live" style={{ background: 'rgba(217, 70, 239, 0.15)', color: '#d946ef' }}>Double-Auction Engine</span>
+        </div>
+
+        {/* Intraday Clearing Curve & Price */}
+        <div style={{ width: '100%', minHeight: 360, minWidth: 0, marginTop: 10 }}>
+          <ResponsiveContainer width="100%" height={360}>
+            <ComposedChart
+              data={[
+                { block: "08:00", surplus_kw: 140, demand_kw: 110, cleared_kwh: 110, clearing_rate: 6.20 },
+                { block: "10:00", surplus_kw: 480, demand_kw: 420, cleared_kwh: 420, clearing_rate: 6.45 },
+                { block: "12:00", surplus_kw: 900, demand_kw: 810, cleared_kwh: 770, clearing_rate: 6.75 },
+                { block: "14:00", surplus_kw: 760, demand_kw: 680, cleared_kwh: 640, clearing_rate: 6.80 },
+                { block: "16:00", surplus_kw: 420, demand_kw: 390, cleared_kwh: 360, clearing_rate: 6.95 },
+                { block: "18:00", surplus_kw: 110, demand_kw: 320, cleared_kwh: 110, clearing_rate: 7.40 },
+                { block: "20:00", surplus_kw: 20,  demand_kw: 410, cleared_kwh: 20,  clearing_rate: 7.85 },
+              ]}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="p2pMarketGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#d946ef" stopOpacity={0.35}/>
+                  <stop offset="95%" stopColor="#d946ef" stopOpacity={0.0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
+              <XAxis dataKey="block" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <YAxis yAxisId="volume" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} unit=" kW" />
+              <YAxis yAxisId="price" orientation="right" stroke="#fbbf24" tick={{ fill: '#fbbf24', fontSize: 11 }} unit=" ₹" domain={[5.0, 8.5]} />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#0d1424', 
+                  border: '1px solid rgba(217, 70, 239, 0.4)', 
+                  borderRadius: '8px', 
+                  color: '#f8fafc' 
+                }} 
+              />
+              <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: 10 }} />
+              <Area yAxisId="volume" type="monotone" dataKey="cleared_kwh" name="Cleared Energy (kWh)" stroke="#d946ef" strokeWidth={2} fill="url(#p2pMarketGrad)" />
+              <Bar yAxisId="volume" dataKey="surplus_kw" name="Prosumer Solar Offer (kW)" fill="#fbbf24" opacity={0.8} radius={[4, 4, 0, 0]} />
+              <Bar yAxisId="volume" dataKey="demand_kw" name="Consumer Demand Ask (kW)" fill="#38bdf8" opacity={0.65} radius={[4, 4, 0, 0]} />
+              <Line yAxisId="price" type="monotone" dataKey="clearing_rate" name="Clearing Rate (₹/kWh)" stroke="#a855f7" strokeWidth={3} dot={{ fill: '#a855f7', r: 4 }} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Participants Order Book Table (M7: Fixed Double Header) */}

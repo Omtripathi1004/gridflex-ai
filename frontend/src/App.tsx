@@ -30,12 +30,21 @@ import JudgeModePage from './app/judge-mode/page';
 import CopilotPage from './app/copilot/page';
 import NotFoundPage from './app/not-found';
 
+function ScrollToTopOnRouteChange() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
         <AuthGuard>
           <div className="app-container">
+            <ScrollToTopOnRouteChange />
             <NavbarWrapper />
             <main className="main-content">
               <Routes>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -291,7 +291,7 @@ export default function JudgeModePage() {
           marginBottom: 28
         }}>
           <div style={{ fontSize: '0.78rem', color: currentStep.badge_color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>
-            📊 Live Algorithmic Telemetry & Proof Metrics:
+            Live Algorithmic Telemetry &amp; Proof Metrics:
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
             {Object.entries(currentStep.telemetry_snippet).map(([key, val]: [string, any]) => (

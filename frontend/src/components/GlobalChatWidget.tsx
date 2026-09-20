@@ -36,12 +36,12 @@ interface Message {
 }
 
 const QUICK_PROMPTS = [
-  "⚡ Why is there an evening deficit?",
-  "🔋 What is the battery SoC status?",
-  "🛡️ Explain the 4 resilience pillars",
-  "🤝 How does P2P auction clearing work?",
-  "🔑 What are the default login accounts?",
-  "📈 Which ML models generate forecasts?"
+  "Why is there an evening deficit?",
+  "What is the battery SoC status?",
+  "Explain the 4 resilience pillars",
+  "How does P2P auction clearing work?",
+  "What are the default login accounts?",
+  "Which ML models generate forecasts?"
 ];
 
 export const GlobalChatWidget: React.FC = () => {

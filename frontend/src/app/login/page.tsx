@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -316,7 +316,7 @@ export default function LoginPage() {
                     style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${cfg.iconColor}40`, color: cfg.iconColor, fontWeight: 700, fontSize: '0.78rem' }}
                     onClick={e => { e.stopPropagation(); handleQuickSelect(acc); }}
                   >
-                    ⚡ Quick Login
+                    Quick Login
                   </button>
                 </div>
               );

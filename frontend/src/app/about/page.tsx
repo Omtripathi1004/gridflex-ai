@@ -552,7 +552,7 @@ export default function AboutPage() {
         }}>
           <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid var(--cyan-primary)' }}>
             <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              ⚡ Monitor Live Grid &amp; SCADA
+              Monitor Live Grid &amp; SCADA
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               Inspect live frequency, solar/wind balance, and execute quick dispatch alerts.
@@ -564,7 +564,7 @@ export default function AboutPage() {
 
           <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid var(--amber-flow)' }}>
             <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              🧪 Test Blackouts &amp; Fault Injections
+              Test Blackouts &amp; Fault Injections
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               Trigger cloud dips, transformer overloads, and test automated islanding safely.
@@ -576,7 +576,7 @@ export default function AboutPage() {
 
           <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid #a855f7' }}>
             <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              👁️ Watch Cloud Velocity Radar
+              Watch Cloud Velocity Radar
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               See Farneback optical-flow tracking cloud vectors 15–30 mins ahead of solar drops.
@@ -588,7 +588,7 @@ export default function AboutPage() {
 
           <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid #10b981' }}>
             <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              🎯 Evaluate for Hackathon Judging
+              Evaluate for Hackathon Judging
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               Take the guided evaluation tour, run the 1-click test suite, and check mathematical proofs.

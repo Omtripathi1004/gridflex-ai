@@ -38,23 +38,10 @@ interface Language {
   flag: string;
 }
 
-// ─── 15 Indian National Languages ─────────────────────────────────────────────
+// ─── Bilingual Support: English and Hindi ─────────────────────────────────────────
 const LANGUAGES: Language[] = [
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇬🇧' },
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'mr', name: 'Marathi', nativeName: 'मराठी', flag: '🇮🇳' },
-  { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી', flag: '🇮🇳' },
-  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', flag: '🇮🇳' },
-  { code: 'te', name: 'Telugu', nativeName: 'తెలుగు', flag: '🇮🇳' },
-  { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', flag: '🇮🇳' },
-  { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം', flag: '🇮🇳' },
-  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', flag: '🇮🇳' },
-  { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
-  { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ', flag: '🇮🇳' },
-  { code: 'as', name: 'Assamese', nativeName: 'অসমীয়া', flag: '🇮🇳' },
-  { code: 'ur', name: 'Urdu', nativeName: 'اردو', flag: '🇵🇰' },
-  { code: 'kok', name: 'Konkani', nativeName: 'कोंकणी', flag: '🇮🇳' },
-  { code: 'mni', name: 'Manipuri', nativeName: 'মৈতৈলোন্', flag: '🇮🇳' },
 ];
 
 const RAG_KB: Record<string, RAGDocument> = {
@@ -86,8 +73,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R1', 'R5'],
     confidence: 97,
     responses: {
-      en: "🚨 **CRITICAL INCIDENT: Feeder F-01 Breaker Trip Detected**\n\n• **Impact**: Instant loss of 18.4 MW industrial demand on 11kV Bus-1.\n• **Immediate Threat**: Voltage spike to 1.06 p.u. on remaining feeders.\n\n**Automated Mitigation Directives:**\n1. **BESS Ramp Absorption**: Commanded BESS-01 to immediately absorb +8.5 MW in charging mode (0.9C rate) to dampen over-voltage.\n2. **Load Re-routing**: Opened tie-breaker TB-12 to isolate fault section; closed bus-coupler BC-2 to backfeed essential auxiliary pumps from Feeder F-03.\n3. **Transformer Headroom**: Substation loading normalized to 58.2%.\n\n**Status**: Secondary feeders F-02, F-03, F-04 remain 100% operational.",
-      hi: "🚨 **गंभीर घटना: फीडर F-01 ब्रेकर ट्रिप हुआ (18.4 MW)**\n\n• **प्रभाव**: 11kV बस-1 पर औद्योगिक भार का तत्काल नुकसान।\n• **तत्काल कार्रवाई**: BESS-01 को वोल्टेज वृद्धि को रोकने के लिए +8.5 MW चार्जिंग मोड में लगाया गया। बस-कपलर BC-2 बंद कर आवश्यक पंपों को F-03 से बिजली दी गई।"
+      en: "**CRITICAL INCIDENT: Feeder F-01 Breaker Trip Detected**\n\n• **Impact**: Instant loss of 18.4 MW industrial demand on 11kV Bus-1.\n• **Immediate Threat**: Voltage spike to 1.06 p.u. on remaining feeders.\n\n**Automated Mitigation Directives:**\n1. **BESS Ramp Absorption**: Commanded BESS-01 to immediately absorb +8.5 MW in charging mode (0.9C rate) to dampen over-voltage.\n2. **Load Re-routing**: Opened tie-breaker TB-12 to isolate fault section; closed bus-coupler BC-2 to backfeed essential auxiliary pumps from Feeder F-03.\n3. **Transformer Headroom**: Substation loading normalized to 58.2%.\n\n**Status**: Secondary feeders F-02, F-03, F-04 remain 100% operational.",
+      hi: "**गंभीर घटना: फीडर F-01 ब्रेकर ट्रिप हुआ (18.4 MW)**\n\n• **प्रभाव**: 11kV बस-1 पर औद्योगिक भार का तत्काल नुकसान।\n• **तत्काल कार्रवाई**: BESS-01 को वोल्टेज वृद्धि को रोकने के लिए +8.5 MW चार्जिंग मोड में लगाया गया। बस-कपलर BC-2 बंद कर आवश्यक पंपों को F-03 से बिजली दी गई।"
     }
   },
   {
@@ -98,8 +85,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R5', 'R1'],
     confidence: 94,
     responses: {
-      en: "⚠️ **WARNING: Substation Transformer Thermal Overload Alert**\n\n• **Telemetry**: Main 33/11kV 70 MVA Transformer loading reached **61.8 MVA (88.3%)**.\n• **Oil Temp**: 78.4°C (Approaching 85°C alarm threshold).\n\n**Automated Mitigation Directives:**\n1. **Virtual BESS Discharge**: Triggered 7.2 MW injection from BESS-01 and BESS-02 to supply local loads downstream of the transformer.\n2. **Commercial DR Activation**: Initiated Tier-1 HVAC chiller setback (-1.5°C) across corporate consumers on Feeder F-03 (-3.4 MW).\n3. **Result**: Transformer loading dropped from 88.3% to **73.1% (Safe Green Zone)** within 110 seconds.",
-      hi: "⚠️ **चेतावनी: सबस्टेशन ट्रांसफार्मर ओवरलोड (88.3%)**\n\n• **कार्रवाई**: BESS-01 और BESS-02 से 7.2 MW डिस्चार्ज सक्रिय किया गया। कमर्शियल चिलर सेटबैक से लोड 73.1% तक सामान्य हुआ।"
+      en: "**WARNING: Substation Transformer Thermal Overload Alert**\n\n• **Telemetry**: Main 33/11kV 70 MVA Transformer loading reached **61.8 MVA (88.3%)**.\n• **Oil Temp**: 78.4°C (Approaching 85°C alarm threshold).\n\n**Automated Mitigation Directives:**\n1. **Virtual BESS Discharge**: Triggered 7.2 MW injection from BESS-01 and BESS-02 to supply local loads downstream of the transformer.\n2. **Commercial DR Activation**: Initiated Tier-1 HVAC chiller setback (-1.5°C) across corporate consumers on Feeder F-03 (-3.4 MW).\n3. **Result**: Transformer loading dropped from 88.3% to **73.1% (Safe Green Zone)** within 110 seconds.",
+      hi: "**चेतावनी: सबस्टेशन ट्रांसफार्मर ओवरलोड (88.3%)**\n\n• **कार्रवाई**: BESS-01 और BESS-02 से 7.2 MW डिस्चार्ज सक्रिय किया गया। कमर्शियल चिलर सेटबैक से लोड 73.1% तक सामान्य हुआ।"
     }
   },
   {
@@ -110,8 +97,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R4', 'R1'],
     confidence: 98,
     responses: {
-      en: "🚨 **CRITICAL: Grid Frequency Dip to 49.82 Hz Detected**\n\n• **Statutory Risk**: Under CERC DSM 2023 regulations, overdrawing below 49.90 Hz attracts punitive tariffs up to ₹14.60/kWh.\n\n**Automated Mitigation Directives:**\n1. **Sub-150ms Primary Frequency Response**: BESS fleet stepped up to **10.5 MW maximum discharge** at 1.1C pulse rate.\n2. **EV Depot Throttle**: Throttled 45 transit EV depot chargers from 150 kW to 30 kW trickle mode (-4.2 MW load shed).\n3. **Net Drawal**: Reduced upstream grid drawal by 14.7 MW, holding local bus frequency at **49.98 Hz** and avoiding **₹4.8 Lakh** in statutory DSM penalties.",
-      hi: "🚨 **गंभीर: ग्रिड फ्रीक्वेंसी 49.82 Hz तक गिरी**\n\n• **कार्रवाई**: BESS फ्लीट से 10.5 MW तत्काल डिस्चार्ज और 45 EV चार्जर्स की चार्जिंग दर घटाई गई। DSM पेनल्टी पूरी तरह बचाई गई।"
+      en: "**CRITICAL: Grid Frequency Dip to 49.82 Hz Detected**\n\n• **Statutory Risk**: Under CERC DSM 2023 regulations, overdrawing below 49.90 Hz attracts punitive tariffs up to ₹14.60/kWh.\n\n**Automated Mitigation Directives:**\n1. **Sub-150ms Primary Frequency Response**: BESS fleet stepped up to **10.5 MW maximum discharge** at 1.1C pulse rate.\n2. **EV Depot Throttle**: Throttled 45 transit EV depot chargers from 150 kW to 30 kW trickle mode (-4.2 MW load shed).\n3. **Net Drawal**: Reduced upstream grid drawal by 14.7 MW, holding local bus frequency at **49.98 Hz** and avoiding **₹4.8 Lakh** in statutory DSM penalties.",
+      hi: "**गंभीर: ग्रिड फ्रीक्वेंसी 49.82 Hz तक गिरी**\n\n• **कार्रवाई**: BESS फ्लीट से 10.5 MW तत्काल डिस्चार्ज और 45 EV चार्जर्स की चार्जिंग दर घटाई गई। DSM पेनल्टी पूरी तरह बचाई गई।"
     }
   },
   {
@@ -122,8 +109,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R2', 'R1'],
     confidence: 93,
     responses: {
-      en: "⚡ **RAPID WEATHER CONTINGENCY: Sudden Cloud Occlusion**\n\n• **Telemetry**: Rooftop solar generation dropped abruptly from **42.0 MW to 12.6 MW** (-29.4 MW plunge) across Feeder F-02.\n• **SkyVision Radar Warning**: Optical flow detected cumulus storm cloud front 14 minutes in advance.\n\n**Automated Mitigation Directives:**\n1. **BESS Fast-Ramp**: BESS-02 and BESS-03 ramped from idle to **+9.2 MW discharge in 140ms**.\n2. **Water Pumping Interlock**: Suspended municipal reservoir pumping on Feeder F-04 (-3.8 MW).\n3. **Bus Voltage**: Held steady at **0.985 p.u.** with zero flicker or residential inverter disconnections.",
-      hi: "⚡ **मौसम अलर्ट: 120 सेकंड में सोलर उत्पादन 70% गिरा**\n\n• **कार्रवाई**: स्काईविज़न रडार के पूर्व-संकेत पर BESS ने 140ms में +9.2 MW डिस्चार्ज शुरू किया। वोल्टेज 0.985 p.u. पर स्थिर रहा।"
+      en: "**RAPID WEATHER CONTINGENCY: Sudden Cloud Occlusion**\n\n• **Telemetry**: Rooftop solar generation dropped abruptly from **42.0 MW to 12.6 MW** (-29.4 MW plunge) across Feeder F-02.\n• **SkyVision Radar Warning**: Optical flow detected cumulus storm cloud front 14 minutes in advance.\n\n**Automated Mitigation Directives:**\n1. **BESS Fast-Ramp**: BESS-02 and BESS-03 ramped from idle to **+9.2 MW discharge in 140ms**.\n2. **Water Pumping Interlock**: Suspended municipal reservoir pumping on Feeder F-04 (-3.8 MW).\n3. **Bus Voltage**: Held steady at **0.985 p.u.** with zero flicker or residential inverter disconnections.",
+      hi: "**मौसम अलर्ट: 120 सेकंड में सोलर उत्पादन 70% गिरा**\n\n• **कार्रवाई**: स्काईविज़न रडार के पूर्व-संकेत पर BESS ने 140ms में +9.2 MW डिस्चार्ज शुरू किया। वोल्टेज 0.985 p.u. पर स्थिर रहा।"
     }
   },
   {
@@ -134,8 +121,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R2', 'R4'],
     confidence: 96,
     responses: {
-      en: "📉 **OPERATIONAL PROTOCOL: Evening Renewable Sunset Cliff**\n\n• **Window**: 17:30–20:30 IST.\n• **Dynamic Gap**: Solar generating capacity collapsing to 0 MW while lighting and residential cooking loads ramp +16.4 MW.\n\n**Automated Mitigation Directives:**\n1. **Two-Stage Dispatch Activated**: Dispatched 9.5 MW from community BESS fleet (72.5% SOC currently primed).\n2. **Demand Flexibility Response**: Activated 5.2 MW of contracted commercial flexible load shifts.\n3. **Avoided Carbon**: 100% avoided diesel peaker plant dispatch, eliminating 14.8 tCO2.",
-      hi: "📉 **शाम का डक कर्व डेफिसिट (18.2 MW)**\n\n• **कार्रवाई**: BESS से 9.5 MW और फ्लेक्सिबल लोड से 5.2 MW संचालित किया गया। डीजल जनरेटर की आवश्यकता शून्य रही।"
+      en: "**OPERATIONAL PROTOCOL: Evening Renewable Sunset Cliff**\n\n• **Window**: 17:30–20:30 IST.\n• **Dynamic Gap**: Solar generating capacity collapsing to 0 MW while lighting and residential cooking loads ramp +16.4 MW.\n\n**Automated Mitigation Directives:**\n1. **Two-Stage Dispatch Activated**: Dispatched 9.5 MW from community BESS fleet (72.5% SOC currently primed).\n2. **Demand Flexibility Response**: Activated 5.2 MW of contracted commercial flexible load shifts.\n3. **Avoided Carbon**: 100% avoided diesel peaker plant dispatch, eliminating 14.8 tCO2.",
+      hi: "**शाम का डक कर्व डेफिसिट (18.2 MW)**\n\n• **कार्रवाई**: BESS से 9.5 MW और फ्लेक्सिबल लोड से 5.2 MW संचालित किया गया। डीजल जनरेटर की आवश्यकता शून्य रही।"
     }
   },
   {
@@ -146,8 +133,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R1', 'R5'],
     confidence: 92,
     responses: {
-      en: "🔋 **BATTERY HEALTH ALERT: BESS-01 Thermal Derating Active**\n\n• **Condition**: Rack 4 cell temperature reached **43.1°C** during heavy discharge.\n• **Safety Protection**: C-rate clamped from 1.0C to **0.6C** to prevent thermal runaway risk.\n\n**Automated Mitigation Directives:**\n1. **Load Re-allocation**: Transferred 2.0 MW discharge burden to **BESS-03 Sodium-Ion** unit (inherently non-flammable, thermal tolerance up to 55°C).\n2. **HVAC Chiller Boost**: Switched battery container cooling loops to maximum auxiliary cycle.\n3. **Fleet State**: Fleet remains able to supply 10.0 MW continuously.",
-      hi: "🔋 **बैटरी अलर्ट: BESS-01 सेल तापमान 43.1°C**\n\n• **कार्रवाई**: डिस्चार्ज दर 0.6C तक सीमित की गई। भार को सोडियम-आयन BESS-03 पर स्थानांतरित किया गया।"
+      en: "**BATTERY HEALTH ALERT: BESS-01 Thermal Derating Active**\n\n• **Condition**: Rack 4 cell temperature reached **43.1°C** during heavy discharge.\n• **Safety Protection**: C-rate clamped from 1.0C to **0.6C** to prevent thermal runaway risk.\n\n**Automated Mitigation Directives:**\n1. **Load Re-allocation**: Transferred 2.0 MW discharge burden to **BESS-03 Sodium-Ion** unit (inherently non-flammable, thermal tolerance up to 55°C).\n2. **HVAC Chiller Boost**: Switched battery container cooling loops to maximum auxiliary cycle.\n3. **Fleet State**: Fleet remains able to supply 10.0 MW continuously.",
+      hi: "**बैटरी अलर्ट: BESS-01 सेल तापमान 43.1°C**\n\n• **कार्रवाई**: डिस्चार्ज दर 0.6C तक सीमित की गई। भार को सोडियम-आयन BESS-03 पर स्थानांतरित किया गया।"
     }
   },
   {
@@ -158,8 +145,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R6', 'R1'],
     confidence: 95,
     responses: {
-      en: "🏝️ **MICROGRID DIRECTIVE: Islanding Feeder F-04 Initiated**\n\n• **Context**: Upstream transmission line maintenance or emergency grid trip.\n\n**Automated Mitigation Directives:**\n1. **Point of Common Coupling (PCC)**: Opened microgrid circuit breaker CB-44 at 11kV bus.\n2. **Grid-Forming Inverter Mode**: Transitioned BESS-04 (4 MWh) inverter into **Voltage-Source Grid-Forming Mode (GFM)** at exactly 50.00 Hz, 1.00 p.u.\n3. **Local Generation Balance**: Matched campus rooftop solar (2.4 MW) + BESS-04 (1.8 MW) against critical university loads (3.9 MW).\n4. **Endurance**: Microgrid can sustain autonomous islanded operation for **6.5 hours**.",
-      hi: "🏝️ **माइक्रोग्रिड कमांड: फीडर F-04 स्वतंत्र आइलैंड मोड में**\n\n• **कार्रवाई**: BESS-04 ग्रिड-फॉर्मिंग इनवर्टर मोड में बदला। 50.00 Hz पर 6.5 घंटे तक स्वतंत्र बिजली आपूर्ति जारी रहेगी।"
+      en: "**MICROGRID DIRECTIVE: Islanding Feeder F-04 Initiated**\n\n• **Context**: Upstream transmission line maintenance or emergency grid trip.\n\n**Automated Mitigation Directives:**\n1. **Point of Common Coupling (PCC)**: Opened microgrid circuit breaker CB-44 at 11kV bus.\n2. **Grid-Forming Inverter Mode**: Transitioned BESS-04 (4 MWh) inverter into **Voltage-Source Grid-Forming Mode (GFM)** at exactly 50.00 Hz, 1.00 p.u.\n3. **Local Generation Balance**: Matched campus rooftop solar (2.4 MW) + BESS-04 (1.8 MW) against critical university loads (3.9 MW).\n4. **Endurance**: Microgrid can sustain autonomous islanded operation for **6.5 hours**.",
+      hi: "**माइक्रोग्रिड कमांड: फीडर F-04 स्वतंत्र आइलैंड मोड में**\n\n• **कार्रवाई**: BESS-04 ग्रिड-फॉर्मिंग इनवर्टर मोड में बदला। 50.00 Hz पर 6.5 घंटे तक स्वतंत्र बिजली आपूर्ति जारी रहेगी।"
     }
   },
   {
@@ -170,8 +157,8 @@ const INCIDENT_SCENARIOS: IncidentScenario[] = [
     docs: ['R1', 'R6'],
     confidence: 91,
     responses: {
-      en: "🛡️ **CYBER-RESILIENCE PROTOCOL: Autonomous Fallback Mode Engaged**\n\n• **Anomaly**: SCADA polling timeout on Feeder F-03 RTU telemetry.\n• **Security Response**: Cryptographic verification triggered in SQLite audit log.\n\n**Automated Mitigation Directives:**\n1. **Autonomous Local Edge Control**: Inverters switched to local droop control ($P-f$ and $Q-V$) without requiring central cloud connection.\n2. **Last-Known-Good Schedule**: Executing cached LightGBM dispatch trajectory.\n3. **Audit Log**: Incident timestamped with client IP and SHA-256 integrity check.",
-      hi: "🛡️ **सुरक्षा प्रोटोकॉल: ऑटोनॉमस एज कंट्रोल सक्रिय**\n\n• **कार्रवाई**: क्लाउड संपर्क टूटने पर इनवर्टर लोकल ड्रूप कंट्रोल पर चले गए हैं। सिस्टम बिना रुकावट चल रहा है।"
+      en: "**CYBER-RESILIENCE PROTOCOL: Autonomous Fallback Mode Engaged**\n\n• **Anomaly**: SCADA polling timeout on Feeder F-03 RTU telemetry.\n• **Security Response**: Cryptographic verification triggered in SQLite audit log.\n\n**Automated Mitigation Directives:**\n1. **Autonomous Local Edge Control**: Inverters switched to local droop control ($P-f$ and $Q-V$) without requiring central cloud connection.\n2. **Last-Known-Good Schedule**: Executing cached LightGBM dispatch trajectory.\n3. **Audit Log**: Incident timestamped with client IP and SHA-256 integrity check.",
+      hi: "**सुरक्षा प्रोटोकॉल: ऑटोनॉमस एज कंट्रोल सक्रिय**\n\n• **कार्रवाई**: क्लाउड संपर्क टूटने पर इनवर्टर लोकल ड्रूप कंट्रोल पर चले गए हैं। सिस्टम बिना रुकावट चल रहा है।"
     }
   }
 ];
@@ -228,7 +215,7 @@ function getIncidentResponse(query: string, langCode: string): {
 
   // Fallback intelligent responder with specific telemetry
   return {
-    text: `### ⚡ Grid Incident Assessment for: "${query}"\n\n• **Telemetry Snapshot**: 33/11kV Substation throughput is **51.2 MW** (73.1% loading) across 4 feeders.\n• **BESS Reserve**: **40 MWh** Virtual BESS fleet is at **72.5% SOC**, ready for emergency injection up to 10.5 MW in <150 ms.\n• **Directives**:\n  1. Maintain primary droop frequency control ($50.00 \\pm 0.05$ Hz).\n  2. Keep EV depot fast-chargers armed for automated curtailment if feeder loading exceeds 85%.\n  3. P2P double auction window remains active for prosumer bilateral balancing.\n\n*Select any of the 12 incident scenarios above or use voice command to dispatch immediate corrective measures.*`,
+    text: `### Grid Incident Assessment for: "${query}"\n\n• **Telemetry Snapshot**: 33/11kV Substation throughput is **51.2 MW** (73.1% loading) across 4 feeders.\n• **BESS Reserve**: **40 MWh** Virtual BESS fleet is at **72.5% SOC**, ready for emergency injection up to 10.5 MW in <150 ms.\n• **Directives**:\n  1. Maintain primary droop frequency control ($50.00 \\pm 0.05$ Hz).\n  2. Keep EV depot fast-chargers armed for automated curtailment if feeder loading exceeds 85%.\n  3. P2P double auction window remains active for prosumer bilateral balancing.\n\n*Select any of the incident scenarios above or use voice command to dispatch immediate corrective measures.*`,
     docs: [RAG_KB.R1, RAG_KB.R4],
     confidence: 91,
     incidentType: "Automated Incident Co-pilot Resolution",
@@ -241,7 +228,7 @@ export default function IncidentCopilotPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([{
     id: 'sys-1',
     role: 'system',
-    content: '🚨 **GridFlex AI Emergency Incident Co-pilot Initialized**\n\nReal-time voice & text dispatcher connected to 33/11kV SCADA telemetry and CERC grid protection protocols. Click any of the **12 incident scenarios below** or speak directly in English, Hindi, or 13 Indian regional languages.',
+    content: '**GridFlex AI Emergency Incident Copilot Initialized**\n\nVoice & text dispatcher connected to 33/11kV SCADA telemetry and CERC grid protection protocols. Click any of the incident scenarios below or speak directly in English or Hindi.',
     language: 'en',
     timestamp: new Date().toLocaleTimeString('en-IN'),
     confidence: 100,

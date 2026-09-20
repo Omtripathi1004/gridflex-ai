@@ -291,7 +291,7 @@ export default function P2PPage() {
               Total Ledger Cleared: <strong>{totalMatchedVolumeKwh} kWh</strong> • Total Value: <strong>₹{totalTransactionInr.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong>
             </p>
           </div>
-          <span className="badge badge-live">Reconciled Sum ✅</span>
+          <span className="badge badge-live">Reconciled Sum</span>
         </div>
 
         <div className="table-wrapper">

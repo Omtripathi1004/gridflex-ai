@@ -130,8 +130,8 @@ export default function LandingPage() {
             <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>Sub-Cycle Dispatch Latency</div>
           </div>
           <div className="card-purple" style={{ padding: 18, textAlign: 'center', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#e9d5ff' }}>15 Locales</div>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>Indian Regional Languages</div>
+            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#e9d5ff' }}>EN &amp; HI</div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>Bilingual Support</div>
           </div>
         </div>
       </section>
@@ -283,7 +283,7 @@ export default function LandingPage() {
               <span className="badge badge-live" style={{ fontSize: '0.72rem' }}>REST API &amp; Web Speech</span>
             </div>
             <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.5 }}>
-              Dynamic API fetches from Open-Meteo NWP and NASA POWER, plus browser Web Speech API audio for 15 Indian languages.
+              Dynamic API fetches from Open-Meteo NWP and NASA POWER, with bilingual English and Hindi interface support.
             </p>
             <div style={{ fontSize: '0.76rem', color: 'var(--text-tertiary)' }}>
               Pages: <strong>/command-center</strong>, <strong>/renewable-forecast</strong>, <strong>/sky-vision</strong>, <strong>/incident-copilot</strong>
@@ -300,13 +300,12 @@ export default function LandingPage() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: '1rem' }}>⏱️</span>
                 <strong style={{ color: 'var(--cyan-primary)', fontSize: '1rem' }}>Cached National Data</strong>
               </div>
               <span className="badge badge-forecast" style={{ fontSize: '0.72rem' }}>Govt Baselines</span>
             </div>
             <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.5 }}>
-              Real Indian utility profiles (Grid-India NLDC Daily PSP 64.8 MW, Vidyut PRAVAH IEX DAM ₹6.80/kWh, CEA v19) cached for zero latency &amp; 100% offline uptime.
+              Real Indian utility profiles (Grid-India NLDC Daily PSP 64.8 MW, Vidyut PRAVAH IEX DAM ₹6.80/kWh, CEA v19) cached for fast response &amp; offline reliability.
             </p>
             <div style={{ fontSize: '0.76rem', color: 'var(--text-tertiary)' }}>
               Pages: <strong>/demand-forecast</strong>, <strong>/spatial-twin</strong>, <strong>/tariff-engine</strong>, <strong>/explainable-ai</strong>
@@ -323,13 +322,12 @@ export default function LandingPage() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: '1rem' }}>⚡</span>
                 <strong style={{ color: 'var(--amber-flow)', fontSize: '1rem' }}>Demo / Synthetic Data</strong>
               </div>
               <span className="badge badge-sim" style={{ fontSize: '0.72rem' }}>Physics Twin</span>
             </div>
             <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.5 }}>
-              Physics-constrained mathematical ODEs and MILP optimization algorithms simulating 40 MWh community BESS, fault injections, and microgrid P2P auctions.
+              Mathematical models and MILP optimization algorithms simulating 40 MWh community BESS, fault injections, and microgrid P2P auctions.
             </p>
             <div style={{ fontSize: '0.76rem', color: 'var(--text-tertiary)' }}>
               Pages: <strong>/digital-twin</strong>, <strong>/self-healing</strong>, <strong>/storage</strong>, <strong>/flexibility</strong>, <strong>/p2p</strong>
@@ -349,20 +347,19 @@ export default function LandingPage() {
         }}>
           <div style={{ fontSize: '0.86rem', fontWeight: 700, color: 'var(--cyan-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
             <Cpu size={16} />
-            <span>Under the Hood: Complete Technology &amp; Math Stack</span>
+            <span>Architecture &amp; Math Stack</span>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>React 18 + Vite SPA (21 Routes)</span>
-            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>TypeScript &amp; React 18</span>
-            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>Vanilla CSS Design Tokens</span>
-            <span className="badge" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)' }}>LightGBM Regressor v2.4 (95% CI)</span>
-            <span className="badge" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)' }}>XGBoost Temporal Regressor v3.1</span>
+            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>React 18 + Vite SPA</span>
+            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>TypeScript</span>
+            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>Vanilla CSS</span>
+            <span className="badge" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)' }}>LightGBM Regressor (95% CI)</span>
+            <span className="badge" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)' }}>XGBoost Temporal Regressor</span>
             <span className="badge" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--amber-flow)' }}>MILP PuLP Flexibility Solver</span>
-            <span className="badge" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--amber-flow)' }}>Farneback Optical-Flow Radar (Canvas)</span>
-            <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--green-renew)' }}>Causal Do-Calculus [P(Y|do(X))] DAG</span>
+            <span className="badge" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--amber-flow)' }}>Optical Flow Cloud Tracking</span>
+            <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--green-renew)' }}>Causal Inference DAG</span>
             <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--green-renew)' }}>TreeSHAP Feature Attributions</span>
-            <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc' }}>Web Speech API (15 Indian Languages)</span>
-            <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc' }}>CERC DSM Frequency Arbitrage Solver</span>
+            <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc' }}>English &amp; Hindi Bilingual</span>
           </div>
         </div>
 
@@ -370,9 +367,9 @@ export default function LandingPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>
-              Where Should You Go? Quick Directory
+              Page Directory
             </h3>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Click any card to launch immediately</span>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Click any card to view</span>
           </div>
 
           <div style={{
@@ -382,81 +379,81 @@ export default function LandingPage() {
           }}>
             <Link to="/command-center" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: 'var(--cyan-primary)', fontSize: '0.95rem' }}>⚡ Command Center</span>
+                <span style={{ fontWeight: 700, color: 'var(--cyan-primary)', fontSize: '0.95rem' }}>Command Center</span>
                 <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Live</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Real-time SCADA telemetry, live grid frequency (50 Hz), generation vs demand, and instant dispatch commands.
+                Telemetry dashboard, grid frequency (50 Hz), generation vs demand, and dispatch directives.
               </p>
             </Link>
 
             <Link to="/sky-vision" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>👁️ SkyVision Radar</span>
-                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Live Flow</span>
+                <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>SkyVision Radar</span>
+                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Flow</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Farneback optical-flow canvas tracking cloud vectors to forecast sudden solar drops 15–30 mins in advance.
+                Cloud vector tracking to forecast sudden solar changes 15–30 minutes ahead.
               </p>
             </Link>
 
             <Link to="/self-healing" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>🛡️ Self-Healing Grid</span>
+                <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>Self-Healing Grid</span>
                 <span className="badge badge-sim" style={{ fontSize: '0.68rem' }}>Causal AI</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Causal Do-Calculus DAG inference isolating faulty feeders and triggering automated DSM bids during trips.
+                Causal DAG inference isolating faulty feeders and triggering automated bids during feeder trips.
               </p>
             </Link>
 
             <Link to="/spatial-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: '#38bdf8', fontSize: '0.95rem' }}>🗺️ Spatial Twin (3D)</span>
-                <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>Topological</span>
+                <span style={{ fontWeight: 700, color: '#38bdf8', fontSize: '0.95rem' }}>Spatial Twin (3D)</span>
+                <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>Topology</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Topological 3D corridor view of inter-regional transmission lines, loading percentages, and N-1 bottlenecks.
+                Corridor view of inter-regional transmission lines, loading percentages, and bottlenecks.
               </p>
             </Link>
 
             <Link to="/tariff-engine" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.95rem' }}>⚖️ Tariff Engine</span>
-                <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>CERC DSM</span>
+                <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.95rem' }}>Tariff Engine</span>
+                <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>DSM</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                CERC §5.3 deviation penalty solver, Time-of-Use schedule (₹/kWh), and battery arbitrage optimizer.
+                Deviation penalty calculation, Time-of-Use tariff structure, and battery arbitrage.
               </p>
             </Link>
 
             <Link to="/incident-copilot" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: '#c084fc', fontSize: '0.95rem' }}>🎙️ Incident Co-pilot</span>
-                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>15 Locales</span>
+                <span style={{ fontWeight: 700, color: '#c084fc', fontSize: '0.95rem' }}>Incident Copilot</span>
+                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Copilot</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Multilingual AI assistant with native browser voice control in Hindi, Tamil, Telugu, Marathi, and 11 more languages.
+                Grid assistant supporting queries and advisory in English and Hindi.
               </p>
             </Link>
 
             <Link to="/digital-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>🎛️ Digital Twin Sandbox</span>
-                <span className="badge badge-sim" style={{ fontSize: '0.68rem' }}>64.8 MW</span>
+                <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>Digital Twin Sandbox</span>
+                <span className="badge badge-sim" style={{ fontSize: '0.68rem' }}>Simulator</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Safely simulate substation breaker trips, transformer overloads, and cloud bursts with real-time feedback.
+                What-if grid simulator testing generation, demand, battery, and weather variations over 24 hours.
               </p>
             </Link>
 
             <Link to="/judge-mode" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>🎯 Judge Mode &amp; Audit</span>
-                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Evaluator</span>
+                <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>Judge Mode &amp; Audit</span>
+                <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Evaluation</span>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Guided evaluation tour with 1-click automated test runner, rubric scores, and mathematical proof documents.
+                Evaluation walkthrough highlighting key challenge criteria, model metrics, and architecture.
               </p>
             </Link>
           </div>

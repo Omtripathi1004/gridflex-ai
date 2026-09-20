@@ -181,7 +181,7 @@ export default function SpatialTwinPage() {
           {(['congestion','voltage','flow'] as const).map(m=>(
             <button key={m} onClick={()=>setViewMode(m)}
               style={{padding:'8px 16px',borderRadius:8,border:`1px solid ${viewMode===m?'rgba(6,182,212,0.6)':'rgba(255,255,255,0.1)'}`,background:viewMode===m?'rgba(6,182,212,0.2)':'rgba(255,255,255,0.03)',color:viewMode===m?'#06B6D4':'var(--text-secondary)',cursor:'pointer',fontSize:'0.82rem',fontWeight:viewMode===m?700:500,textTransform:'capitalize',transition:'all 0.2s'}}>
-              {m === 'congestion' ? '⚡ Congestion' : m === 'voltage' ? '📈 Voltage (pu)' : '🔄 Power Flow'}
+              {m === 'congestion' ? 'Congestion' : m === 'voltage' ? 'Voltage (pu)' : 'Power Flow'}
             </button>
           ))}
         </div>
@@ -291,7 +291,7 @@ export default function SpatialTwinPage() {
                     {k:'Utilization',v:`${Math.round(selectedLine.loadMW/selectedLine.capacityMW*100)}%`},
                     {k:'Voltage',v:`${selectedLine.voltagekV} kV`},
                     {k:'State',v:selectedLine.state},
-                    {k:'Status',v:selectedLine.congested?'⚠ CONGESTED':'✓ Normal'},
+                    {k:'Status',v:selectedLine.congested?'CONGESTED':'Normal'},
                   ].map(r=>(
                     <div key={r.k} style={{display:'flex',justifyContent:'space-between',marginBottom:5,fontSize:'0.8rem'}}>
                       <span style={{color:'var(--text-tertiary)'}}>{r.k}</span>

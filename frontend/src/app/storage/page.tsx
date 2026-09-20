@@ -209,7 +209,7 @@ export default function StoragePage() {
             <Activity size={20} style={{ color: 'var(--cyan-primary)' }} />
             <h3 style={{ margin: 0, fontSize: '1.05rem' }}>F2: Battery Fleet Constraint Inspector</h3>
           </div>
-          <span className="badge badge-live" style={{ color: '#22c55e' }}>All 5 Constraints Satisfied ✅</span>
+          <span className="badge badge-live" style={{ color: '#22c55e' }}>All 5 Constraints Satisfied</span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, fontSize: '0.82rem' }}>

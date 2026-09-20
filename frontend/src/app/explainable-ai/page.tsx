@@ -495,7 +495,7 @@ export default function ExplainableAIPage() {
           }}>
             <CheckCircle2 size={16} />
             <span>
-              <strong>TreeSHAP Additivity Enforced:</strong> Base ({solarShap.base_value_mw} MW) + Σ contributions ({solarCheck.sum >= 0 ? `+${solarCheck.sum}` : solarCheck.sum} MW) = <strong>{solarShap.predicted_value_mw} MW</strong> (Exact Match ✅)
+              <strong>TreeSHAP Additivity Enforced:</strong> Base ({solarShap.base_value_mw} MW) + Σ contributions ({solarCheck.sum >= 0 ? `+${solarCheck.sum}` : solarCheck.sum} MW) = <strong>{solarShap.predicted_value_mw} MW</strong> (Exact Match)
             </span>
           </div>
 
@@ -577,7 +577,7 @@ export default function ExplainableAIPage() {
           }}>
             <CheckCircle2 size={16} />
             <span>
-              <strong>TreeSHAP Additivity Enforced:</strong> Base ({deficitShap.base_value_mw} MW) + Σ contributions ({deficitCheck.sum >= 0 ? `+${deficitCheck.sum}` : deficitCheck.sum} MW) = <strong>{deficitShap.predicted_value_mw} MW</strong> (Exact Match ✅)
+              <strong>TreeSHAP Additivity Enforced:</strong> Base ({deficitShap.base_value_mw} MW) + Σ contributions ({deficitCheck.sum >= 0 ? `+${deficitCheck.sum}` : deficitCheck.sum} MW) = <strong>{deficitShap.predicted_value_mw} MW</strong> (Exact Match)
             </span>
           </div>
 
@@ -671,15 +671,15 @@ export default function ExplainableAIPage() {
             <div style={{ fontSize: '0.94rem', fontWeight: 600, color: '#e2e8f0', lineHeight: 1.5 }}>
               {batterySocSlider < 30 ? (
                 <span style={{ color: '#f87171' }}>
-                  ⚠️ BESS depleted below 30%. Solver shifts <strong>8.8 MW</strong> to Aggregated Demand Response and increases P2P prosumer clearing to <strong>5.4 MW</strong> to avoid blackout.
+                  BESS depleted below 30%. Solver shifts <strong>8.8 MW</strong> to Aggregated Demand Response and increases P2P prosumer clearing to <strong>5.4 MW</strong> to avoid blackout.
                 </span>
               ) : batterySocSlider < 70 ? (
                 <span style={{ color: 'var(--amber-flow)' }}>
-                  ⚡ Balanced Flexibility: BESS dispatches <strong>7.2 MW</strong>, DR sheds <strong>6.5 MW</strong>, and P2P covers remaining <strong>4.5 MW</strong>.
+                  Balanced Flexibility: BESS dispatches <strong>7.2 MW</strong>, DR sheds <strong>6.5 MW</strong>, and P2P covers remaining <strong>4.5 MW</strong>.
                 </span>
               ) : (
                 <span style={{ color: 'var(--green-renew)' }}>
-                  ✅ High Battery Headroom: BESS dispatches full <strong>9.5 MW</strong> primary reserve at lowest levelized cost (₹5,166/MWh). Zero consumer curtailment.
+                  High Battery Headroom: BESS dispatches full <strong>9.5 MW</strong> primary reserve at lowest levelized cost (₹5,166/MWh). Zero consumer curtailment.
                 </span>
               )}
             </div>

@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import { AuthGuard } from './components/AuthGuard';
 import { NavbarWrapper } from './components/NavbarWrapper';
 import { Footer } from './components/Footer';
+import { GlobalChatWidget } from './components/GlobalChatWidget';
 
 // Direct synchronous imports for 0ms instantaneous navigation without Suspense layout jumps
 import HomePage from './app/page';
@@ -73,6 +74,7 @@ export default function App() {
                 <Route path="*"                 element={<NotFoundPage />} />
               </Routes>
             </main>
+            <GlobalChatWidget />
             <Footer />
           </div>
         </AuthGuard>

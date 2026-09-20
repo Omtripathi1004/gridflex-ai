@@ -254,15 +254,10 @@ export default function DigitalTwinPage() {
         </button>
       </div>
 
-      {/* 3. Main Area: Two columns on laptop (Inputs vs Results + Recommendation) */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 480px), 1fr))',
-        gap: 24,
-        alignItems: 'start'
-      }}>
-        {/* Left Column: Inputs Card */}
-        <div style={{
+      {/* 3. Main Area: twin-layout-wrapper (2-col grid on laptop, custom order on mobile) */}
+      <div className="twin-layout-wrapper">
+        {/* Inputs Card */}
+        <div className="twin-order-inputs" style={{
           background: 'var(--bg-secondary)',
           border: '1px solid var(--border-subtle)',
           borderRadius: 8,
@@ -282,17 +277,16 @@ export default function DigitalTwinPage() {
           </h2>
 
           {/* Slider 1: Solar */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
-              <label htmlFor="solar-slider" style={{ color: 'var(--text-secondary)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>
                 {language === 'hi' ? 'सौर उत्पादन गुणक' : 'Solar generation multiplier'}
-              </label>
-              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+              </span>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                 {(solarMult * 100).toFixed(0)}%
               </span>
             </div>
             <input
-              id="solar-slider"
               type="range"
               min="0"
               max="1.5"
@@ -302,22 +296,22 @@ export default function DigitalTwinPage() {
                 setSolarMult(parseFloat(e.target.value));
                 setActivePreset(null);
               }}
+              aria-label="Solar generation multiplier"
               style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
           {/* Slider 2: Wind */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
-              <label htmlFor="wind-slider" style={{ color: 'var(--text-secondary)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>
                 {language === 'hi' ? 'पवन उत्पादन गुणक' : 'Wind generation multiplier'}
-              </label>
-              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+              </span>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                 {(windMult * 100).toFixed(0)}%
               </span>
             </div>
             <input
-              id="wind-slider"
               type="range"
               min="0"
               max="1.5"
@@ -327,22 +321,22 @@ export default function DigitalTwinPage() {
                 setWindMult(parseFloat(e.target.value));
                 setActivePreset(null);
               }}
+              aria-label="Wind generation multiplier"
               style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* Slider 3: Demand */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
-              <label htmlFor="demand-slider" style={{ color: 'var(--text-secondary)' }}>
-                {language === 'hi' ? 'पीक मांग लोड' : 'Peak demand load'}
-              </label>
-              <span style={{ fontWeight: 600, minWidth: 120, textAlign: 'right', fontFamily: 'monospace' }}>
+          {/* Slider 3: Demand Load */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'पीक मांग भार' : 'Peak demand load'}
+              </span>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                 {(demandMult * 64.8).toFixed(1)} MW ({(demandMult * 100).toFixed(0)}%)
               </span>
             </div>
             <input
-              id="demand-slider"
               type="range"
               min="0.7"
               max="1.5"
@@ -352,22 +346,22 @@ export default function DigitalTwinPage() {
                 setDemandMult(parseFloat(e.target.value));
                 setActivePreset(null);
               }}
+              aria-label="Peak demand load"
               style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
           {/* Slider 4: Battery */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
-              <label htmlFor="battery-slider" style={{ color: 'var(--text-secondary)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>
                 {language === 'hi' ? 'बैटरी उपलब्धता (40 MWh)' : 'Battery availability (40 MWh)'}
-              </label>
-              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+              </span>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                 {batteryPct}%
               </span>
             </div>
             <input
-              id="battery-slider"
               type="range"
               min="0"
               max="100"
@@ -377,22 +371,22 @@ export default function DigitalTwinPage() {
                 setBatteryPct(parseFloat(e.target.value));
                 setActivePreset(null);
               }}
+              aria-label="Battery availability"
               style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* Slider 5: Flexible Load */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.84rem' }}>
-              <label htmlFor="flex-slider" style={{ color: 'var(--text-secondary)' }}>
+          {/* Slider 5: Flexible Demand */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>
                 {language === 'hi' ? 'लचीली मांग भागीदारी' : 'Flexible load participation'}
-              </label>
-              <span style={{ fontWeight: 600, minWidth: 60, textAlign: 'right', fontFamily: 'monospace' }}>
+              </span>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                 {flexPct}%
               </span>
             </div>
             <input
-              id="flex-slider"
               type="range"
               min="0"
               max="100"
@@ -402,25 +396,26 @@ export default function DigitalTwinPage() {
                 setFlexPct(parseFloat(e.target.value));
                 setActivePreset(null);
               }}
+              aria-label="Flexible load participation"
               style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer', height: 28 }}
             />
           </div>
 
-          {/* Weather Selector (No emoji) */}
-          <div style={{ paddingTop: 6 }}>
-            <span style={{ display: 'block', marginBottom: 8, fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          {/* Weather Selector */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
+            <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
               {language === 'hi' ? 'मौसम मोड' : 'Weather mode'}
-            </span>
+            </div>
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 6
+              gap: 8
             }}>
               {[
                 { key: 'NORMAL', label: language === 'hi' ? 'सामान्य' : 'Normal' },
                 { key: 'HEATWAVE', label: language === 'hi' ? 'हीटवेव' : 'Heatwave' },
-                { key: 'STORM_FRONT', label: language === 'hi' ? 'मानसून तूफान' : 'Monsoon Storm' },
-              ].map(opt => (
+                { key: 'STORM_FRONT', label: language === 'hi' ? 'मानसून तूफान' : 'Monsoon Storm' }
+              ].map((opt) => (
                 <button
                   key={opt.key}
                   type="button"
@@ -446,249 +441,247 @@ export default function DigitalTwinPage() {
           </div>
         </div>
 
-        {/* Right Column: Results + Recommendation Card */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        {/* Results Card */}
+        <div className="twin-order-results" style={{
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: 8,
+          padding: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16
+        }}>
+          {/* Results Heading with Risk Badge */}
           <div style={{
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 8,
-            padding: 20,
             display: 'flex',
-            flexDirection: 'column',
-            gap: 16
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 8,
+            paddingBottom: 8,
+            borderBottom: '1px solid var(--border-subtle)'
           }}>
-            {/* Results Heading with Risk Badge */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 8,
-              paddingBottom: 8,
-              borderBottom: '1px solid var(--border-subtle)'
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, margin: 0 }}>
+              {language === 'hi' ? 'परिणाम' : 'Results'}
+            </h2>
+            <span style={{
+              padding: '3px 8px',
+              borderRadius: 4,
+              fontSize: '0.76rem',
+              fontWeight: 600,
+              background: summary.peak_deficit_mw > 20 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+              color: summary.peak_deficit_mw > 20 ? '#ef4444' : '#10b981',
+              border: `1px solid ${summary.peak_deficit_mw > 20 ? '#ef4444' : '#10b981'}`
             }}>
-              <h2 style={{ fontSize: '1.05rem', fontWeight: 600, margin: 0 }}>
-                {language === 'hi' ? 'परिणाम' : 'Results'}
-              </h2>
-              <span style={{
-                padding: '3px 8px',
-                borderRadius: 4,
-                fontSize: '0.76rem',
-                fontWeight: 600,
-                background: summary.peak_deficit_mw > 20 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
-                color: summary.peak_deficit_mw > 20 ? '#ef4444' : '#10b981',
-                border: `1px solid ${summary.peak_deficit_mw > 20 ? '#ef4444' : '#10b981'}`
-              }}>
-                {summary.risk_classification}
-              </span>
-            </div>
-
-            {/* 2x2 Metric Cards Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: 12
-            }}>
-              {/* Card 1: Peak Deficit */}
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 6,
-                padding: '12px 14px'
-              }}>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
-                  {language === 'hi' ? 'पीक घाटा' : 'Peak deficit'}
-                </div>
-                <div style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  fontFamily: 'monospace',
-                  color: summary.peak_deficit_mw > 0 ? '#ef4444' : '#10b981'
-                }}>
-                  {summary.peak_deficit_mw > 0 ? `-${summary.peak_deficit_mw}` : '0.0'}{' '}
-                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>MW</span>
-                </div>
-              </div>
-
-              {/* Card 2: Net Energy Balance */}
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 6,
-                padding: '12px 14px'
-              }}>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
-                  {language === 'hi' ? 'शुद्ध ऊर्जा संतुलन' : 'Net energy balance'}
-                </div>
-                <div style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  fontFamily: 'monospace',
-                  color: summary.net_daily_balance_mwh < 0 ? '#f59e0b' : '#10b981'
-                }}>
-                  {summary.net_daily_balance_mwh > 0 ? `+${summary.net_daily_balance_mwh}` : summary.net_daily_balance_mwh}{' '}
-                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>MWh</span>
-                </div>
-              </div>
-
-              {/* Card 3: Resilience Score */}
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 6,
-                padding: '12px 14px'
-              }}>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
-                  {language === 'hi' ? 'लचीलापन स्कोर' : 'Resilience score'}
-                </div>
-                <div style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  fontFamily: 'monospace',
-                  color: summary.composite_resilience_score >= 80 ? '#10b981' : '#f59e0b'
-                }}>
-                  {summary.composite_resilience_score}{' '}
-                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>/ 100</span>
-                </div>
-              </div>
-
-              {/* Card 4: Shortage Hours Eliminated */}
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 6,
-                padding: '12px 14px'
-              }}>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
-                  {language === 'hi' ? 'कमी के घंटे समाप्त' : 'Shortage hours eliminated'}
-                </div>
-                <div style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  fontFamily: 'monospace',
-                  color: '#10b981'
-                }}>
-                  {shortageHoursEliminated}{' '}
-                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
-                    {language === 'hi' ? 'घंटे' : 'hours'}
-                  </span>
-                </div>
-              </div>
-            </div>
+              {summary.risk_classification}
+            </span>
           </div>
 
-          {/* Recommended Action Box */}
+          {/* 2x2 Metric Cards Grid */}
           <div style={{
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 8,
-            padding: 16
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 12
           }}>
-            <h3 style={{
-              fontSize: '0.88rem',
-              fontWeight: 600,
-              margin: '0 0 6px 0',
-              color: 'var(--cyan-primary)'
+            {/* Card 1: Peak Deficit */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 6,
+              padding: '12px 14px'
             }}>
-              {language === 'hi' ? 'अनुशंसित कार्रवाई' : 'Recommended action'}
-            </h3>
-            <p style={{
-              fontSize: '0.88rem',
-              lineHeight: 1.5,
-              color: 'var(--text-secondary)',
-              margin: 0
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                {language === 'hi' ? 'पीक घाटा' : 'Peak deficit'}
+              </div>
+              <div style={{
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                fontFamily: 'monospace',
+                color: summary.peak_deficit_mw > 0 ? '#ef4444' : '#10b981'
+              }}>
+                {summary.peak_deficit_mw > 0 ? `-${summary.peak_deficit_mw}` : '0.0'}{' '}
+                <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>MW</span>
+              </div>
+            </div>
+
+            {/* Card 2: Net Energy Balance */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 6,
+              padding: '12px 14px'
             }}>
-              {summary.recommended_operational_action}
-            </p>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                {language === 'hi' ? 'शुद्ध ऊर्जा संतुलन' : 'Net energy balance'}
+              </div>
+              <div style={{
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                fontFamily: 'monospace',
+                color: summary.net_daily_balance_mwh < 0 ? '#f59e0b' : '#10b981'
+              }}>
+                {summary.net_daily_balance_mwh > 0 ? `+${summary.net_daily_balance_mwh}` : summary.net_daily_balance_mwh}{' '}
+                <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>MWh</span>
+              </div>
+            </div>
+
+            {/* Card 3: Resilience Score */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 6,
+              padding: '12px 14px'
+            }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                {language === 'hi' ? 'लचीलापन स्कोर' : 'Resilience score'}
+              </div>
+              <div style={{
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                fontFamily: 'monospace',
+                color: summary.composite_resilience_score >= 80 ? '#10b981' : '#f59e0b'
+              }}>
+                {summary.composite_resilience_score}{' '}
+                <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>/ 100</span>
+              </div>
+            </div>
+
+            {/* Card 4: Shortage Hours Eliminated */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 6,
+              padding: '12px 14px'
+            }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+                {language === 'hi' ? 'कमी के घंटे समाप्त' : 'Shortage hours eliminated'}
+              </div>
+              <div style={{
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                fontFamily: 'monospace',
+                color: '#10b981'
+              }}>
+                {shortageHoursEliminated}{' '}
+                <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
+                  {language === 'hi' ? 'घंटे' : 'hours'}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 4. Chart: Full width below */}
-      <div style={{
-        background: 'var(--bg-secondary)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: 8,
-        padding: 20
-      }}>
-        <div style={{ marginBottom: 16 }}>
-          <h2 style={{
-            fontSize: '1.05rem',
+        {/* Recommended Action Box */}
+        <div className="twin-order-recommendation" style={{
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: 8,
+          padding: 16
+        }}>
+          <h3 style={{
+            fontSize: '0.88rem',
             fontWeight: 600,
-            margin: '0 0 4px 0'
+            margin: '0 0 6px 0',
+            color: 'var(--cyan-primary)'
           }}>
-            {language === 'hi' ? '24 घंटे का ऊर्जा संतुलन' : '24-hour energy balance'}
-          </h2>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-tertiary)', margin: 0 }}>
-            {language === 'hi'
-              ? 'अशमित घाटे (लाल रेखा) बनाम ग्रिडफ्लेक्स अनुकूलन (हरी रेखा) का तुलनात्मक विश्लेषण।'
-              : 'Comparison of unmitigated shortfall (red dashed) against GridFlex optimization (green solid).'}
+            {language === 'hi' ? 'अनुशंसित कार्रवाई' : 'Recommended action'}
+          </h3>
+          <p style={{
+            fontSize: '0.88rem',
+            lineHeight: 1.5,
+            color: 'var(--text-secondary)',
+            margin: 0
+          }}>
+            {summary.recommended_operational_action}
           </p>
         </div>
 
-        <div style={{ width: '100%', height: 320 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={curve} margin={{ top: 10, right: 15, left: -10, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" />
-              <XAxis 
-                dataKey="hour" 
-                stroke="#64748b" 
-                tick={{ fill: '#94a3b8', fontSize: 11 }} 
-              />
-              <YAxis 
-                stroke="#64748b" 
-                tick={{ fill: '#94a3b8', fontSize: 11 }} 
-                unit=" MW" 
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'var(--bg-secondary)', 
-                  border: '1px solid var(--border-subtle)', 
-                  borderRadius: '6px', 
-                  color: 'var(--text-primary)',
-                  fontSize: '0.82rem'
-                }} 
-              />
-              <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: 8 }} />
-              <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.2)" strokeWidth={1} />
-              
-              <Line 
-                type="monotone" 
-                dataKey="unmitigated_balance" 
-                name={language === 'hi' ? 'अशमित संतुलन (घाटा)' : 'Unmitigated balance'} 
-                stroke="#ef4444" 
-                strokeWidth={2} 
-                strokeDasharray="4 4" 
-                dot={false} 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="mitigated_balance" 
-                name={language === 'hi' ? 'ग्रिडफ्लेक्स के साथ' : 'With GridFlex (BESS + DR)'} 
-                stroke="#10b981" 
-                strokeWidth={2} 
-                dot={false} 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="p90_upper" 
-                name={language === 'hi' ? 'P90 ऊपरी बैंड' : 'P90 optimistic band'} 
-                stroke="#06b6d4" 
-                strokeWidth={1} 
-                strokeDasharray="2 2" 
-                dot={false} 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="p10_lower" 
-                name={language === 'hi' ? 'P10 निचला बैंड' : 'P10 stress band'} 
-                stroke="#f59e0b" 
-                strokeWidth={1} 
-                strokeDasharray="2 2" 
-                dot={false} 
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
+        {/* 4. Chart: Full width below */}
+        <div className="twin-order-chart" style={{
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: 8,
+          padding: 20
+        }}>
+          <div style={{ marginBottom: 16 }}>
+            <h2 style={{
+              fontSize: '1.05rem',
+              fontWeight: 600,
+              margin: '0 0 4px 0'
+            }}>
+              {language === 'hi' ? '24 घंटे का ऊर्जा संतुलन' : '24-hour energy balance'}
+            </h2>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-tertiary)', margin: 0 }}>
+              {language === 'hi'
+                ? 'अशमित घाटे (लाल रेखा) बनाम ग्रिडफ्लेक्स अनुकूलन (हरी रेखा) का तुलनात्मक विश्लेषण।'
+                : 'Comparison of unmitigated shortfall (red dashed) against GridFlex optimization (green solid).'}
+            </p>
+          </div>
+
+          <div style={{ width: '100%', height: 320 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={curve} margin={{ top: 10, right: 15, left: -10, bottom: 4 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" />
+                <XAxis 
+                  dataKey="hour" 
+                  stroke="#64748b" 
+                  tick={{ fill: '#94a3b8', fontSize: 11 }} 
+                />
+                <YAxis 
+                  stroke="#64748b" 
+                  tick={{ fill: '#94a3b8', fontSize: 11 }} 
+                  unit=" MW" 
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'var(--bg-secondary)', 
+                    border: '1px solid var(--border-subtle)', 
+                    borderRadius: '6px', 
+                    color: 'var(--text-primary)',
+                    fontSize: '0.82rem'
+                  }} 
+                />
+                <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: 8 }} />
+                <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.2)" strokeWidth={1} />
+                
+                <Line 
+                  type="monotone" 
+                  dataKey="unmitigated_balance" 
+                  name={language === 'hi' ? 'अशमित संतुलन (घाटा)' : 'Unmitigated shortfall'} 
+                  stroke="#ef4444" 
+                  strokeWidth={2} 
+                  strokeDasharray="4 4" 
+                  dot={false} 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="mitigated_balance" 
+                  name={language === 'hi' ? 'ग्रिडफ्लेक्स के साथ' : 'GridFlex optimized'} 
+                  stroke="#10b981" 
+                  strokeWidth={2} 
+                  dot={false} 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="p90_upper" 
+                  name={language === 'hi' ? 'P90 ऊपरी बैंड' : 'P90 optimistic band'} 
+                  stroke="#06b6d4" 
+                  strokeWidth={1} 
+                  strokeDasharray="2 2" 
+                  dot={false} 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="p10_lower" 
+                  name={language === 'hi' ? 'P10 निचला बैंड' : 'P10 stress band'} 
+                  stroke="#f59e0b" 
+                  strokeWidth={1} 
+                  strokeDasharray="2 2" 
+                  dot={false} 
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>

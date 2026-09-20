@@ -123,7 +123,7 @@ export default function CommandCenterPage() {
             <Cpu size={14} style={{ marginRight: 4 }} /> Inspect XAI Rationale
           </Link>
           <Link to="/judge-mode" className="btn btn-amber btn-sm">
-            🎯 {t('nav.judge_mode')}
+            {t('nav.judge_mode')}
           </Link>
         </div>
       </div>

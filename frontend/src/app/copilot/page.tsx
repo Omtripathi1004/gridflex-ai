@@ -88,7 +88,7 @@ export default function CopilotPage() {
       id: 'init-1',
       sender: 'copilot',
       timestamp: 'Live',
-      text: "👋 **Welcome to GridFlex AI Energy Copilot!**\n\nI am your intelligent assistant for 33/11kV substation operations, ML-driven renewable forecasting, virtual BESS dispatch, and P2P market coordination.\n\nClick any of the **15 prompt chips below** or type your own question in the box to get an instant, technically grounded answer with authoritative citations.",
+      text: "**Welcome to GridFlex AI Energy Copilot**\n\nI am your assistant for 33/11kV substation operations, ML-driven renewable forecasting, virtual BESS dispatch, and P2P market coordination.\n\nClick any of the prompt chips below or type your own question in the box to get an answer with references.",
       references: [
         {
           doc_id: "DOC-GRID-01",

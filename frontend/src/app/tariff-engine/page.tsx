@@ -284,7 +284,7 @@ export default function TariffEnginePage() {
                         <span>σ: <strong style={{color:col}}>{p.sigma}</strong></span>
                         <span>Direction: <strong style={{color:'var(--text-secondary)'}}>{p.direction}</strong></span>
                       </div>
-                      <div style={{marginTop:5,fontSize:'0.7rem',color:'#8B5CF6'}}>⚡ {p.vector}</div>
+                      <div style={{marginTop:5,fontSize:'0.7rem',color:'#8B5CF6'}}>{p.vector}</div>
                     </div>
                   );
                 })}

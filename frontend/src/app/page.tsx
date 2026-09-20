@@ -50,20 +50,22 @@ export default function LandingPage() {
         alignItems: 'center',
         gap: 20
       }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <span className="badge badge-live">
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <span className="badge badge-live" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)', border: '1px solid var(--cyan-primary)' }}>
+            <Zap size={13} style={{ marginRight: 4 }} />
             {t('landing.badge')}
           </span>
-          <span className="badge badge-sim">
+          <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--gold-accent)', border: '1px solid var(--gold-accent)' }}>
+            <Sparkles size={13} style={{ marginRight: 4 }} />
             {t('landing.stat_languages')}
           </span>
         </div>
 
-        <h1 style={{ maxWidth: 860, margin: '0 auto', fontSize: '2.75rem', lineHeight: 1.2 }}>
-          {t('landing.hero_title')}
+        <h1 style={{ maxWidth: 920, margin: '0 auto', fontSize: '2.85rem', lineHeight: 1.2, fontWeight: 800 }}>
+          <span className="text-gradient-cyan">Autonomous Energy Grid</span> Optimization &amp; <span className="text-gradient-gold">Resilience Platform</span>
         </h1>
 
-        <p style={{ maxWidth: 780, margin: '0 auto', fontSize: '1.12rem', color: 'var(--text-secondary)' }}>
+        <p style={{ maxWidth: 820, margin: '0 auto', fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
           {t('landing.hero_subtitle')}
         </p>
 
@@ -73,19 +75,20 @@ export default function LandingPage() {
             display: 'flex',
             alignItems: 'center',
             gap: 20,
-            background: 'rgba(20, 31, 54, 0.7)',
-            padding: '10px 22px',
+            background: 'linear-gradient(135deg, rgba(20, 31, 54, 0.85) 0%, rgba(13, 20, 36, 0.95) 100%)',
+            padding: '12px 26px',
             borderRadius: 'var(--radius-full)',
-            border: '1px solid var(--border-medium)',
+            border: '1.5px solid var(--cyan-primary)',
+            boxShadow: '0 0 24px rgba(0, 240, 255, 0.2)',
             flexWrap: 'wrap',
             justifyContent: 'center',
-            fontSize: '0.88rem'
+            fontSize: '0.92rem'
           }}>
             <span className="badge badge-live">{t('badge.live')}</span>
-            <span>{t('landing.solar_lbl')} <strong style={{ color: 'var(--amber-flow)' }}>{telemetry.metrics?.solar_generation_mw} MW</strong></span>
-            <span>{t('landing.wind_lbl')} <strong style={{ color: 'var(--cyan-primary)' }}>{telemetry.metrics?.wind_generation_mw} MW</strong></span>
-            <span>{t('landing.demand_lbl')} <strong>{telemetry.metrics?.grid_demand_mw} MW</strong></span>
-            <span>{t('landing.resilience_lbl')} <strong style={{ color: 'var(--green-renew)' }}>{telemetry.metrics?.composite_resilience_score}/100</strong></span>
+            <span>{t('landing.solar_lbl')} <strong style={{ color: 'var(--amber-flow)', fontSize: '1.05rem' }}>{telemetry.metrics?.solar_generation_mw} MW</strong></span>
+            <span>{t('landing.wind_lbl')} <strong style={{ color: 'var(--cyan-primary)', fontSize: '1.05rem' }}>{telemetry.metrics?.wind_generation_mw} MW</strong></span>
+            <span>{t('landing.demand_lbl')} <strong style={{ fontSize: '1.05rem' }}>{telemetry.metrics?.grid_demand_mw} MW</strong></span>
+            <span>{t('landing.resilience_lbl')} <strong style={{ color: 'var(--green-renew)', fontSize: '1.05rem' }}>{telemetry.metrics?.composite_resilience_score}/100</strong></span>
           </div>
         )}
 
@@ -99,32 +102,36 @@ export default function LandingPage() {
             <Award size={20} />
             {t('landing.btn_judge_tour')}
           </Link>
+          <Link href="/explainable-ai" className="btn btn-purple" style={{ padding: '14px 24px', fontSize: '1.02rem' }}>
+            <Cpu size={20} />
+            <span>Explore XAI Rationale</span>
+          </Link>
         </div>
 
-        {/* Highlight Stats Row (H3: Verified Backtest Metrics) */}
+        {/* Highlight Stats Row (Nova Varchasva Contrast Themed Cards) */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
           gap: 16,
           width: '100%',
-          maxWidth: 960,
+          maxWidth: 1040,
           marginTop: 20
         }}>
-          <div className="card kpi wind" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--cyan-primary)' }}>0.942 R²</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Solar Forecast (MAE: 1.42 MW)</div>
+          <div className="card-cyan" style={{ padding: 18, textAlign: 'center', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#a5f3fc' }}>0.942 R²</div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>Solar Forecast (MAE: 1.42 MW)</div>
           </div>
-          <div className="card kpi storage" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--green-renew)' }}>0 Hours</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Deficit Hours (Mitigated)</div>
+          <div className="card-emerald" style={{ padding: 18, textAlign: 'center', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#6ee7b7' }}>0 Hours</div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>Deficit Hours (100% Mitigated)</div>
           </div>
-          <div className="card kpi brand" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--amber-flow)' }}>&lt; 150 ms</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Sub-Cycle Dispatch Latency</div>
+          <div className="card-gold" style={{ padding: 18, textAlign: 'center', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#fef08a' }}>&lt; 150 ms</div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>Sub-Cycle Dispatch Latency</div>
           </div>
-          <div className="card kpi flex" style={{ padding: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#a855f7' }}>15 Locales</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Indian Regional Languages</div>
+          <div className="card-purple" style={{ padding: 18, textAlign: 'center', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#e9d5ff' }}>15 Locales</div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>Indian Regional Languages</div>
           </div>
         </div>
       </section>
@@ -133,39 +140,39 @@ export default function LandingPage() {
       <section style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <span className="badge badge-risk-critical" style={{ marginBottom: 8 }}>{t('landing.problem_badge')}</span>
-          <h2>{t('landing.problem_title')}</h2>
-          <p style={{ marginTop: 6, maxWidth: 800 }}>
+          <h2 style={{ fontSize: '1.85rem', fontWeight: 800 }}>{t('landing.problem_title')}</h2>
+          <p style={{ marginTop: 6, maxWidth: 840, fontSize: '0.98rem' }}>
             {t('landing.problem_desc')}
           </p>
         </div>
 
         <div className="grid-3">
-          <div className="card" style={{ borderLeft: '4px solid var(--amber-flow)' }}>
+          <div className="card-gold" style={{ borderRadius: 'var(--radius-md)', padding: 22 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <Sun size={24} style={{ color: 'var(--amber-flow)' }} />
-              <h4>{t('landing.problem_card1_title')}</h4>
+              <Sun size={24} style={{ color: 'var(--gold-accent)' }} />
+              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fef08a' }}>{t('landing.problem_card1_title')}</h4>
             </div>
-            <p style={{ fontSize: '0.9rem' }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
               {t('landing.problem_card1_desc')}
             </p>
           </div>
 
-          <div className="card" style={{ borderLeft: '4px solid var(--red-risk)' }}>
+          <div className="card-crimson" style={{ borderRadius: 'var(--radius-md)', padding: 22 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <Flame size={24} style={{ color: 'var(--red-risk)' }} />
-              <h4>{t('landing.problem_card2_title')}</h4>
+              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fca5a5' }}>{t('landing.problem_card2_title')}</h4>
             </div>
-            <p style={{ fontSize: '0.9rem' }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
               {t('landing.problem_card2_desc')}
             </p>
           </div>
 
-          <div className="card" style={{ borderLeft: '4px solid var(--orange-warn)' }}>
+          <div className="card-orange" style={{ borderRadius: 'var(--radius-md)', padding: 22 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <ShieldAlert size={24} style={{ color: 'var(--orange-warn)' }} />
-              <h4>{t('landing.problem_card3_title')}</h4>
+              <ShieldAlert size={24} style={{ color: 'var(--orange-vivid)' }} />
+              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fdba74' }}>{t('landing.problem_card3_title')}</h4>
             </div>
-            <p style={{ fontSize: '0.9rem' }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
               {t('landing.problem_card3_desc')}
             </p>
           </div>

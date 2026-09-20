@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
 import { fetchRenewableForecast } from '../../lib/api';
 import { MetricCard } from '../../components/MetricCard';
@@ -12,7 +13,8 @@ import {
   Gauge, 
   LineChart, 
   Info,
-  Calendar
+  Calendar,
+  Cpu
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -54,30 +56,43 @@ export default function RenewableForecastPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Page Header */}
+      {/* Page Header with High-Contrast Themed Badges */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <h1>{t('rf.title')}</h1>
-            <span className="badge badge-forecast">{t('badge.forecast')}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+            <span className="badge badge-live" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--gold-accent)', border: '1px solid var(--gold-accent)' }}>
+              <Sun size={14} style={{ marginRight: 4 }} />
+              NASA POWER + NWP Telemetry
+            </span>
+            <span className="badge badge-forecast" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)', border: '1px solid var(--cyan-primary)' }}>
+              LightGBM v2.4 (0.942 R²)
+            </span>
           </div>
-          <p>{t('rf.subtitle')}</p>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: 6 }}>
+            <span className="text-gradient-gold">Renewable Generation</span> &amp; <span className="text-gradient-cyan">Weather Forecast</span>
+          </h1>
+          <p style={{ maxWidth: 840, fontSize: '0.96rem', color: 'var(--text-secondary)' }}>{t('rf.subtitle')}</p>
         </div>
 
-        {/* Horizon selector */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--bg-tertiary)', padding: 4, borderRadius: 'var(--radius-md)' }}>
-          <button
-            onClick={() => setHorizon(24)}
-            className={`btn btn-sm ${horizon === 24 ? 'btn-primary' : 'btn-secondary'}`}
-          >
-            {t('rf.horizon_24')}
-          </button>
-          <button
-            onClick={() => setHorizon(48)}
-            className={`btn btn-sm ${horizon === 48 ? 'btn-primary' : 'btn-secondary'}`}
-          >
-            {t('rf.horizon_48')}
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+            <Cpu size={14} style={{ marginRight: 4 }} /> TreeSHAP Attribution
+          </Link>
+          {/* Horizon selector */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--bg-tertiary)', padding: 4, borderRadius: 'var(--radius-md)' }}>
+            <button
+              onClick={() => setHorizon(24)}
+              className={`btn btn-sm ${horizon === 24 ? 'btn-primary' : 'btn-secondary'}`}
+            >
+              {t('rf.horizon_24')}
+            </button>
+            <button
+              onClick={() => setHorizon(48)}
+              className={`btn btn-sm ${horizon === 48 ? 'btn-primary' : 'btn-secondary'}`}
+            >
+              {t('rf.horizon_48')}
+            </button>
+          </div>
         </div>
       </div>
 

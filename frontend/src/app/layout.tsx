@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import '../styles/globals.css';
 import { LanguageProvider } from '../context/LanguageContext';
 import { AuthProvider } from '../context/AuthContext';
-import { Navbar } from '../components/Navbar';
+import { AuthGuard } from '../components/AuthGuard';
+import { NavbarWrapper } from '../components/NavbarWrapper';
 import { Footer } from '../components/Footer';
 import { GlobalChatWidget } from '../components/GlobalChatWidget';
 
@@ -46,14 +47,16 @@ export default function RootLayout({
       <body>
         <LanguageProvider>
           <AuthProvider>
-            <div className="app-container">
-              <Navbar />
-              <main className="main-content">
-                {children}
-              </main>
-              <Footer />
-              <GlobalChatWidget />
-            </div>
+            <AuthGuard>
+              <div className="app-container">
+                <NavbarWrapper />
+                <main className="main-content">
+                  {children}
+                </main>
+                <Footer />
+                <GlobalChatWidget />
+              </div>
+            </AuthGuard>
           </AuthProvider>
         </LanguageProvider>
       </body>

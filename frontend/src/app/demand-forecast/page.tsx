@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
 import { fetchDemandForecast } from '../../lib/api';
-import { MetricCard } from '../../components/MetricCard';
 import { 
   TrendingUp, 
   AlertTriangle, 
@@ -13,7 +13,8 @@ import {
   Car, 
   Clock, 
   Zap,
-  Info 
+  Info,
+  Cpu 
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -47,57 +48,72 @@ export default function DemandForecastPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Page Header */}
+      {/* Page Header with High-Contrast Themed Badges */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <h1>{t('df.title')}</h1>
-            <span className="badge badge-forecast">{t('badge.forecast')}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+            <span className="badge badge-live" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)', border: '1px solid var(--cyan-primary)' }}>
+              <TrendingUp size={14} style={{ marginRight: 4 }} />
+              Grid-India Scaled PSP Baseline
+            </span>
+            <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--gold-accent)', border: '1px solid var(--gold-accent)' }}>
+              <Clock size={14} style={{ marginRight: 4 }} />
+              Peak Window: 18:00 - 22:00 IST
+            </span>
           </div>
-          <p>{t('df.subtitle')}</p>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: 6 }}>
+            <span className="text-gradient-cyan">Grid Demand</span> &amp; <span className="text-gradient-pink">Peak Deficit Forecast</span>
+          </h1>
+          <p style={{ maxWidth: 840, fontSize: '0.96rem', color: 'var(--text-secondary)' }}>{t('df.subtitle')}</p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span className="badge badge-risk-critical">
-            <AlertTriangle size={14} /> Peak: 18:00 - 22:00
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+            <Cpu size={14} style={{ marginRight: 4 }} /> TreeSHAP Deficit Attribution
+          </Link>
+          <span className="badge badge-risk-critical" style={{ padding: '8px 14px' }}>
+            <AlertTriangle size={14} style={{ marginRight: 4 }} /> Peak Risk: 18:00 - 22:00
           </span>
         </div>
       </div>
 
-      {/* Demand KPIs */}
-      <div className="grid-3">
-        <MetricCard
-          label={t('df.peak_window')}
-          value={metrics.peak_window_hours}
-          meta={t('df.peak_meta')}
-          icon={Clock}
-          variant="red"
-          badgeText={t('df.peak_badge')}
-          badgeType="risk"
-        />
+      {/* Demand KPIs — XAI-style colored strip */}
+      <div className="kpi-strip">
+        <div className="card-gold kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--gold-accent)' }}>
+            <Clock size={13} style={{ display:'inline',marginRight:4 }} />{t('df.peak_window')}
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#fef08a' }}>{metrics.peak_window_hours}</div>
+          <div className="kpi-strip-meta">{t('df.peak_meta')}</div>
+        </div>
 
-        <MetricCard
-          label={t('df.peak_reduction')}
-          value={metrics.curtailment_avoidance_potential_mw}
-          unit="MW"
-          meta={t('df.reduction_meta')}
-          icon={Zap}
-          variant="green"
-          badgeText={t('df.high_value')}
-          badgeType="live"
-        />
+        <div className="card-crimson kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--red-risk)' }}>
+            <AlertTriangle size={13} style={{ display:'inline',marginRight:4 }} />Peak Demand
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#fca5a5' }}>{metrics.peak_demand_mw} MW</div>
+          <div className="kpi-strip-meta">Predicted Maximum Load</div>
+        </div>
 
-        <MetricCard
-          label={t('df.r2_label')}
-          value={`R² ${metrics.load_r2_score}`}
-          meta={`MAE: ${metrics.load_mae_mw} MW (${t('df.model_badge')})`}
-          icon={TrendingUp}
-          variant="cyan"
-        />
+        <div className="card-emerald kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--green-renew)' }}>
+            <Zap size={13} style={{ display:'inline',marginRight:4 }} />{t('df.peak_reduction')}
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#6ee7b7' }}>{metrics.curtailment_avoidance_potential_mw} MW</div>
+          <div className="kpi-strip-meta">{t('df.reduction_meta')}</div>
+        </div>
+
+        <div className="card-cyan kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--cyan-primary)' }}>
+            <TrendingUp size={13} style={{ display:'inline',marginRight:4 }} />{t('df.r2_label')}
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#a5f3fc' }}>R² {metrics.load_r2_score}</div>
+          <div className="kpi-strip-meta">MAE: {metrics.load_mae_mw} MW</div>
+        </div>
       </div>
 
-      {/* Demand Forecast Chart with Peak Windows */}
-      <div className="card">
+      {/* Demand Forecast Chart */}
+      <div className="card-cyan" style={{ padding: 24, borderRadius: 'var(--radius-lg)' }}>
         <div className="card-header">
           <div>
             <h3 className="card-title">
@@ -126,8 +142,6 @@ export default function DemandForecastPage() {
                 }} 
               />
               <Legend wrapperStyle={{ paddingTop: 10 }} />
-
-              {/* Peak Shaded Window */}
               <Area
                 type="monotone"
                 dataKey="demand_predicted"
@@ -136,8 +150,6 @@ export default function DemandForecastPage() {
                 strokeWidth={2.5}
                 fill="rgba(0, 240, 255, 0.09)"
               />
-
-              {/* Recorded Actual */}
               <Line
                 type="monotone"
                 dataKey="demand_actual"
@@ -153,49 +165,42 @@ export default function DemandForecastPage() {
       </div>
 
       {/* Consumption Segment Breakdown */}
-      <div className="card">
+      <div className="card-purple" style={{ padding: 24, borderRadius: 'var(--radius-lg)' }}>
         <div className="card-header">
           <h3 className="card-title">
-            <Building size={20} style={{ color: 'var(--amber-flow)' }} />
-            {t('df.segments_title')}
+            <Building size={20} style={{ color: 'var(--purple-insight)' }} />
+            <span className="text-gradient-purple">{t('df.segments_title')}</span>
           </h3>
           <span className="badge badge-sim">{t('badge.simulation')}</span>
         </div>
 
         <div className="grid-4">
-          <div className="metric-card" style={{ borderColor: 'rgba(239, 68, 68, 0.3)' }}>
-            <span className="metric-label"><Home size={16} style={{ color: 'var(--red-risk)' }} /> {t('df.seg_residential')}</span>
-            <div className="metric-val-row">
-              <span className="metric-value" style={{ color: 'var(--red-risk)' }}>42%</span>
-            </div>
-             <span className="metric-meta">{t('df.segment_residential_meta')}</span>
+          <div className="card-crimson" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Home size={15} color="var(--red-risk)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--red-risk)' }}>{t('df.seg_residential')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#fca5a5' }}>42%</div>
+            <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_residential_meta')}</div>
           </div>
 
-          <div className="metric-card" style={{ borderColor: 'rgba(56, 189, 248, 0.3)' }}>
-            <span className="metric-label"><Building size={16} style={{ color: '#38bdf8' }} /> {t('df.seg_commercial')}</span>
-            <div className="metric-val-row">
-              <span className="metric-value" style={{ color: '#38bdf8' }}>26%</span>
-            </div>
-             <span className="metric-meta">{t('df.segment_commercial_meta')}</span>
+          <div className="card-cyan" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Building size={15} color="var(--cyan-primary)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--cyan-primary)' }}>{t('df.seg_commercial')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#a5f3fc' }}>26%</div>
+            <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_commercial_meta')}</div>
           </div>
 
-          <div className="metric-card" style={{ borderColor: 'rgba(251, 191, 36, 0.3)' }}>
-            <span className="metric-label"><Factory size={16} style={{ color: 'var(--amber-flow)' }} /> {t('df.seg_industrial')}</span>
-            <div className="metric-val-row">
-              <span className="metric-value" style={{ color: 'var(--amber-flow)' }}>20%</span>
-            </div>
-             <span className="metric-meta">{t('df.segment_industrial_meta')}</span>
+          <div className="card-gold" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Factory size={15} color="var(--gold-accent)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--gold-accent)' }}>{t('df.seg_industrial')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#fef08a' }}>20%</div>
+            <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_industrial_meta')}</div>
           </div>
 
-          <div className="metric-card" style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}>
-            <span className="metric-label"><Car size={16} style={{ color: 'var(--green-renew)' }} /> {t('df.seg_ev')}</span>
-            <div className="metric-val-row">
-              <span className="metric-value" style={{ color: 'var(--green-renew)' }}>12%</span>
-            </div>
-             <span className="metric-meta">{t('df.segment_ev_meta')}</span>
+          <div className="card-emerald" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Car size={15} color="var(--green-renew)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--green-renew)' }}>{t('df.seg_ev')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#6ee7b7' }}>12%</div>
+            <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_ev_meta')}</div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+

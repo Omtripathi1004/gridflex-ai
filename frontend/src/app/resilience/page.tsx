@@ -152,39 +152,46 @@ export default function ResiliencePage() {
       <div>
         <h3 style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
           <ShieldCheck size={20} style={{ color: 'var(--cyan-primary)' }} />
-          {t('res.4pillars_title')}
+          <span className="text-gradient-cyan">{t('res.4pillars_title')}</span>
         </h3>
 
         <div className="grid-4">
-          {components.map((c: any) => (
-            <div key={c.key} className="card kpi flex" style={{ padding: 20 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <span className="badge badge-sim">{t('res.pillar_weight')} (25%)</span>
-                <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--cyan-primary)' }}>
-                  {c.score}
-                </span>
+          {components.map((c: any, index: number) => {
+            const pillarCards = ['card-cyan', 'card-gold', 'card-purple', 'card-emerald'];
+            const accentColors = ['var(--cyan-primary)', 'var(--gold-accent)', 'var(--purple-insight)', 'var(--green-renew)'];
+            const cardTheme = pillarCards[index % pillarCards.length];
+            const accent = accentColors[index % accentColors.length];
+
+            return (
+              <div key={c.key} className={`card ${cardTheme}`} style={{ padding: 22, borderRadius: 12 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                  <span className="badge badge-sim">{t('res.pillar_weight')} (25%)</span>
+                  <span style={{ fontSize: '1.5rem', fontWeight: 800, color: accent }}>
+                    {c.score}
+                  </span>
+                </div>
+                <h4 style={{ fontSize: '0.98rem', minHeight: 44, color: '#fff', fontWeight: 600 }}>{c.name}</h4>
+                <div style={{ width: '100%', height: 6, background: 'rgba(255, 255, 255, 0.1)', borderRadius: 3, margin: '12px 0', overflow: 'hidden' }}>
+                  <div style={{ width: `${c.score}%`, height: '100%', background: `linear-gradient(90deg, ${accent}, #10b981)` }} />
+                </div>
+                <div style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>
+                  {c.raw_value}
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+                  {c.description}
+                </p>
               </div>
-              <h4 style={{ fontSize: '0.95rem', minHeight: 44 }}>{c.name}</h4>
-              <div style={{ width: '100%', height: 6, background: 'var(--bg-tertiary)', borderRadius: 3, margin: '10px 0', overflow: 'hidden' }}>
-                <div style={{ width: `${c.score}%`, height: '100%', background: 'linear-gradient(90deg, #00f0ff, #10b981)' }} />
-              </div>
-              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>
-                {c.raw_value}
-              </div>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>
-                {c.description}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {/* Why Did The Score Change? (Recent Deltas) */}
-      <div className="card">
+      <div className="card card-gold">
         <div className="card-header">
           <h3 className="card-title">
-            <Clock size={20} style={{ color: 'var(--amber-flow)' }} />
-            {t('res.why_title')}
+            <Clock size={20} style={{ color: 'var(--gold-accent)' }} />
+            <span className="text-gradient-gold">{t('res.why_title')}</span>
           </h3>
           <ProvenanceBadge classification="real" sourceName="SCADA Telemetry Delta Log" mode="cached" />
         </div>
@@ -226,12 +233,12 @@ export default function ResiliencePage() {
       </div>
 
       {/* Prescriptive Actions to Elevate Resilience (>90 "Excellent") */}
-      <div className="card kpi storage" style={{ padding: 22 }}>
+      <div className="card card-emerald" style={{ padding: 22 }}>
         <div className="card-header">
           <div>
             <h3 className="card-title">
               <TrendingUp size={20} style={{ color: 'var(--green-renew)' }} />
-              Prescriptive Actions to Elevate Resilience (Target: &gt; 90.0)
+              <span className="text-gradient-cyan">Prescriptive Actions to Elevate Resilience</span> (Target: &gt; 90.0)
             </h3>
             <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: 4 }}>
               Current: <strong>{compositeScore}</strong> ➔ Implementing all 3 actions yields <strong>{(compositeScore + 6.4 + 4.8 + 3.5).toFixed(1)}/100</strong> (Excellent)

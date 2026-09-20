@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 /* =========================================================================
    GRIDFLEX AI — MASTER DESIGN SYSTEM (PURE VANILLA CSS)
    Energy-Tech Palette: Obsidian Navy Foundation, Electric Cyan Accents,
@@ -32,7 +34,7 @@
   --orange-warn: #f97316;
 
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-tertiary: #64748b;
@@ -270,21 +272,40 @@ body::before {
   background: var(--border-medium);
 }
 
-/* Typography Utilities */
+/* Typography Utilities (Synced with Explainable AI High-Contrast Standards) */
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.025em;
   line-height: 1.25;
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.75rem; }
-h3 { font-size: 1.25rem; }
-h4 { font-size: 1.05rem; }
+h1 { 
+  font-size: 2.4rem; 
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+h2 { 
+  font-size: 1.65rem; 
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+h3 { 
+  font-size: 1.25rem; 
+  font-weight: 700;
+}
+
+h4 { 
+  font-size: 1.05rem; 
+  font-weight: 700;
+}
 
 p {
   color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 a {
@@ -399,22 +420,25 @@ a {
   border: 1px solid rgba(249, 115, 22, 0.35);
 }
 
-/* Glassmorphism Cards */
+/* Glassmorphism Cards (Enhanced with Explainable AI High-Contrast Styling) */
 .card {
-  background: var(--bg-card);
+  background: linear-gradient(145deg, rgba(20, 31, 54, 0.85) 0%, rgba(13, 20, 36, 0.92) 100%);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
+  border-top: 1.5px solid rgba(0, 240, 255, 0.25);
   border-radius: var(--radius-lg);
   padding: 24px;
   position: relative;
   transition: all var(--transition-normal);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
 }
 
 .card:hover {
   border-color: var(--border-medium);
-  box-shadow: var(--shadow-cyan);
+  border-top-color: var(--cyan-primary);
+  box-shadow: 0 12px 36px rgba(0, 240, 255, 0.16);
+  transform: translateY(-2px);
 }
 
 .card-header {
@@ -426,8 +450,9 @@ a {
 }
 
 .card-title {
-  font-size: 1.12rem;
-  font-weight: 600;
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -435,22 +460,29 @@ a {
 
 /* Metric Display Card */
 .metric-card {
-  background: var(--bg-card);
+  background: linear-gradient(145deg, rgba(20, 31, 54, 0.8) 0%, rgba(13, 20, 36, 0.9) 100%);
   border: 1px solid var(--border-subtle);
+  border-top: 2px solid rgba(0, 240, 255, 0.35);
   border-radius: var(--radius-md);
   padding: 18px 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: border-color var(--transition-fast);
+  transition: all var(--transition-fast);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 .metric-card:hover {
   border-color: var(--border-medium);
+  border-top-color: var(--cyan-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 240, 255, 0.15);
 }
 .metric-label {
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -462,8 +494,9 @@ a {
 }
 .metric-value {
   font-size: 1.85rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
@@ -895,3 +928,91 @@ input[type="range"]::-webkit-slider-thumb:hover {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
+
+/* =========================================================================
+   XAI-UNIFIED PAGE LAYOUT UTILITIES
+   Used across all pages to match the Explainable AI high-contrast standard.
+   ========================================================================= */
+
+/* Page header block: badge row + gradient H1 + subtitle */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-header-left {
+  flex: 1;
+}
+
+.page-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.page-title {
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  max-width: 860px;
+}
+
+/* KPI metric strip — colored card row */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.kpi-strip-item {
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+}
+
+.kpi-strip-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.kpi-strip-value {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.kpi-strip-meta {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Colored section wrappers — the XAI standard */
+.section-gold { padding: 26px; border-radius: var(--radius-lg); }
+.section-cyan { padding: 26px; border-radius: var(--radius-lg); }
+.section-purple { padding: 26px; border-radius: var(--radius-lg); }
+.section-emerald { padding: 26px; border-radius: var(--radius-lg); }
+.section-crimson { padding: 26px; border-radius: var(--radius-lg); }
+.section-pink { padding: 26px; border-radius: var(--radius-lg); }
+
+/* green-optimal alias for auth success states */
+:root { --green-optimal: #10b981; --red-alert: #ef4444; }
+

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
 import { runOptimization } from '../../lib/api';
-import { MetricCard } from '../../components/MetricCard';
 import { ProvenanceBadge } from '../../components/ProvenanceBadge';
 import { 
   Sliders, 
@@ -14,7 +14,8 @@ import {
   Clock, 
   BatteryCharging, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Cpu
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -98,65 +99,72 @@ export default function FlexibilityPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Page Header */}
+      {/* Page Header with High-Contrast Themed Badges */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <h1>{t('flex.title')}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+            <span className="badge badge-live" style={{ background: 'rgba(168, 85, 247, 0.15)', color: 'var(--purple-insight)', border: '1px solid var(--purple-insight)' }}>
+              <Sliders size={14} style={{ marginRight: 4 }} />
+              MILP Multi-Asset Solver
+            </span>
+            <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--gold-accent)', border: '1px solid var(--gold-accent)' }}>
+              100% Deficit Mitigated (4.0h → 0h)
+            </span>
             <ProvenanceBadge classification="forecast" sourceName="PuLP / CBC MILP Solver (5-Minute Horizon)" mode="cached" />
           </div>
-          <p>{t('flex.subtitle')}</p>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: 6 }}>
+            <span className="text-gradient-purple">Flexibility Dispatch</span> &amp; <span className="text-gradient-cyan">Peak Shaving Engine</span>
+          </h1>
+          <p style={{ maxWidth: 840, fontSize: '0.96rem', color: 'var(--text-secondary)' }}>{t('flex.subtitle')}</p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="badge badge-live">
-            <CheckCircle2 size={13} /> {t('flex.deficit_mitigated')}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+            <Cpu size={14} style={{ marginRight: 4 }} /> Why This Action? (XAI Rationale)
+          </Link>
+          <span className="badge badge-live" style={{ padding: '8px 14px' }}>
+            <CheckCircle2 size={14} style={{ marginRight: 4 }} /> 0 Shortage Hours
           </span>
         </div>
       </div>
 
-      {/* Measurable Impact Scorecard */}
-      <div className="grid-4">
-        <MetricCard
-          label={t('flex.metric_peak_shaved')}
-          value={`${scorecard.peak_reduction_mw} MW`}
-          unit={`(-${scorecard.peak_reduction_pct}%)`}
-          meta={t('flex.peak_shaved_meta')}
-          icon={TrendingDown}
-          domain="load"
-          provenance={{ classification: 'simulated', sourceName: 'MILP Optimization', mode: 'cached' }}
-        />
+      {/* Measurable Impact Scorecard — XAI-style colored kpi-strip */}
+      <div className="kpi-strip">
+        <div className="card-crimson kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--red-risk)' }}>
+            <TrendingDown size={13} style={{ display:'inline',marginRight:4 }} />{t('flex.metric_peak_shaved')}
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#fca5a5' }}>{scorecard.peak_reduction_mw} MW</div>
+          <div className="kpi-strip-meta">-{scorecard.peak_reduction_pct}% · {t('flex.peak_shaved_meta')}</div>
+        </div>
 
-        <MetricCard
-          label={t('flex.metric_shortage_elim')}
-          value={`${scorecard.shortage_hours_before}h → ${scorecard.shortage_hours_after}h`}
-          meta={t('flex.shortage_elim_meta')}
-          icon={Clock}
-          domain="storage"
-          provenance={{ classification: 'simulated', sourceName: 'Dispatch Schedule', mode: 'cached' }}
-        />
+        <div className="card-emerald kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--green-renew)' }}>
+            <Clock size={13} style={{ display:'inline',marginRight:4 }} />{t('flex.metric_shortage_elim')}
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#6ee7b7' }}>{scorecard.shortage_hours_before}h → {scorecard.shortage_hours_after}h</div>
+          <div className="kpi-strip-meta">{t('flex.shortage_elim_meta')}</div>
+        </div>
 
-        <MetricCard
-          label="DSM Tariff Penalty Avoided"
-          value={`₹${scorecard.estimated_cost_savings_inr.toLocaleString('en-IN')}`}
-          meta="CERC Deviation Settlement Mechanism Benchmark"
-          icon={IndianRupee}
-          domain="brand"
-          provenance={{ classification: 'real', sourceName: 'CERC DSM Rules', mode: 'cached' }}
-        />
+        <div className="card-gold kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--gold-accent)' }}>
+            <IndianRupee size={13} style={{ display:'inline',marginRight:4 }} />DSM Penalty Avoided
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#fef08a' }}>₹{scorecard.estimated_cost_savings_inr.toLocaleString('en-IN')}</div>
+          <div className="kpi-strip-meta">CERC Deviation Settlement</div>
+        </div>
 
-        <MetricCard
-          label="CO2 Emissions Avoided"
-          value={`${scorecard.co2_emissions_avoided_tonnes} tCO2`}
-          meta="CEA Grid Emission Factor: 0.71 kg CO2/kWh"
-          icon={Leaf}
-          domain="storage"
-          provenance={{ classification: 'real', sourceName: 'CEA CO2 Database v19', mode: 'cached' }}
-        />
+        <div className="card-cyan kpi-strip-item">
+          <div className="kpi-strip-label" style={{ color: 'var(--cyan-primary)' }}>
+            <Leaf size={13} style={{ display:'inline',marginRight:4 }} />CO₂ Avoided
+          </div>
+          <div className="kpi-strip-value" style={{ color: '#a5f3fc' }}>{scorecard.co2_emissions_avoided_tonnes} tCO₂</div>
+          <div className="kpi-strip-meta">CEA Factor: 0.71 kg/kWh</div>
+        </div>
       </div>
 
       {/* Load Profile Before vs After Flexibility */}
-      <div className="card">
+      <div className="card-cyan" style={{ padding: 24, borderRadius: 'var(--radius-lg)' }}>
         <div className="card-header">
           <div>
             <h3 className="card-title">

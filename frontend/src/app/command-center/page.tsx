@@ -20,7 +20,8 @@ import {
   ArrowRight,
   TrendingDown,
   Clock,
-  Radio
+  Radio,
+  Cpu
 } from 'lucide-react';
 
 export default function CommandCenterPage() {
@@ -77,21 +78,33 @@ export default function CommandCenterPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Page Header */}
+      {/* Page Header with High-Contrast Themed Badges */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <h1>{t('cc.title')}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+            <span className="badge badge-live" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)', border: '1px solid var(--cyan-primary)' }}>
+              <Zap size={14} style={{ marginRight: 4 }} />
+              Live Substation Dispatch
+            </span>
+            <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--gold-accent)', border: '1px solid var(--gold-accent)' }}>
+              Sub-Cycle 120ms Telemetry
+            </span>
             <ProvenanceBadge classification="scaled_real" sourceName="Grid-India & NASA POWER Substation Feed" mode="cached" />
           </div>
-          <p>{t('cc.subtitle')}</p>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: 6 }}>
+            <span className="text-gradient-cyan">Live Autonomous</span> Command &amp; <span className="text-gradient-gold">Dispatch Center</span>
+          </h1>
+          <p style={{ maxWidth: 840, fontSize: '0.96rem', color: 'var(--text-secondary)' }}>{t('cc.subtitle')}</p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6 }}>
             <Clock size={15} />
             <span>{t('cc.updated')}: <strong>{lastUpdated || t('cc.connecting')}</strong></span>
           </div>
+          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+            <Cpu size={14} style={{ marginRight: 4 }} /> Inspect XAI Rationale
+          </Link>
           <Link href="/judge-mode" className="btn btn-amber btn-sm">
             🎯 {t('nav.judge_mode')}
           </Link>
@@ -180,36 +193,36 @@ export default function CommandCenterPage() {
         />
       </div>
 
-      {/* Active AI Recommendation Banner */}
-      <div className="card kpi flex" style={{
-        background: 'linear-gradient(135deg, rgba(20, 31, 54, 0.95) 0%, rgba(13, 20, 36, 0.95) 100%)',
-        boxShadow: 'var(--shadow-cyan)',
-        padding: '20px 24px'
+      {/* Active AI Recommendation Banner with High Contrast */}
+      <div className="card-purple" style={{
+        padding: '24px 28px',
+        borderRadius: 'var(--radius-lg)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
             <div style={{
-              width: 44,
-              height: 44,
+              width: 46,
+              height: 46,
               borderRadius: 12,
-              background: 'rgba(0, 240, 255, 0.15)',
+              background: 'rgba(168, 85, 247, 0.2)',
+              border: '1px solid #c084fc',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--cyan-primary)',
+              color: '#d8b4fe',
               flexShrink: 0
             }}>
               <Sparkles size={24} />
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <span className="badge badge-forecast">{t('cc.ai_badge')}</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>REC-704 (Confidence 94%)</span>
+                <span className="badge badge-amber">{t('cc.ai_badge')}</span>
+                <span style={{ fontSize: '0.8rem', color: '#c084fc', fontWeight: 600 }}>REC-704 (Confidence 94%)</span>
               </div>
-              <h3 style={{ fontSize: '1.18rem', color: 'var(--cyan-primary)', margin: 0 }}>
+              <h3 style={{ fontSize: '1.25rem', color: '#f8fafc', fontWeight: 800, margin: 0 }}>
                 {telemetry?.active_recommendation?.action_type || "BESS Storage Buffer & Pre-cooling Schedule"}
               </h3>
-              <p style={{ fontSize: '0.88rem', marginTop: 4, maxWidth: 720, color: '#e2e8f0' }}>
+              <p style={{ fontSize: '0.92rem', marginTop: 4, maxWidth: 720, color: '#e2e8f0', lineHeight: 1.5 }}>
                 {telemetry?.active_recommendation?.expected_impact || "Absorbs midday solar surplus and secures 14.5 MWh for the evening ramp window."}
               </p>
             </div>

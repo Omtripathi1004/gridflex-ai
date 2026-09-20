@@ -29,7 +29,10 @@ import {
   Map,
   Scale,
   MessageSquare,
-  Radio
+  Radio,
+  Building,
+  Sparkles,
+  Award
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -54,46 +57,50 @@ export const Navbar: React.FC = () => {
       key: 'operate',
       label: 'Operate',
       items: [
-        { href: '/command-center', label: t('nav.command_center'), icon: Zap },
-        { href: '/digital-twin', label: t('nav.digital_twin'), icon: Sliders }
+        { href: '/command-center', label: t('nav.command_center', 'Live Command Center'), icon: Zap },
+        { href: '/digital-twin', label: t('nav.digital_twin', 'Digital Twin Simulator'), icon: Sliders },
+        { href: '/discom', label: 'DISCOM Control Desk', icon: Building },
+        { href: '/self-healing', label: 'Self-Healing Grid (FLISR)', icon: Radio }
       ]
     },
     {
       key: 'forecast',
       label: 'Forecast',
       items: [
-        { href: '/renewable-forecast', label: t('nav.renewable_forecast'), icon: Sun },
-        { href: '/demand-forecast', label: t('nav.demand_forecast'), icon: TrendingUp }
+        { href: '/renewable-forecast', label: t('nav.renewable_forecast', 'Renewable Forecast'), icon: Sun },
+        { href: '/demand-forecast', label: t('nav.demand_forecast', 'Demand Forecast'), icon: TrendingUp },
+        { href: '/sky-vision', label: 'SkyVision Cloud Radar', icon: Eye }
       ]
     },
     {
       key: 'optimize',
-      label: 'Optimize',
+      label: 'Optimize & Markets',
       items: [
-        { href: '/flexibility', label: t('nav.flexibility'), icon: Sliders },
-        { href: '/storage', label: t('nav.storage'), icon: BatteryCharging },
-        { href: '/p2p', label: t('nav.p2p'), icon: Share2 }
+        { href: '/flexibility', label: t('nav.flexibility', 'Flexibility Dispatch'), icon: Sliders },
+        { href: '/storage', label: t('nav.storage', 'Virtual BESS Storage'), icon: BatteryCharging },
+        { href: '/p2p', label: t('nav.p2p', 'P2P Energy Trading'), icon: Share2 },
+        { href: '/tariff-engine', label: 'Dynamic Tariff Engine (LMP)', icon: Scale },
+        { href: '/spatial-twin', label: 'Spatial 3D Grid Twin', icon: Map }
+      ]
+    },
+    {
+      key: 'xai_copilot',
+      label: 'AI & Copilots',
+      items: [
+        { href: '/explainable-ai', label: 'Explainable AI (TreeSHAP & Why)', icon: Cpu },
+        { href: '/incident-copilot', label: 'Voice Incident Co-pilot', icon: MessageSquare },
+        { href: '/copilot', label: 'Multilingual Grid Assistant', icon: Sparkles }
       ]
     },
     {
       key: 'trust',
-      label: 'Trust & Audits',
+      label: 'Trust & Governance',
       items: [
-        { href: '/resilience', label: t('nav.resilience'), icon: ShieldCheck },
-        { href: '/explainable-ai', label: t('nav.explainable_ai'), icon: Cpu },
-        { href: '/architecture', label: t('nav.architecture'), icon: Layers },
-        { href: '/about', label: 'About & Directory', icon: HelpCircle }
-      ]
-    },
-    {
-      key: 'engines',
-      label: 'AI Engines',
-      items: [
-        { href: '/sky-vision', label: 'SkyVision Radar', icon: Eye },
-        { href: '/self-healing', label: 'Self-Healing Grid', icon: Radio },
-        { href: '/spatial-twin', label: 'Spatial Twin', icon: Map },
-        { href: '/tariff-engine', label: 'Tariff Engine', icon: Scale },
-        { href: '/incident-copilot', label: 'Incident Co-pilot', icon: MessageSquare }
+        { href: '/resilience', label: t('nav.resilience', 'Resilience Matrix (4 Pillars)'), icon: ShieldCheck },
+        { href: '/architecture', label: t('nav.architecture', 'System Architecture'), icon: Layers },
+        { href: '/about', label: 'About & 20-Page Directory', icon: HelpCircle },
+        { href: '/judge-mode', label: 'Judge 7-Engine Tour', icon: Award },
+        { href: '/login', label: 'Operator Portal & Login', icon: KeyRound }
       ]
     }
   ];
@@ -200,6 +207,15 @@ export const Navbar: React.FC = () => {
                 </div>
               );
             })}
+
+            {/* Direct Link to Explainable AI */}
+            <Link
+              href="/explainable-ai"
+              className={`nav-item ${pathname === '/explainable-ai' ? 'active' : ''}`}
+              style={{ color: '#c084fc', fontWeight: 600 }}
+            >
+              🧠 Explainable AI
+            </Link>
 
             {/* Direct Link to Digital Twin */}
             <Link

@@ -1,35 +1,33 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth, DefaultAccount } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-import { 
-  ShieldCheck, 
-  KeyRound, 
-  User, 
-  Building, 
-  Award, 
-  Users, 
-  CheckCircle2, 
-  AlertCircle, 
-  Database, 
-  RotateCw, 
-  LogOut, 
+import {
+  ShieldCheck,
+  KeyRound,
+  User,
+  Building,
+  Award,
+  Users,
+  CheckCircle2,
+  AlertCircle,
+  Database,
+  LogOut,
   ArrowRight,
-  Lock
+  Lock,
+  Zap,
+  Activity,
+  Sun,
+  BatteryCharging,
+  Globe,
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LoginPage() {
-  const { 
-    user, 
-    login, 
-    logout, 
-    loginRecords, 
-    defaultAccounts, 
-    fetchRecords, 
-    quickLogin 
-  } = useAuth();
+  const router = useRouter();
+  const { user, login, logout, defaultAccounts, quickLogin } = useAuth();
   const { t } = useLanguage();
 
   const [email, setEmail] = useState('');
@@ -43,411 +41,377 @@ export default function LoginPage() {
     setErrorMsg(null);
     setSuccessMsg(null);
     setLoading(true);
-
     const res = await login(email, password);
     setLoading(false);
     if (res.success) {
-      setSuccessMsg('Authentication verified. Welcome to GridFlex AI.');
+      setSuccessMsg('Authentication verified. Redirecting…');
+      setTimeout(() => router.push('/'), 900);
     } else {
-      setErrorMsg(res.message || 'Invalid credentials. Please verify or use a preset demo account.');
+      setErrorMsg(res.message || 'Invalid credentials. Use a preset demo account below.');
     }
   };
 
   const handleQuickSelect = async (account: DefaultAccount) => {
-    setEmail(account.email);
-    setPassword(account.password);
     setErrorMsg(null);
     setLoading(true);
     const ok = await quickLogin(account);
     setLoading(false);
     if (ok) {
-      setSuccessMsg(`Logged in as ${account.name} (${account.role})`);
+      setSuccessMsg(`Logged in as ${account.name}. Redirecting…`);
+      setTimeout(() => router.push('/'), 900);
     } else {
       setErrorMsg('Failed to log in with demo account.');
     }
   };
 
-  const getRoleIcon = (icon: string) => {
+  // Role card visual config
+  const roleConfig: Record<string, { cardClass: string; iconColor: string; gradientText: string }> = {
+    award: { cardClass: 'card-gold', iconColor: 'var(--gold-accent)', gradientText: 'text-gradient-gold' },
+    building: { cardClass: 'card-cyan', iconColor: 'var(--cyan-primary)', gradientText: 'text-gradient-cyan' },
+    shield: { cardClass: 'card-purple', iconColor: 'var(--purple-insight)', gradientText: 'text-gradient-purple' },
+    users: { cardClass: 'card-emerald', iconColor: 'var(--green-renew)', gradientText: '' },
+  };
+
+  const getRoleIcon = (icon: string, color: string) => {
     switch (icon) {
-      case 'award':
-        return <Award size={22} color="var(--amber-flow)" />;
-      case 'shield':
-        return <ShieldCheck size={22} color="var(--green-optimal)" />;
-      case 'users':
-        return <Users size={22} color="var(--purple-insight)" />;
-      default:
-        return <Building size={22} color="var(--cyan-primary)" />;
+      case 'award': return <Award size={24} color={color} />;
+      case 'shield': return <ShieldCheck size={24} color={color} />;
+      case 'users': return <Users size={24} color={color} />;
+      default: return <Building size={24} color={color} />;
     }
   };
 
   return (
-    <div className="container" style={{ padding: '36px 20px', maxWidth: 1200 }}>
-      {/* Page Header */}
-      <div style={{ textAlign: 'center', marginBottom: 36 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <span className="badge badge-live">
-            <Database size={13} style={{ marginRight: 4 }} />
-            {t('login.badge_auth')}
-          </span>
-          <span className="badge badge-sim">{t('login.audit_trail')}</span>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        background: 'var(--bg-primary)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Animated background glows */}
+      <div style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+        background: `
+          radial-gradient(ellipse 60% 50% at 20% 30%, rgba(0,240,255,0.07) 0%, transparent 70%),
+          radial-gradient(ellipse 50% 40% at 80% 70%, rgba(168,85,247,0.07) 0%, transparent 70%),
+          radial-gradient(ellipse 40% 30% at 50% 10%, rgba(251,191,36,0.05) 0%, transparent 70%)
+        `
+      }} />
+
+      {/* Grid dot pattern */}
+      <div style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.35,
+        backgroundImage: 'radial-gradient(rgba(0,240,255,0.18) 1px, transparent 1px)',
+        backgroundSize: '36px 36px',
+      }} />
+
+      {/* ─── LEFT PANEL: Branding ─── */}
+      <div
+        style={{
+          flex: '0 0 42%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '60px 52px',
+          position: 'relative',
+          zIndex: 1,
+          borderRight: '1px solid var(--border-subtle)',
+        }}
+        className="login-left-panel"
+      >
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 48 }}>
+          <div style={{
+            width: 52, height: 52, borderRadius: 14,
+            background: 'linear-gradient(135deg, #00f0ff 0%, #0050ff 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 0 28px rgba(0,240,255,0.45)',
+          }}>
+            <Zap size={28} color="#070b14" />
+          </div>
+          <div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
+              GridFlex AI
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+              Smart Energy Orchestration Platform
+            </div>
+          </div>
         </div>
-        <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: 12 }}>
-          {t('login.title', 'GridFlex Operator & Evaluator Portal')}
+
+        {/* Main heading */}
+        <h1 style={{ fontSize: '2.8rem', fontWeight: 900, lineHeight: 1.15, marginBottom: 20, letterSpacing: '-0.04em' }}>
+          <span className="text-gradient-cyan">Power the Grid</span>
+          <br />
+          <span className="text-gradient-gold">with Intelligence</span>
         </h1>
-        <p style={{ color: 'var(--text-secondary)', maxWidth: 680, margin: '0 auto', fontSize: '1rem', lineHeight: 1.6 }}>
-          {t('login.subtitle', 'Access the smart energy orchestration suite with multi-role authorization. Select any preset demo account below for 1-click instant login or sign in with custom credentials. All access events are audited to the SQLite database.')}
+
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.7, maxWidth: 400, marginBottom: 40 }}>
+          ML-driven grid resilience platform — solar &amp; wind forecasting, BESS dispatch, 
+          P2P energy trading, digital twin simulation, and explainable AI. Deployed for DISCOM operators across India.
         </p>
+
+        {/* Stat cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 40 }}>
+          <div className="card-gold" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+              <Sun size={16} color="var(--gold-accent)" />
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--gold-accent)', letterSpacing: '0.05em' }}>Solar Forecast</span>
+            </div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#fef08a' }}>42.5 MW</div>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: 2 }}>0.942 R² Accuracy</div>
+          </div>
+
+          <div className="card-emerald" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+              <BatteryCharging size={16} color="var(--green-renew)" />
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-renew)', letterSpacing: '0.05em' }}>BESS Dispatch</span>
+            </div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#6ee7b7' }}>9.5 MW</div>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: 2 }}>120ms Sub-Cycle Response</div>
+          </div>
+
+          <div className="card-cyan" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+              <Activity size={16} color="var(--cyan-primary)" />
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--cyan-primary)', letterSpacing: '0.05em' }}>Carbon Saved</span>
+            </div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a5f3fc' }}>14.2 T</div>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: 2 }}>Zero-Emission Dispatch Stack</div>
+          </div>
+
+          <div className="card-purple" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+              <Globe size={16} color="var(--purple-insight)" />
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--purple-insight)', letterSpacing: '0.05em' }}>Languages</span>
+            </div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#e9d5ff' }}>15</div>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: 2 }}>Full i18n Glossary</div>
+          </div>
+        </div>
+
+        {/* Badges */}
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <span className="badge badge-live">Live Demo</span>
+          <span className="badge badge-sim">Hackathon 2026</span>
+          <span className="badge badge-forecast">DISCOM Ready</span>
+        </div>
       </div>
 
-      {/* Active User Session Card (if logged in) */}
-      {user && (
-        <div 
-          className="card" 
-          style={{ 
-            marginBottom: 32, 
-            background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(157, 0, 255, 0.08) 100%)',
-            border: '1px solid var(--border-medium)',
-            padding: 24
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div 
-                style={{ 
-                  width: 52, 
-                  height: 52, 
-                  borderRadius: '50%', 
-                  background: 'rgba(0, 240, 255, 0.15)',
+      {/* ─── RIGHT PANEL: Login Form ─── */}
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '60px 52px',
+          position: 'relative',
+          zIndex: 1,
+          overflowY: 'auto',
+        }}
+        className="login-right-panel"
+      >
+        {/* If already logged in */}
+        {user && (
+          <div
+            className="card-cyan"
+            style={{ padding: 22, borderRadius: 'var(--radius-lg)', marginBottom: 28 }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <div style={{
+                  width: 46, height: 46, borderRadius: '50%',
+                  background: 'rgba(0,240,255,0.15)',
                   border: '2px solid var(--cyan-primary)',
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center' 
-                }}
-              >
-                <User size={26} color="var(--cyan-primary)" />
-              </div>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{user.full_name}</h3>
-                  <span className="badge badge-live" style={{ fontSize: '0.75rem' }}>{t('login.active_session')}</span>
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <User size={22} color="var(--cyan-primary)" />
                 </div>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
-                  <strong>{t('login.role')}:</strong> {user.role} &nbsp;|&nbsp; <strong>{t('login.org')}:</strong> {user.organization} &nbsp;|&nbsp; <strong>{t('login.email')}:</strong> {user.email}
-                </p>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: 12 }}>
-              <Link href="/command-center" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                Open Command Center <ArrowRight size={16} />
-              </Link>
-              <button 
-                onClick={logout} 
-                className="btn btn-secondary"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--red-alert)' }}
-              >
-                <LogOut size={16} /> Sign Out
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Preset Demo Accounts Section */}
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-          <div>
-            <h2 style={{ fontSize: '1.3rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <KeyRound size={20} color="var(--amber-flow)" />
-              {t('login.preset_title', 'Preset Demo Accounts (1-Click Instant Login)')}
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              Click any profile card to automatically populate and authenticate instantly:
-            </p>
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
-          {defaultAccounts.map((acc, idx) => {
-            const isCurrent = user?.email.toLowerCase() === acc.email.toLowerCase();
-            return (
-              <div 
-                key={idx}
-                className="card"
-                onClick={() => handleQuickSelect(acc)}
-                style={{
-                  padding: 20,
-                  cursor: 'pointer',
-                  border: isCurrent ? '2px solid var(--cyan-primary)' : '1px solid var(--border-subtle)',
-                  background: isCurrent ? 'rgba(0, 240, 255, 0.08)' : 'var(--bg-card)',
-                  transition: 'all 0.2s ease',
-                  position: 'relative'
-                }}
-              >
-                {isCurrent && (
-                  <span 
-                    style={{
-                      position: 'absolute',
-                      top: 10,
-                      right: 10,
-                      color: 'var(--cyan-primary)',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 4
-                    }}
-                  >
-                    <CheckCircle2 size={14} /> Signed In
-                  </span>
-                )}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <div 
-                    style={{ 
-                      width: 42, 
-                      height: 42, 
-                      borderRadius: 'var(--radius-md)', 
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    {getRoleIcon(acc.icon)}
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700 }}>{user.full_name}</h3>
+                    <span className="badge badge-live" style={{ fontSize: '0.7rem' }}>Active Session</span>
                   </div>
-                  <div>
-                    <h4 style={{ fontSize: '1rem', fontWeight: 700 }}>{acc.role}</h4>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{acc.organization}</span>
-                  </div>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                    {user.role} · {user.organization}
+                  </p>
                 </div>
-
-                <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 12px', borderRadius: 'var(--radius-sm)', marginBottom: 12, fontSize: '0.82rem' }}>
-                  <div style={{ color: 'var(--text-secondary)' }}>{t('login.email')}: <code style={{ color: 'var(--cyan-primary)' }}>{acc.email}</code></div>
-                  <div style={{ color: 'var(--text-secondary)', marginTop: 4 }}>{t('login.password')}: <code style={{ color: 'var(--amber-flow)' }}>{acc.password}</code></div>
-                </div>
-
-                <button 
-                  className="btn btn-sm btn-secondary" 
-                  style={{ width: '100%', fontSize: '0.8rem' }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleQuickSelect(acc);
-                  }}
-                >
-                  ⚡ {t('login.btn_quick_login')}
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <Link href="/" className="btn btn-primary" style={{ fontSize: '0.85rem', gap: 6 }}>
+                  Go to Dashboard <ArrowRight size={14} />
+                </Link>
+                <button onClick={logout} className="btn btn-secondary" style={{ color: 'var(--red-risk)', fontSize: '0.85rem', gap: 6 }}>
+                  <LogOut size={14} /> Sign Out
                 </button>
               </div>
-            );
-          })}
-        </div>
-      </div>
+            </div>
+          </div>
+        )}
 
-      {/* Manual Login Form */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 24, marginBottom: 48 }}>
-        <div className="card" style={{ padding: 28 }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Lock size={18} color="var(--cyan-primary)" />
-            {t('login.custom_auth')}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+            <span className="badge" style={{ background: 'rgba(0,240,255,0.12)', color: 'var(--cyan-primary)', border: '1px solid var(--cyan-primary)' }}>
+              <Database size={12} style={{ marginRight: 4 }} /> Secure Portal
+            </span>
+            <span className="badge badge-sim">Multi-Role Auth</span>
+          </div>
+          <h2 style={{ fontSize: '1.9rem', fontWeight: 800, marginBottom: 8, letterSpacing: '-0.03em' }}>
+            <span className="text-gradient-gold">Operator</span> &amp; <span className="text-gradient-cyan">Evaluator Login</span>
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
+            Select any preset demo account for 1-click instant access, or sign in with custom credentials.
+          </p>
+        </div>
+
+        {/* ── Preset Demo Accounts ── */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <KeyRound size={14} color="var(--gold-accent)" />
+            1-Click Demo Accounts
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
+            {defaultAccounts.map((acc, idx) => {
+              const cfg = roleConfig[acc.icon] || roleConfig['building'];
+              const isCurrent = user?.email.toLowerCase() === acc.email.toLowerCase();
+              return (
+                <div
+                  key={idx}
+                  className={cfg.cardClass}
+                  onClick={() => handleQuickSelect(acc)}
+                  style={{
+                    padding: '16px 18px',
+                    borderRadius: 'var(--radius-md)',
+                    cursor: 'pointer',
+                    transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                    outline: isCurrent ? `2px solid ${cfg.iconColor}` : 'none',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
+                >
+                  {isCurrent && (
+                    <span style={{ position: 'absolute', top: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.7rem', color: cfg.iconColor, fontWeight: 700 }}>
+                      <CheckCircle2 size={12} /> Active
+                    </span>
+                  )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {getRoleIcon(acc.icon, cfg.iconColor)}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.25 }}>{acc.role}</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>{acc.organization}</div>
+                    </div>
+                  </div>
+                  <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 10px', borderRadius: 8, fontSize: '0.76rem', marginBottom: 10 }}>
+                    <div style={{ color: 'var(--text-secondary)' }}>Email: <code style={{ color: cfg.iconColor }}>{acc.email}</code></div>
+                    <div style={{ color: 'var(--text-secondary)', marginTop: 2 }}>Pass: <code style={{ color: 'var(--amber-flow)' }}>{acc.password}</code></div>
+                  </div>
+                  <button
+                    className="btn btn-sm"
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${cfg.iconColor}40`, color: cfg.iconColor, fontWeight: 700, fontSize: '0.78rem' }}
+                    onClick={e => { e.stopPropagation(); handleQuickSelect(acc); }}
+                  >
+                    ⚡ Quick Login
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Manual Login Form ── */}
+        <div className="card" style={{ padding: 24 }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Lock size={16} color="var(--cyan-primary)" />
+            Custom Credentials
           </h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: 20 }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', marginBottom: 18 }}>
             Sign in with your registered DISCOM operator or researcher account.
           </p>
 
           {errorMsg && (
-            <div style={{ 
-              padding: '12px 16px', 
-              background: 'rgba(255, 0, 85, 0.12)', 
-              border: '1px solid var(--red-alert)', 
-              borderRadius: 'var(--radius-md)', 
-              marginBottom: 16,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              color: 'var(--red-alert)',
-              fontSize: '0.88rem'
-            }}>
-              <AlertCircle size={18} />
-              <span>{errorMsg}</span>
+            <div style={{ padding: '11px 14px', background: 'rgba(255,0,85,0.1)', border: '1px solid var(--red-risk)', borderRadius: 'var(--radius-md)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--red-risk)', fontSize: '0.84rem' }}>
+              <AlertCircle size={16} /> {errorMsg}
             </div>
           )}
 
           {successMsg && (
-            <div style={{ 
-              padding: '12px 16px', 
-              background: 'rgba(0, 255, 157, 0.12)', 
-              border: '1px solid var(--green-optimal)', 
-              borderRadius: 'var(--radius-md)', 
-              marginBottom: 16,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              color: 'var(--green-optimal)',
-              fontSize: '0.88rem'
-            }}>
-              <CheckCircle2 size={18} />
-              <span>{successMsg}</span>
+            <div style={{ padding: '11px 14px', background: 'rgba(0,255,157,0.1)', border: '1px solid var(--green-renew)', borderRadius: 'var(--radius-md)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--green-renew)', fontSize: '0.84rem' }}>
+              <CheckCircle2 size={16} /> {successMsg}
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', marginBottom: 6, fontSize: '0.88rem', fontWeight: 600 }}>
-                Email Address
-              </label>
-              <input 
-                type="email" 
-                required 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t('login.placeholder_email')}
-                style={{
-                  width: '100%',
-                  padding: '10px 14px',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                  fontSize: '0.95rem',
-                  outline: 'none'
-                }}
-              />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: 5, fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Email</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="operator@gridflex.ai"
+                  style={{
+                    width: '100%', padding: '10px 12px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-md)',
+                    color: 'var(--text-primary)', fontSize: '0.9rem', outline: 'none',
+                    transition: 'border-color 0.15s',
+                  }}
+                  onFocus={e => { e.target.style.borderColor = 'var(--cyan-primary)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'var(--border-subtle)'; }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: 5, fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Password</label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••••"
+                  style={{
+                    width: '100%', padding: '10px 12px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-md)',
+                    color: 'var(--text-primary)', fontSize: '0.9rem', outline: 'none',
+                    transition: 'border-color 0.15s',
+                  }}
+                  onFocus={e => { e.target.style.borderColor = 'var(--cyan-primary)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'var(--border-subtle)'; }}
+                />
+              </div>
             </div>
-
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', marginBottom: 6, fontSize: '0.88rem', fontWeight: 600 }}>
-                {t('login.password')}
-              </label>
-              <input 
-                type="password" 
-                required 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder={t('login.placeholder_pass')}
-                style={{
-                  width: '100%',
-                  padding: '10px 14px',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                  fontSize: '0.95rem',
-                  outline: 'none'
-                }}
-              />
-            </div>
-
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
-              className="btn btn-primary" 
-              style={{ width: '100%', padding: '12px 18px', fontWeight: 700 }}
+              className="btn btn-primary"
+              style={{ width: '100%', padding: '12px', fontWeight: 700, fontSize: '0.95rem' }}
             >
-              {loading ? 'Authenticating...' : t('login.btn_signin', 'Sign In to GridFlex')}
+              {loading ? 'Authenticating…' : 'Sign In to GridFlex AI →'}
             </button>
           </form>
         </div>
-
-        {/* Database & Security Info Card */}
-        <div className="card" style={{ padding: 28, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <Database size={22} color="var(--purple-insight)" />
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>{t('login.sqlite_arch')}</h3>
-            </div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: 16 }}>
-              {t('login.sqlite_desc')}
-            </p>
-
-            <div style={{ background: 'rgba(255,255,255,0.03)', padding: 14, borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', marginBottom: 16 }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: 8, color: 'var(--amber-flow)' }}>
-                {t('login.db_schema')}
-              </div>
-              <ul style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: 16, lineHeight: 1.6 }}>
-                <li><code>users</code>: id, email, password_hash (SHA-256), full_name, role, organization, created_at</li>
-                <li><code>login_records</code>: id, user_id, email, full_name, role, login_time, ip_address, status, session_token</li>
-              </ul>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Link href="/command-center" className="btn btn-secondary" style={{ flex: 1, textAlign: 'center', fontSize: '0.85rem' }}>
-              Command Center
-            </Link>
-            <Link href="/judge-mode" className="btn btn-amber" style={{ flex: 1, textAlign: 'center', fontSize: '0.85rem' }}>
-              Judge Mode
-            </Link>
-          </div>
-        </div>
       </div>
 
-      {/* Database Audit Log Section */}
-      <div className="card" style={{ padding: 24 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
-          <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Database size={18} color="var(--cyan-primary)" />
-              {t('login.audit_title', 'Live SQLite Database Login Records')}
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              Verifiable audit trail queried directly from <code style={{ color: 'var(--cyan-primary)' }}>login_records</code> table:
-            </p>
-          </div>
-          <button 
-            onClick={fetchRecords} 
-            className="btn btn-sm btn-secondary" 
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
-          >
-            <RotateCw size={14} /> Refresh Audit Log
-          </button>
-        </div>
-
-        {loginRecords.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 32, color: 'var(--text-secondary)' }}>
-            No login records found in database yet. Log in above to register the first audit record.
-          </div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-medium)', textAlign: 'left', color: 'var(--text-secondary)' }}>
-                  <th style={{ padding: '10px 12px' }}>ID</th>
-                  <th style={{ padding: '10px 12px' }}>Timestamp</th>
-                  <th style={{ padding: '10px 12px' }}>User Name</th>
-                  <th style={{ padding: '10px 12px' }}>Role</th>
-                  <th style={{ padding: '10px 12px' }}>Email</th>
-                  <th style={{ padding: '10px 12px' }}>IP Address</th>
-                  <th style={{ padding: '10px 12px' }}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loginRecords.map((rec) => (
-                  <tr key={rec.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                    <td style={{ padding: '10px 12px', color: 'var(--cyan-primary)', fontWeight: 600 }}>#{rec.id}</td>
-                    <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>{rec.login_time}</td>
-                    <td style={{ padding: '10px 12px', fontWeight: 600 }}>{rec.full_name || 'Guest User'}</td>
-                    <td style={{ padding: '10px 12px' }}>
-                      <span className="badge badge-sim" style={{ fontSize: '0.72rem' }}>{rec.role}</span>
-                    </td>
-                    <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>{rec.email}</td>
-                    <td style={{ padding: '10px 12px', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{rec.ip_address}</td>
-                    <td style={{ padding: '10px 12px' }}>
-                      <span 
-                        style={{ 
-                          color: rec.status.includes('SUCCESS') ? 'var(--green-optimal)' : 'var(--red-alert)',
-                          fontWeight: 700,
-                          fontSize: '0.78rem'
-                        }}
-                      >
-                        {rec.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      {/* Responsive: hide left panel on small screens */}
+      <style>{`
+        @media (max-width: 900px) {
+          .login-left-panel { display: none !important; }
+          .login-right-panel { padding: 40px 24px !important; }
+        }
+        @media (max-width: 480px) {
+          .login-right-panel { padding: 24px 16px !important; }
+        }
+      `}</style>
     </div>
   );
 }

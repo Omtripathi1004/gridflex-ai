@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '../../context/LanguageContext';
 import { runDigitalTwinSimulation } from '../../lib/api';
@@ -25,7 +26,8 @@ import {
   Activity,
   Layers,
   Copy,
-  ExternalLink
+  ExternalLink,
+  Cpu
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -242,20 +244,32 @@ export default function DigitalTwinPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Header with truthful naming */}
+      {/* Page Header with High-Contrast Themed Badges */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <h1>Digital Twin & What-If Simulator</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+            <span className="badge badge-live" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)', border: '1px solid var(--cyan-primary)' }}>
+              <Sliders size={14} style={{ marginRight: 4 }} />
+              Physics-Constrained Digital Twin
+            </span>
+            <span className="badge badge-amber" style={{ background: 'rgba(251, 191, 36, 0.15)', color: 'var(--gold-accent)', border: '1px solid var(--gold-accent)' }}>
+              33/11kV Substation Model
+            </span>
             <ProvenanceBadge classification="scaled_real" sourceName="Calibrated vs Grid-India PSP (MAE: 1.15 MW)" mode="cached" />
           </div>
-          <p>
-            Physics-constrained what-if scenario engine calibrated against real 64.8 MW Mahadevapura substation benchmark data.
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: 6 }}>
+            <span className="text-gradient-cyan">Digital Twin</span> Substation <span className="text-gradient-gold">Grid Simulator</span>
+          </h1>
+          <p style={{ maxWidth: 840, fontSize: '0.96rem', color: 'var(--text-secondary)' }}>
+            Physics-constrained what-if scenario engine calibrated against real 64.8 MW Mahadevapura substation benchmark data with sub-cycle contingency stress testing.
           </p>
         </div>
 
         {/* Action Controls: Presets, Share to X, Reset */}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+            <Cpu size={13} /> XAI Rationale
+          </Link>
           <button onClick={resetSliders} className="btn btn-secondary btn-sm" title="Reset all sliders to baseline 100%">
             <RotateCcw size={13} /> Reset Sliders
           </button>
@@ -317,7 +331,7 @@ export default function DigitalTwinPage() {
       {/* Main 2-Column Console */}
       <div className="grid-2">
         {/* Left: Interactive Sliders Console */}
-        <div className="card kpi brand" style={{ padding: 22 }}>
+        <div className="card-purple" style={{ padding: 22, borderRadius: 'var(--radius-lg)' }}>
           <div className="card-header">
             <h3 className="card-title">
               <Sliders size={20} style={{ color: 'var(--cyan-primary)' }} />
@@ -487,7 +501,7 @@ export default function DigitalTwinPage() {
 
         {/* Right: Recomputed Metrics & F3 Probabilistic Risk Fan */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div className="card kpi storage" style={{ padding: 20 }}>
+          <div className="card-gold" style={{ padding: 20, borderRadius: 'var(--radius-lg)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
               <span className="badge badge-forecast">Instant Dispatch Response</span>
               <span className={`badge ${summary.peak_deficit_mw > 20 ? 'badge-risk-critical' : 'badge-live'}`}>

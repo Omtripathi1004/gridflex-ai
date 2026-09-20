@@ -73,14 +73,16 @@ export default function ArchitecturePage() {
       {/* Header */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-          <h1>{t('arch.title')}</h1>
-          <span className="badge badge-live">ISO 50001 & IEEE Compliant</span>
+          <h1>
+            <span className="text-gradient-cyan">{t('arch.title')}</span> &amp; <span className="text-gradient-gold">Data Integrity</span>
+          </h1>
+          <span className="badge badge-live">ISO 50001 &amp; IEEE Compliant</span>
         </div>
-        <p>{t('arch.subtitle')}</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>{t('arch.subtitle')}</p>
       </div>
 
       {/* End-to-End Pipeline Card */}
-      <div className="card">
+      <div className="card card-cyan">
         <div className="card-header">
           <h3 className="card-title">
             <GitBranch size={20} style={{ color: 'var(--cyan-primary)' }} />
@@ -92,41 +94,49 @@ export default function ArchitecturePage() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: 14,
-          marginTop: 10
+          gap: 16,
+          marginTop: 14
         }}>
-          <div className="metric-card" style={{ borderColor: 'var(--border-medium)' }}>
-            <span className="metric-label"><Layout size={16} style={{ color: 'var(--cyan-primary)' }} /> {t('arch.layer_frontend')}</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_nextjs')}</div>
-            <span className="metric-meta">{t('arch.layer_frontend_desc')}</span>
+          <div className="card card-cyan" style={{ padding: '18px 20px', borderRadius: 12 }}>
+            <span className="metric-label" style={{ color: 'var(--cyan-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Layout size={18} /> {t('arch.layer_frontend')}
+            </span>
+            <div style={{ fontSize: '1.15rem', fontWeight: 700, marginTop: 6, color: '#fff' }}>{t('arch.layer_nextjs')}</div>
+            <span className="metric-meta" style={{ display: 'block', marginTop: 4, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{t('arch.layer_frontend_desc')}</span>
           </div>
 
-          <div className="metric-card" style={{ borderColor: 'var(--border-amber)' }}>
-            <span className="metric-label"><Server size={16} style={{ color: 'var(--amber-flow)' }} /> {t('arch.layer_backend')}</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_fastapi')}</div>
-            <span className="metric-meta">{t('arch.layer_backend_desc')}</span>
+          <div className="card card-gold" style={{ padding: '18px 20px', borderRadius: 12 }}>
+            <span className="metric-label" style={{ color: 'var(--gold-accent)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Server size={18} /> {t('arch.layer_backend')}
+            </span>
+            <div style={{ fontSize: '1.15rem', fontWeight: 700, marginTop: 6, color: '#fff' }}>{t('arch.layer_fastapi')}</div>
+            <span className="metric-meta" style={{ display: 'block', marginTop: 4, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{t('arch.layer_backend_desc')}</span>
           </div>
 
-          <div className="metric-card" style={{ borderColor: 'rgba(16, 185, 129, 0.4)' }}>
-            <span className="metric-label"><Cpu size={16} style={{ color: 'var(--green-renew)' }} /> {t('arch.layer_ml')}</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_ml_tech')}</div>
-            <span className="metric-meta">{t('arch.layer_ml_desc')}</span>
+          <div className="card card-emerald" style={{ padding: '18px 20px', borderRadius: 12 }}>
+            <span className="metric-label" style={{ color: 'var(--green-renew)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Cpu size={18} /> {t('arch.layer_ml')}
+            </span>
+            <div style={{ fontSize: '1.15rem', fontWeight: 700, marginTop: 6, color: '#fff' }}>{t('arch.layer_ml_tech')}</div>
+            <span className="metric-meta" style={{ display: 'block', marginTop: 4, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{t('arch.layer_ml_desc')}</span>
           </div>
 
-          <div className="metric-card" style={{ borderColor: 'rgba(168, 85, 247, 0.4)' }}>
-            <span className="metric-label"><Database size={16} style={{ color: '#a855f7' }} /> {t('arch.layer_knowledge')}</span>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: 4 }}>{t('arch.layer_rag_tech')}</div>
-            <span className="metric-meta">{t('arch.layer_knowledge_desc')}</span>
+          <div className="card card-purple" style={{ padding: '18px 20px', borderRadius: 12 }}>
+            <span className="metric-label" style={{ color: 'var(--purple-insight)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Database size={18} /> {t('arch.layer_knowledge')}
+            </span>
+            <div style={{ fontSize: '1.15rem', fontWeight: 700, marginTop: 6, color: '#fff' }}>{t('arch.layer_rag_tech')}</div>
+            <span className="metric-meta" style={{ display: 'block', marginTop: 4, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{t('arch.layer_knowledge_desc')}</span>
           </div>
         </div>
       </div>
 
       {/* Data & Demo Integrity Matrix Table */}
-      <div className="card">
+      <div className="card card-purple">
         <div className="card-header">
           <h3 className="card-title">
-            <ShieldCheck size={20} style={{ color: 'var(--green-renew)' }} />
-            {t('arch.integrity_title')}
+            <ShieldCheck size={20} style={{ color: 'var(--purple-insight)' }} />
+            <span className="text-gradient-purple">{t('arch.integrity_title')}</span>
           </h3>
           <span className="badge badge-sim">{t('arch.disclosure_title')}</span>
         </div>

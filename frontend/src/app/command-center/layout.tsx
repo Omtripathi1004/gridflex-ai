@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Substation Command Center | GridFlex AI',
-  description: 'Live 66/11kV substation monitoring bus, real-time duck curve mitigation, active REC-704 dispatch directives, and energy flow diagram.',
+  description: 'Live 33/11kV substation monitoring bus, real-time duck curve mitigation, active REC-704 dispatch directives, and energy flow diagram.',
   openGraph: {
     title: 'Substation Command Center | GridFlex AI',
     description: 'Real-time telemetry and energy flow visualization across solar, wind, BESS, and commercial/industrial loads.',

@@ -242,7 +242,7 @@ const ALL_PAGES: PageInfo[] = [
     dataMode: "Cached Data",
     dataModeType: "cached",
     dataSource: "Hardware-free software specifications",
-    algorithms: ["Next.js 14 + Python FastAPI Topology", "ISO 50001 / IEEE 1547.4 Mapping"],
+    algorithms: ["Next.js 14 + Python FastAPI Topology", "Ref. ISO 50001 / IEEE 1547.4 Concepts"],
     summary: "Detailed end-to-end technical pipeline, mathematical formulation references, API contracts, and compliance documentation demonstrating 100% software-native design.",
     audience: "System Architects & Technical Judges",
     highlightMetric: "Zero physical hardware needed"
@@ -254,7 +254,7 @@ const ALL_PAGES: PageInfo[] = [
     icon: MessageSquare,
     dataMode: "Live Data",
     dataModeType: "live",
-    dataSource: "IEEE Standards RAG & Deterministic Fallback",
+    dataSource: "Grid Standards Reference RAG & Deterministic Fallback",
     algorithms: ["Vector Similarity RAG", "Contextual Grid Reasoning Engine"],
     summary: "Operator conversational assistant for querying grid status, looking up IEEE contingency procedures, and generating instant dispatch summaries.",
     audience: "Grid Engineers & Operations Trainees",
@@ -492,7 +492,7 @@ export default function AboutPage() {
             <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '12px 14px', borderRadius: 8, fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: 6 }}>
               <div><strong>Active Models:</strong> Appendix A3 40 MWh BESS electrochemical model, MILP dispatch solver, P2P Double Auction ledger.</div>
               <div><strong>Symbol:</strong> Amber chip icon &amp; <code style={{ color: '#fbbf24', background: 'rgba(251, 191, 36, 0.15)', padding: '1px 6px', borderRadius: 4 }}>Simulated</code> tag.</div>
-              <div><strong>Fidelity:</strong> Conforms strictly to IEEE 1547.4 &amp; ISO 50001.</div>
+              <div><strong>Fidelity:</strong> Designed with reference to IEEE 1547.4 &amp; ISO 50001 concepts.</div>
             </div>
           </div>
         </div>
@@ -952,11 +952,11 @@ export default function AboutPage() {
               <h4 style={{ margin: 0, fontSize: '1.02rem' }}>Data, Security &amp; Speech</h4>
             </div>
             <ul style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 18, margin: 0 }}>
-              <li><strong>Web Speech API</strong>: Native browser speech recognition and synthesis for 15 Indian languages.</li>
+              <li><strong>Web Speech API</strong>: Native browser speech recognition and synthesis for English and Hindi.</li>
               <li><strong>Client-Side Mock Auth</strong>: LocalStorage JWT simulation with 4 preset operator roles.</li>
               <li><strong>Open-Meteo REST API</strong>: High-resolution global atmospheric telemetry feed.</li>
               <li><strong>Grid-India (NLDC) PSP</strong>: Real Indian power profile benchmark scaled to 64.8 MW feeder.</li>
-              <li><strong>IEEE 1547.4 &amp; ISO 50001</strong>: Standardized microgrid islanding and energy management compliance.</li>
+              <li><strong>Ref. IEEE 1547.4 &amp; ISO 50001</strong>: Microgrid islanding and energy management reference guidelines.</li>
             </ul>
           </div>
         </div>

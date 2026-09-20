@@ -33,7 +33,7 @@ export const EnergyFlowDiagram: React.FC<EnergyFlowProps> = ({
             {t('cc.flow_title')}
           </h3>
           <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-            Real-time energy balance through 66/11kV substation bus (Reconciled Load: 28.4 + 30.2 + 6.2 = 64.8 MW)
+            Real-time energy balance through 33/11kV substation bus (Reconciled Load: 28.4 + 30.2 + 6.2 = 64.8 MW)
           </p>
         </div>
         <span className={`badge ${isSurplus ? 'badge-live' : 'badge-risk-critical'}`}>
@@ -123,7 +123,7 @@ export const EnergyFlowDiagram: React.FC<EnergyFlowProps> = ({
             className="energy-line"
           />
 
-          {/* Central 66/11kV Substation Bus Node */}
+          {/* Central 33/11kV Substation Bus Node */}
           <rect
             x="350"
             y="140"
@@ -135,7 +135,7 @@ export const EnergyFlowDiagram: React.FC<EnergyFlowProps> = ({
             strokeWidth="2.5"
             filter="url(#glowCyan)"
           />
-          <text x="400" y="166" textAnchor="middle" fill="#00f0ff" fontSize="13" fontWeight="bold">66/11kV</text>
+          <text x="400" y="166" textAnchor="middle" fill="#00f0ff" fontSize="13" fontWeight="bold">33/11kV</text>
           <text x="400" y="184" textAnchor="middle" fill="#94a3b8" fontSize="10">Substation Bus</text>
 
           {/* Left Node: Solar Farm Array */}

@@ -28,9 +28,9 @@ KNOWLEDGE_DOCUMENTS = [
     },
     {
         "doc_id": "DOC-GRID-02",
-        "title": "IEEE 1547-2018 Interconnection Standards & Feeder Limits",
+        "title": "IEEE 1547-2018 Interconnection — Key Feeder Principles (Paraphrased Reference)",
         "category": "Grid Standards",
-        "snippet": "Substation transformers must maintain thermal loading below 90% continuous rating. Reverse power flow from high-penetration rooftop solar must be mitigated through local BESS charging or coordinated P2P matching before back-feeding upstream.",
+        "snippet": "Distribution interconnection guidelines indicate substation transformers should maintain thermal loading below 90% of continuous rating. Reverse power flow from high-penetration rooftop solar should be mitigated through local BESS charging or coordinated P2P matching before back-feeding upstream. (Designed with reference to IEEE 1547 concepts; not a certified compliance claim.)",
         "relevance_keywords": ["ieee", "standard", "feeder", "transformer", "thermal", "reverse power", "voltage", "limits", "overload"]
     },
     {
@@ -58,7 +58,7 @@ KNOWLEDGE_DOCUMENTS = [
         "doc_id": "DOC-GRID-06",
         "title": "Continuous Double Auction P2P Locational Settlement",
         "category": "Market Settlement",
-        "snippet": "Prosumer rooftop solar sellers submit ask orders matched continuously against commercial deficit bids with a 1.2 cent/kWh distribution wheeling tariff paid directly to the local DISCOM.",
+        "snippet": "Prosumer rooftop solar sellers submit ask orders matched continuously against commercial deficit bids with a ₹0.85/kWh distribution wheeling tariff paid directly to the local DISCOM.",
         "relevance_keywords": ["p2p", "auction", "clearing", "tariff", "market", "settlement", "prosumer", "trading", "order"]
     },
     {
@@ -100,7 +100,7 @@ KNOWLEDGE_DOCUMENTS = [
         "doc_id": "DOC-GRID-12",
         "title": "Economic Value Proposition & DISCOM OPEX Reduction",
         "category": "Economics & Finance",
-        "snippet": "GridFlex AI reduces annual DISCOM operating expenses by $1.82M through 4 core mechanisms: peak demand charge shaving ($640k), elimination of DSM frequency deviation fines ($480k), renewable curtailment minimization ($390k), and P2P wheeling fee revenue ($310k).",
+        "snippet": "GridFlex AI reduces annual DISCOM operating expenses by ₹15.1 crore through 4 core mechanisms: peak demand charge shaving (₹5.3 cr), elimination of DSM frequency deviation fines (₹3.98 cr), renewable curtailment minimization (₹3.24 cr), and P2P wheeling fee revenue (₹2.57 cr). (Simulated projections at 2025-26 Indian power market rates.)",
         "relevance_keywords": ["cost", "savings", "economic", "financial", "roi", "opex", "revenue", "dollar", "money", "tariff"]
     },
     {

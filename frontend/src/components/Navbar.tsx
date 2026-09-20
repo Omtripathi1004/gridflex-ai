@@ -570,6 +570,30 @@ export const Navbar: React.FC = () => {
         isOpen={trustCenterOpen}
         onClose={() => setTrustCenterOpen(false)}
       />
+
+      {/* Sticky Mobile Bottom Navigation for Phones (<= 768px) */}
+      <nav className="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+        <Link href="/" className={`bottom-nav-item ${pathname === '/' ? 'active' : ''}`}>
+          <Zap size={18} />
+          <span>Home</span>
+        </Link>
+        <Link href="/command-center" className={`bottom-nav-item ${pathname === '/command-center' ? 'active' : ''}`}>
+          <Activity size={18} />
+          <span>Operate</span>
+        </Link>
+        <Link href="/digital-twin" className={`bottom-nav-item ${pathname === '/digital-twin' ? 'active' : ''}`}>
+          <Sliders size={18} />
+          <span>Twin</span>
+        </Link>
+        <Link href="/resilience" className={`bottom-nav-item ${pathname === '/resilience' ? 'active' : ''}`}>
+          <ShieldCheck size={18} />
+          <span>Resilience</span>
+        </Link>
+        <Link href="/judge-mode" className={`bottom-nav-item ${pathname === '/judge-mode' ? 'active' : ''}`}>
+          <Award size={18} />
+          <span>Judges</span>
+        </Link>
+      </nav>
     </>
   );
 };

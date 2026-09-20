@@ -201,7 +201,7 @@ export default function SkyVisionPage() {
       </div>
 
       {/* Main Grid */}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 340px',gap:20,marginBottom:20}}>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 400px), 1fr))',gap:20,marginBottom:20}}>
         {/* Canvas */}
         <div style={{background:'var(--bg-card)',border:'1px solid var(--border-medium)',borderRadius:16,overflow:'hidden'}}>
           <div style={{padding:'14px 16px 10px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>

@@ -76,7 +76,7 @@ export default function ArchitecturePage() {
           <h1>
             <span className="text-gradient-cyan">{t('arch.title')}</span> &amp; <span className="text-gradient-gold">Data Integrity</span>
           </h1>
-          <span className="badge badge-live">ISO 50001 &amp; IEEE Compliant</span>
+          <span className="badge badge-live">Ref. ISO 50001 &amp; IEEE 1547 Concepts</span>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>{t('arch.subtitle')}</p>
       </div>

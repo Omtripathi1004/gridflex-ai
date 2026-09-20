@@ -83,18 +83,18 @@ export default function ExplainableAIPage() {
     {
       action: "Discharge Substation BESS-01 & 02",
       amount_mw: selectedScenario === 'low_battery' ? 4.2 : 9.5,
-      cost_usd_mwh: 62,
+      cost_usd_mwh: 62, // ₹5,166/MWh
       emissions_kg: 0,
       latency_ms: 120,
       status: "OPTIMAL (Primary)",
-      why_chosen: "Zero marginal emissions, sub-cycle response (120ms), levelized cost ($62/MWh) is 81% lower than emergency gas peakers.",
+      why_chosen: "Zero marginal emissions, sub-cycle response (120ms), levelized cost (₹5,166/MWh) is 81% lower than emergency gas peakers.",
       icon: BatteryCharging,
       badge_color: "var(--green-renew)"
     },
     {
       action: "Demand Response EV & HVAC Shift",
       amount_mw: selectedScenario === 'low_battery' ? 8.5 : 5.2,
-      cost_usd_mwh: 45,
+      cost_usd_mwh: 45, // ₹3,735/MWh
       emissions_kg: 0,
       latency_ms: 850,
       status: "OPTIMAL (Secondary)",
@@ -105,7 +105,7 @@ export default function ExplainableAIPage() {
     {
       action: "Clear Prosumer P2P Bilateral Reserve",
       amount_mw: selectedScenario === 'low_battery' ? 5.5 : 3.5,
-      cost_usd_mwh: 78,
+      cost_usd_mwh: 78, // ₹6,474/MWh
       emissions_kg: 0,
       latency_ms: 450,
       status: "OPTIMAL (Tertiary)",
@@ -119,14 +119,14 @@ export default function ExplainableAIPage() {
   const rejectedAlternatives = [
     {
       action: "Ignite Emergency Gas Peaker Unit #3",
-      cost_penalty: "$18,400 + ₹12/kWh fuel surcharge",
+      cost_penalty: "₹15.25 lakh + ₹12/kWh fuel surcharge",
       carbon_penalty: "14.2 Metric Tons CO₂",
       rejection_reason: "High marginal operating expense; exceeds CERC emissions cap for peak mitigation.",
       tag: "REJECTED (High Cost & CO₂)"
     },
     {
       action: "Initiate Rolling Load Shedding (Feeder F-02)",
-      cost_penalty: "$35,000 regulatory penalty + 12,000 consumers cut",
+      cost_penalty: "₹29.05 lakh regulatory penalty + 12,000 consumers cut",
       carbon_penalty: "Severe SLA Violation",
       rejection_reason: "Violates 24x7 power mandate; unserved energy penalty exceeds BESS dispatch by 5.6x.",
       tag: "REJECTED (Reliability Breach)"
@@ -231,10 +231,10 @@ export default function ExplainableAIPage() {
             Dispatch Cost Saved
           </div>
           <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#fbcfe8' }}>
-            $18,400
+            ₹15.25L
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 4 }}>
-            Avoided Gas Peakers & Spot Price Spikes
+            Avoided Gas Peakers & Spot Price Spikes (INR)
           </div>
         </div>
 
@@ -552,7 +552,7 @@ export default function ExplainableAIPage() {
                 </span>
               ) : (
                 <span style={{ color: 'var(--green-renew)' }}>
-                  ✅ High Battery Headroom: BESS dispatches full <strong>9.5 MW</strong> primary reserve at lowest levelized cost ($62/MWh). Zero consumer curtailment.
+                  ✅ High Battery Headroom: BESS dispatches full <strong>9.5 MW</strong> primary reserve at lowest levelized cost (₹5,166/MWh). Zero consumer curtailment.
                 </span>
               )}
             </div>

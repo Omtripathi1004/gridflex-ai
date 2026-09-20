@@ -132,7 +132,7 @@ export default function ResiliencePage() {
             {compositeScore} <span style={{ fontSize: '1.2rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>/ 100</span>
           </h2>
           <div style={{ marginTop: 8, fontSize: '0.84rem', color: '#94a3b8' }}>
-            Calculation: <code>(0.25×80.1) + (0.25×85.0) + (0.25×72.5) + (0.25×85.3) = <strong>{compositeScore}</strong></code>
+            Calculation: <code>{components.map((c: any) => `(${c.weight}×${c.score})`).join(' + ')} = <strong>{compositeScore}</strong></code>
           </div>
         </div>
 

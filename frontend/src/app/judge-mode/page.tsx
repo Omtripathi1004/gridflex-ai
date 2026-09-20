@@ -107,19 +107,19 @@ export default function JudgeModePage() {
       badge_color: "var(--blue-bright)",
       card_class: "card-cyan",
       details: "Natural language voice assistant supporting 15 Indian regional languages (Hindi, Tamil, Telugu, Bengali, Marathi, etc.). Generates immutable SQLite audit records and CEA regulatory compliance documentation instantly.",
-      telemetry_snippet: { supported_languages: "15 Indian Locales", voice_stt_accuracy: "98.4%", dispatch_protocol: "IEEE 1547 / CEA compliant", audit_trail: "SQLite Immutable" }
+      telemetry_snippet: { supported_languages: "EN + Hindi", voice_stt_accuracy: "Prototype", dispatch_protocol: "Ref. IEEE 1547 / CEA concepts", audit_trail: "SQLite Immutable" }
     },
     {
       step_number: 7,
       title: "Measurable Impact",
-      headline: "100% Reliability: 0 Outages, $18,400 Saved & 14.2T CO₂ Avoided",
+      headline: "100% Reliability: 0 Outages, ₹15.25 Lakh Saved & 14.2T CO₂ Avoided",
       module_name: "Resilience & Audit Matrix",
       module_link: "/resilience",
       module_icon: Award,
       badge_color: "var(--green-renew)",
       card_class: "card-emerald",
-      details: "Complete elimination of evening shortage. Shortage hours cut from 4.0h to 0. Feeder loading safely capped at 78.4%. $18,400 in emergency gas peaker costs avoided and 14.2 metric tons of carbon emissions prevented.",
-      telemetry_snippet: { blackout_hours: "0.0 Hours", cost_saved: "$18,400 USD", co2_avoided: "14.2 Metric Tons", rubric_score: "10/10 Verification" }
+      details: "Complete elimination of evening shortage. Shortage hours cut from 4.0h to 0. Feeder loading safely capped at 78.4%. ₹15.25 lakh in emergency gas peaker costs avoided and 14.2 metric tons of carbon emissions prevented.",
+      telemetry_snippet: { blackout_hours: "0.0 Hours", cost_saved: "₹15.25 Lakh INR", co2_avoided: "14.2 Metric Tons", rubric_score: "10/10 Verification" }
     }
   ];
 

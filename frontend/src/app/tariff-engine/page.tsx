@@ -157,9 +157,9 @@ export default function TariffEnginePage() {
         ))}
       </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'1fr 300px',gap:20}}>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',gap:20}}>
         {/* Left: Tabs */}
-        <div>
+        <div style={{minWidth:0,maxWidth:'100%'}}>
           {/* Tabs */}
           <div style={{display:'flex',gap:4,marginBottom:16}}>
             {(['tariff','arbitrage','dsm'] as const).map(tab=>(
@@ -299,7 +299,7 @@ export default function TariffEnginePage() {
         </div>
 
         {/* Right: BESS Optimizer Controls */}
-        <div style={{display:'flex',flexDirection:'column',gap:14}}>
+        <div style={{display:'flex',flexDirection:'column',gap:14,minWidth:0,maxWidth:'100%'}}>
           <div style={{background:'var(--bg-card)',border:'1px solid var(--border-subtle)',borderRadius:16,padding:16}}>
             <h3 style={{fontSize:'0.82rem',fontWeight:700,color:'var(--text-secondary)',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:16,display:'flex',alignItems:'center',gap:6}}>
               <Settings size={12}/> BESS Optimizer Params

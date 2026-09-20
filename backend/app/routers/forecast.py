@@ -14,19 +14,24 @@ def get_renewable_forecast(horizon_hours: int = 24):
     base_hours = range(0, min(horizon_hours, 48))
     
     for h in base_hours:
-        time_label = f"{h:02d}:00"
+        day = (h // 24) + 1
+        h_day = h % 24
+        time_label = f"{h_day:02d}:00 (D{day})" if horizon_hours > 24 else f"{h_day:02d}:00"
         
-        # Solar model (peaks midday 11-13)
-        solar_pred = max(0.0, math.sin(math.pi * (h - 6) / 12)) * 52.0 if 6 <= h <= 18 else 0.0
+        # Solar model (peaks midday 11-13; Day 2 has moderate cloud attenuation)
+        solar_peak = 52.0 if day == 1 else 43.5
+        solar_pred = max(0.0, math.sin(math.pi * (h_day - 6) / 12)) * solar_peak if 6 <= h_day <= 18 else 0.0
         # Simulated actual (historical or current)
         solar_actual = round(max(0.0, solar_pred + random.uniform(-2.5, 2.5)), 2) if h <= 14 else None
         
-        # Prediction interval
-        confidence_span_95 = round(solar_pred * 0.12 + 1.5, 2)
-        confidence_span_80 = round(solar_pred * 0.07 + 0.9, 2)
+        # Prediction interval (wider for Day 2 due to forecast uncertainty)
+        uncertainty_factor = 1.0 if day == 1 else 1.45
+        confidence_span_95 = round((solar_pred * 0.12 + 1.5) * uncertainty_factor, 2)
+        confidence_span_80 = round((solar_pred * 0.07 + 0.9) * uncertainty_factor, 2)
         
-        # Wind model (stronger night and early morning)
-        wind_pred = round(16.0 + 5.0 * math.cos(h / 3.8) + 2.0 * math.sin(h / 5.2), 2)
+        # Wind model (stronger night and early morning; Day 2 has higher coastal gusts)
+        wind_base = 16.0 if day == 1 else 19.5
+        wind_pred = round(wind_base + 5.0 * math.cos(h / 3.8) + 2.0 * math.sin(h / 5.2), 2)
         wind_actual = round(wind_pred + random.uniform(-1.8, 1.8), 2) if h <= 14 else None
         
         # Total renewable
@@ -34,13 +39,14 @@ def get_renewable_forecast(horizon_hours: int = 24):
         
         # Weather inputs
         ghi = round(solar_pred * 18.5, 1)  # W/m2
-        temp = round(22.0 + 8.0 * math.sin(math.pi * (h - 7) / 14), 1)
-        cloud = round(max(5.0, min(85.0, 30.0 + 20.0 * math.sin(h / 2.0) + random.uniform(-5, 5))), 1)
+        temp = round(22.0 + 8.0 * math.sin(math.pi * (h_day - 7) / 14), 1)
+        cloud = round(max(5.0, min(85.0, (25.0 if day == 1 else 42.0) + 20.0 * math.sin(h / 2.0) + random.uniform(-5, 5))), 1)
         wind_speed_100m = round(wind_pred * 0.42, 1)  # m/s
         
         points.append({
             "hour": h,
             "time": time_label,
+            "day": day,
             "solar_predicted": round(solar_pred, 2),
             "solar_actual": solar_actual,
             "solar_upper_95": round(solar_pred + confidence_span_95, 2),

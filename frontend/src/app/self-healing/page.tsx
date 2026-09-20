@@ -197,9 +197,9 @@ export default function SelfHealingPage() {
 
       {/* Tab Content */}
       {activeTab==='topology'&&(
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',gap:16,marginBottom:20}}>
           {/* Node Grid */}
-          <div style={{background:'var(--bg-card)',border:'1px solid var(--border-subtle)',borderRadius:16,padding:20}}>
+          <div style={{background:'var(--bg-card)',border:'1px solid var(--border-subtle)',borderRadius:16,padding:20,minWidth:0,maxWidth:'100%'}}>
             <h3 style={{fontSize:'0.88rem',fontWeight:700,marginBottom:14,display:'flex',alignItems:'center',gap:6}}><Layers size={14}/> Grid Topology — Live Status</h3>
             <div style={{display:'flex',flexDirection:'column',gap:8}}>
               {nodes.map(n=>(
@@ -223,7 +223,7 @@ export default function SelfHealingPage() {
           </div>
 
           {/* Healing Log */}
-          <div style={{background:'var(--bg-card)',border:'1px solid var(--border-subtle)',borderRadius:16,padding:20}}>
+          <div style={{background:'var(--bg-card)',border:'1px solid var(--border-subtle)',borderRadius:16,padding:20,minWidth:0,maxWidth:'100%'}}>
             <h3 style={{fontSize:'0.88rem',fontWeight:700,marginBottom:14,display:'flex',alignItems:'center',gap:6}}><Activity size={14}/> Autonomous Healing Log</h3>
             <div style={{display:'flex',flexDirection:'column',gap:10}}>
               {healingLog.map(h=>(

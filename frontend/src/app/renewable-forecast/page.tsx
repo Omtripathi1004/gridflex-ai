@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -123,26 +123,58 @@ export default function RenewableForecastPage() {
         />
       </div>
 
+      {/* Horizon Context Banner */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: horizon === 48 ? 'rgba(168, 85, 247, 0.12)' : 'rgba(0, 240, 255, 0.08)',
+        border: `1px solid ${horizon === 48 ? 'rgba(168, 85, 247, 0.35)' : 'rgba(0, 240, 255, 0.25)'}`,
+        borderRadius: 12,
+        padding: '12px 18px',
+        flexWrap: 'wrap',
+        gap: 12
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Calendar size={18} color={horizon === 48 ? '#c084fc' : 'var(--cyan-primary)'} />
+          <span style={{ fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+            <strong>Active Horizon:</strong> {horizon === 48 ? '48-Hour Multi-Day Horizon (Day 1 + Day 2)' : '24-Hour Day-Ahead Horizon (Day 1)'}
+          </span>
+        </div>
+        <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+          {horizon === 48 ? (
+            <span>Day 1 Peak: <strong style={{ color: '#fbbf24' }}>52.0 MW</strong> • Day 2 Cloud Peak: <strong style={{ color: '#f59e0b' }}>43.5 MW</strong> • 48h Total: <strong style={{ color: '#10b981' }}>1,248.6 MWh</strong></span>
+          ) : (
+            <span>Day 1 Peak Solar: <strong style={{ color: '#fbbf24' }}>52.0 MW</strong> • 24h Total: <strong style={{ color: '#10b981' }}>642.4 MWh</strong></span>
+          )}
+        </div>
+      </div>
+
       {/* Main Forecast Chart with Confidence Intervals */}
       <div className="card">
         <div className="card-header">
           <div>
             <h3 className="card-title">
               <Sun size={20} style={{ color: 'var(--amber-flow)' }} />
-              {t('rf.chart_title')}
+              {t('rf.chart_title')} — {horizon === 48 ? '48-Hour Extended Horizon' : '24-Hour Day-Ahead'}
             </h3>
             <p style={{ fontSize: '0.82rem', marginTop: 4 }}>
-              {t('rf.chart_desc')}
+              {horizon === 48 ? 'Multi-day quantile loss forecast comparing Day 1 baseline against Day 2 afternoon cloud suppression.' : t('rf.chart_desc')}
             </p>
           </div>
-          <span className="badge badge-forecast">{t('rf.model_badge')}</span>
+          <span className="badge badge-forecast">{horizon === 48 ? '48h LightGBM Multi-Horizon' : t('rf.model_badge')}</span>
         </div>
 
-        <div style={{ width: '100%', height: 380, marginTop: 10 }}>
-          <ResponsiveContainer width="100%" height="100%">
+        <div style={{ width: '100%', minHeight: 380, minWidth: 0, marginTop: 10 }}>
+          <ResponsiveContainer width="100%" height={380}>
             <ComposedChart data={series} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
-              <XAxis dataKey="time" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <XAxis 
+                dataKey="time" 
+                stroke="#64748b" 
+                tick={{ fill: '#94a3b8', fontSize: 11 }} 
+                interval={horizon === 48 ? 3 : 1}
+              />
               <YAxis stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} unit=" MW" />
               <Tooltip 
                 contentStyle={{ 

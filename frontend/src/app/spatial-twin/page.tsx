@@ -58,11 +58,36 @@ const LINES: TransmissionLine[] = [
   {id:'L12',name:'Mumbai–Hyderabad 220kV',from:'SS5',to:'SS9',loadMW:305,capacityMW:310,voltagekV:220,congested:true,x1:265,y1:325,x2:380,y2:350,state:'Maharashtra'},
 ];
 
+// ─── Mode-Specific Event Data ──────────────────────────────────────────────────
 const CONGESTION_EVENTS: CongestionEvent[] = [
   {id:'CE1',line:'Ahmedabad–Surat 220kV',severity:'high',price:18.4,duration:'2h 15m',resolution:'Re-dispatch ISGS units + DR activation'},
   {id:'CE2',line:'Mumbai–Pune 220kV',severity:'critical',price:24.7,duration:'45m',resolution:'Emergency imports from SRPC pool'},
   {id:'CE3',line:'Jaipur–Delhi 400kV',severity:'high',price:21.2,duration:'1h 30m',resolution:'Curtail wind + activate BESS ramp'},
   {id:'CE4',line:'Mumbai–Hyderabad 220kV',severity:'medium',price:14.8,duration:'3h',resolution:'Optimal power flow re-routing'},
+];
+
+interface VoltageEvent {
+  id: string; substation: string; busKv: number; pu: number; severity: 'low'|'medium'|'high'|'critical';
+  reactiveReq: string; action: string;
+}
+
+const VOLTAGE_EVENTS: VoltageEvent[] = [
+  {id:'VE1',substation:'Mumbai 220kV Bus',busKv:204.0,pu:0.927,severity:'critical',reactiveReq:'+50 MVAR',action:'Step OLTC +2 & switch 50 MVAR capacitor bank at Trombay'},
+  {id:'VE2',substation:'Delhi 400kV Bus',busKv:208.0,pu:0.945,severity:'high',reactiveReq:'+35 MVAR',action:'Engage synchronous condenser & boost Mandola reactive injection'},
+  {id:'VE3',substation:'Pune 220kV Bus',busKv:209.0,pu:0.950,severity:'medium',reactiveReq:'+25 MVAR',action:'Activate local BESS reactive support (IEEE 1547 Q-mode)'},
+  {id:'VE4',substation:'Bengaluru 220kV Bus',busKv:211.0,pu:0.959,severity:'low',reactiveReq:'+15 MVAR',action:'Adjust Hoodi 400/220kV transformer tertiary tap'},
+];
+
+interface FlowEvent {
+  id: string; corridor: string; flowMW: number; ttcMW: number; severity: 'low'|'medium'|'high'|'critical';
+  lossRate: string; directive: string;
+}
+
+const FLOW_EVENTS: FlowEvent[] = [
+  {id:'FE1',corridor:'Mumbai–Pune 220kV Tie',flowMW:295,ttcMW:310,severity:'critical',lossRate:'4.2% (12.4 MW)',directive:'Sahyadri industrial corridor at 95.2% TTC. Dispatch local BESS peak shave'},
+  {id:'FE2',corridor:'Ahmedabad–Surat 220kV Tie',flowMW:290,ttcMW:310,severity:'high',lossRate:'3.8% (11.0 MW)',directive:'Western coastal loop flow. Re-schedule ISGS generation balance'},
+  {id:'FE3',corridor:'Jaipur–Delhi 400kV Inter-Tie',flowMW:624,ttcMW:680,severity:'high',lossRate:'3.1% (19.3 MW)',directive:'Heavy Northern Region import. Arm SPS (Special Protection Scheme) trip'},
+  {id:'FE4',corridor:'Hyderabad–Bengaluru 400kV Tie',flowMW:388,ttcMW:420,severity:'medium',lossRate:'2.9% (11.2 MW)',directive:'Southern grid transfer corridor stable. Maintain dynamic line rating'},
 ];
 
 const congestionColor = (line: TransmissionLine) => {
@@ -104,8 +129,29 @@ export default function SpatialTwinPage() {
     return Math.max(1.5, r*6);
   };
 
+  // Mode-dependent KPI cards
+  const kpis = viewMode === 'congestion' ? [
+    {label:'Total Load',value:`${(totalLoad/1000).toFixed(1)} GW`,color:'#06B6D4'},
+    {label:'Congested Lines (>80%)',value:String(congestedLines.length),color:congestedLines.length>2?'#DC2626':'#EAB308'},
+    {label:'Critical Nodes',value:String(criticalSS.length),color:criticalSS.length>1?'#DC2626':'#F97316'},
+    {label:'Lines Monitored',value:`${lines.length} Corridors`,color:'#10B981'},
+    {label:'Max Congestion',value:`${Math.round(Math.max(...lines.map(l=>l.loadMW/l.capacityMW))*100)}%`,color:'#DC2626'},
+  ] : viewMode === 'voltage' ? [
+    {label:'Avg Bus Voltage',value:'215.8 kV (0.98 pu)',color:'#8B5CF6'},
+    {label:'Voltage Violations (<0.95 pu)',value:'3 Sub-Buses',color:'#DC2626'},
+    {label:'Reactive Reserve Margin',value:'+420 MVAR',color:'#06B6D4'},
+    {label:'OLTC Tap Steps Active',value:'4 Transf.',color:'#EAB308'},
+    {label:'CEA Compliance Rate',value:'97.2% In-Band',color:'#10B981'},
+  ] : [
+    {label:'Net Inter-Tie Transfer',value:'3,480 MW Import',color:'#10B981'},
+    {label:'Corridor Utilization (TTC)',value:'84.6% Avg',color:congestedLines.length>2?'#DC2626':'#F97316'},
+    {label:'Transmission Losses',value:'3.42% (284 MW)',color:'#06B6D4'},
+    {label:'Reactive Loop Flow',value:'168 MVAR',color:'#EAB308'},
+    {label:'Dynamic Transfer Margin',value:'+620 MW Headroom',color:'#10B981'},
+  ];
+
   return (
-    <div style={{minHeight:'100vh',background:'var(--bg-primary)',padding:'24px',color:'var(--text-primary)'}}>
+    <div style={{minHeight:'100vh',background:'var(--bg-primary)',padding:'24px',color:'var(--text-primary)',maxWidth:'100vw',overflowX:'hidden'}}>
       {/* Header */}
       <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:24,gap:16,flexWrap:'wrap'}}>
         <div>
@@ -118,7 +164,11 @@ export default function SpatialTwinPage() {
                 Spatial Grid Twin
               </h1>
               <p style={{fontSize:'0.82rem',color:'var(--text-secondary)',margin:0}}>
-                3D Transmission Network Congestion Map — Real-Time Power Flow Heatmap
+                {viewMode === 'congestion' 
+                  ? 'Real-Time Power Flow Heatmap — Thermal Loading & Corridors'
+                  : viewMode === 'voltage'
+                  ? 'Substation Bus Voltage Profiles — Reactive Power & OLTC Tap Directives'
+                  : 'Inter-Regional Tie-Line Power Flow — Dynamic Transfer Capability & Loss Audit'}
               </p>
             </div>
           </div>
@@ -127,43 +177,49 @@ export default function SpatialTwinPage() {
             <ProvenanceBadge classification="scaled_real" sourceName="NLDC Power Flow Data" mode="cached"/>
           </div>
         </div>
-        <div style={{display:'flex',gap:4}}>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
           {(['congestion','voltage','flow'] as const).map(m=>(
             <button key={m} onClick={()=>setViewMode(m)}
-              style={{padding:'7px 14px',borderRadius:8,border:`1px solid ${viewMode===m?'rgba(6,182,212,0.5)':'rgba(255,255,255,0.08)'}`,background:viewMode===m?'rgba(6,182,212,0.15)':'transparent',color:viewMode===m?'#06B6D4':'var(--text-secondary)',cursor:'pointer',fontSize:'0.8rem',fontWeight:viewMode===m?700:400,textTransform:'capitalize'}}>
-              {m}
+              style={{padding:'8px 16px',borderRadius:8,border:`1px solid ${viewMode===m?'rgba(6,182,212,0.6)':'rgba(255,255,255,0.1)'}`,background:viewMode===m?'rgba(6,182,212,0.2)':'rgba(255,255,255,0.03)',color:viewMode===m?'#06B6D4':'var(--text-secondary)',cursor:'pointer',fontSize:'0.82rem',fontWeight:viewMode===m?700:500,textTransform:'capitalize',transition:'all 0.2s'}}>
+              {m === 'congestion' ? '⚡ Congestion' : m === 'voltage' ? '📈 Voltage (pu)' : '🔄 Power Flow'}
             </button>
           ))}
         </div>
       </div>
 
-      {/* KPI Row */}
+      {/* KPI Row (Dynamic per viewMode) */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12,marginBottom:20}}>
-        {[
-          {label:'Total Load',value:`${(totalLoad/1000).toFixed(1)} GW`,color:'#06B6D4'},
-          {label:'Congested Lines',value:String(congestedLines.length),color:congestedLines.length>2?'#DC2626':'#EAB308'},
-          {label:'Critical Nodes',value:String(criticalSS.length),color:criticalSS.length>1?'#DC2626':'#F97316'},
-          {label:'Lines Monitored',value:String(lines.length),color:'#10B981'},
-          {label:'Max Congestion',value:`${Math.round(Math.max(...lines.map(l=>l.loadMW/l.capacityMW))*100)}%`,color:'#F97316'},
-        ].map(k=>(
+        {kpis.map(k=>(
           <div key={k.label} style={{background:'var(--bg-card)',border:`1px solid ${k.color}22`,borderRadius:12,padding:'12px 14px',borderLeft:`3px solid ${k.color}`}}>
             <div style={{fontSize:'0.7rem',color:'var(--text-tertiary)',textTransform:'uppercase',letterSpacing:'0.07em',marginBottom:4}}>{k.label}</div>
-            <div style={{fontSize:'1.3rem',fontWeight:800,color:k.color,fontFamily:'monospace'}}>{k.value}</div>
+            <div style={{fontSize:'1.25rem',fontWeight:800,color:k.color,fontFamily:'monospace'}}>{k.value}</div>
           </div>
         ))}
       </div>
 
-      {/* Main Grid Map + Side Panel */}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 320px',gap:20,marginBottom:20}}>
+      {/* Main Grid Map + Side Panel (Responsive auto-fit) */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,320px),1fr))',gap:20,marginBottom:20,alignItems:'start'}}>
         {/* SVG Map */}
-        <div style={{background:'var(--bg-card)',border:'1px solid var(--border-medium)',borderRadius:16,overflow:'hidden',position:'relative'}}>
-          <div style={{padding:'12px 16px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
-            <span style={{fontSize:'0.82rem',fontWeight:700,color:'#06B6D4',display:'flex',alignItems:'center',gap:6}}><Activity size={14}/> WESTERN + CENTRAL REGION — LIVE POWER FLOW</span>
-            <div style={{display:'flex',gap:12,fontSize:'0.7rem',color:'var(--text-tertiary)'}}>
-              <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#10B981',display:'inline-block',borderRadius:2}}/>&lt;65%</span>
-              <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#EAB308',display:'inline-block',borderRadius:2}}/>65-80%</span>
-              <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#F97316',display:'inline-block',borderRadius:2}}/>80-92%</span>
-              <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#DC2626',display:'inline-block',borderRadius:2}}/>Critical</span>
+        <div style={{background:'var(--bg-card)',border:'1px solid var(--border-medium)',borderRadius:16,overflow:'hidden',position:'relative',minWidth:0}}>
+          <div style={{padding:'12px 16px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid rgba(255,255,255,0.05)',flexWrap:'wrap',gap:8}}>
+            <span style={{fontSize:'0.82rem',fontWeight:700,color:'#06B6D4',display:'flex',alignItems:'center',gap:6}}>
+              <Activity size={14}/> {viewMode.toUpperCase()} VIEW — WESTERN & CENTRAL REGION
+            </span>
+            <div style={{display:'flex',gap:12,fontSize:'0.7rem',color:'var(--text-tertiary)',flexWrap:'wrap'}}>
+              {viewMode === 'voltage' ? (
+                <>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:10,height:10,background:'#10B981',borderRadius:'50%'}}/>&gt;0.98 pu</span>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:10,height:10,background:'#EAB308',borderRadius:'50%'}}/>0.95-0.98</span>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:10,height:10,background:'#DC2626',borderRadius:'50%'}}/>&lt;0.95 pu</span>
+                </>
+              ) : (
+                <>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#10B981',display:'inline-block',borderRadius:2}}/>&lt;65%</span>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#EAB308',display:'inline-block',borderRadius:2}}/>65-80%</span>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#F97316',display:'inline-block',borderRadius:2}}/>80-92%</span>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}><span style={{width:16,height:3,background:'#DC2626',display:'inline-block',borderRadius:2}}/>Critical</span>
+                </>
+              )}
             </div>
           </div>
           <svg viewBox="70 60 360 400" style={{width:'100%',height:480,cursor:'default'}}
@@ -219,7 +275,7 @@ export default function SpatialTwinPage() {
         </div>
 
         {/* Details Panel */}
-        <div style={{display:'flex',flexDirection:'column',gap:14}}>
+        <div style={{display:'flex',flexDirection:'column',gap:14,minWidth:0}}>
           {/* Selected item info */}
           {(selectedLine||selectedSS)?(
             <div style={{background:'rgba(0,240,255,0.06)',border:'1px solid rgba(0,240,255,0.3)',borderRadius:14,padding:16}}>
@@ -253,6 +309,7 @@ export default function SpatialTwinPage() {
                   {[
                     {k:'Load',v:`${selectedSS.loadMW} MW`},
                     {k:'Voltage',v:`${selectedSS.voltage.toFixed(1)} kV`},
+                    {k:'Per-Unit (pu)',v:`${(selectedSS.voltage/220).toFixed(3)} pu`},
                     {k:'State',v:selectedSS.state},
                     {k:'Status',v:selectedSS.status.toUpperCase()},
                   ].map(r=>(
@@ -271,25 +328,83 @@ export default function SpatialTwinPage() {
             </div>
           )}
 
-          {/* Congestion Events */}
-          <div style={{background:'var(--bg-card)',border:'1px solid var(--border-subtle)',borderRadius:14,padding:16,flex:1}}>
-            <h3 style={{fontSize:'0.82rem',fontWeight:700,marginBottom:12,display:'flex',alignItems:'center',gap:6}}><AlertTriangle size={13} color="#F97316"/> Active Congestion Events</h3>
-            <div style={{display:'flex',flexDirection:'column',gap:8}}>
-              {CONGESTION_EVENTS.map(ev=>{
-                const col=ev.severity==='critical'?'#DC2626':ev.severity==='high'?'#F97316':'#EAB308';
-                return (
-                  <div key={ev.id} style={{padding:'9px 11px',borderRadius:9,background:'rgba(255,255,255,0.03)',border:`1px solid ${col}22`,borderLeft:`3px solid ${col}`}}>
-                    <div style={{fontSize:'0.78rem',fontWeight:600,color:'var(--text-primary)',marginBottom:3}}>{ev.line}</div>
-                    <div style={{display:'flex',gap:8,marginBottom:3,fontSize:'0.68rem'}}>
-                      <span style={{color:col,fontWeight:700,textTransform:'uppercase'}}>{ev.severity}</span>
-                      <span style={{color:'#F59E0B',fontFamily:'monospace'}}>₹{ev.price}/kWh</span>
-                      <span style={{color:'var(--text-tertiary)'}}>{ev.duration}</span>
-                    </div>
-                    <div style={{fontSize:'0.7rem',color:'var(--text-tertiary)'}}>{ev.resolution}</div>
-                  </div>
-                );
-              })}
-            </div>
+          {/* Mode-Specific Events & Directives Panel */}
+          <div style={{background:'var(--bg-card)',border:'1px solid var(--border-subtle)',borderRadius:14,padding:16,flex:1,minWidth:0}}>
+            {viewMode === 'congestion' && (
+              <>
+                <h3 style={{fontSize:'0.82rem',fontWeight:700,marginBottom:12,display:'flex',alignItems:'center',gap:6}}>
+                  <AlertTriangle size={13} color="#F97316"/> Active Congestion Events
+                </h3>
+                <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                  {CONGESTION_EVENTS.map(ev=>{
+                    const col=ev.severity==='critical'?'#DC2626':ev.severity==='high'?'#F97316':'#EAB308';
+                    return (
+                      <div key={ev.id} style={{padding:'9px 11px',borderRadius:9,background:'rgba(255,255,255,0.03)',border:`1px solid ${col}22`,borderLeft:`3px solid ${col}`}}>
+                        <div style={{fontSize:'0.78rem',fontWeight:600,color:'var(--text-primary)',marginBottom:3}}>{ev.line}</div>
+                        <div style={{display:'flex',gap:8,marginBottom:3,fontSize:'0.68rem'}}>
+                          <span style={{color:col,fontWeight:700,textTransform:'uppercase'}}>{ev.severity}</span>
+                          <span style={{color:'#F59E0B',fontFamily:'monospace'}}>₹{ev.price}/kWh</span>
+                          <span style={{color:'var(--text-tertiary)'}}>{ev.duration}</span>
+                        </div>
+                        <div style={{fontSize:'0.7rem',color:'var(--text-tertiary)'}}>{ev.resolution}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {viewMode === 'voltage' && (
+              <>
+                <h3 style={{fontSize:'0.82rem',fontWeight:700,marginBottom:12,display:'flex',alignItems:'center',gap:6}}>
+                  <TrendingDown size={13} color="#8B5CF6"/> Substation Voltage Deviations & Tap Directives
+                </h3>
+                <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                  {VOLTAGE_EVENTS.map(ev=>{
+                    const col=ev.severity==='critical'?'#DC2626':ev.severity==='high'?'#F97316':ev.severity==='medium'?'#EAB308':'#10B981';
+                    return (
+                      <div key={ev.id} style={{padding:'9px 11px',borderRadius:9,background:'rgba(255,255,255,0.03)',border:`1px solid ${col}22`,borderLeft:`3px solid ${col}`}}>
+                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:3}}>
+                          <span style={{fontSize:'0.78rem',fontWeight:600,color:'var(--text-primary)'}}>{ev.substation}</span>
+                          <span style={{fontSize:'0.72rem',fontFamily:'monospace',color:col,fontWeight:700}}>{ev.busKv} kV ({ev.pu} pu)</span>
+                        </div>
+                        <div style={{display:'flex',gap:8,marginBottom:4,fontSize:'0.68rem'}}>
+                          <span style={{color:col,fontWeight:700,textTransform:'uppercase'}}>{ev.severity}</span>
+                          <span style={{color:'#06B6D4',fontFamily:'monospace'}}>Req: {ev.reactiveReq}</span>
+                        </div>
+                        <div style={{fontSize:'0.7rem',color:'var(--text-tertiary)',lineHeight:1.3}}>{ev.action}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {viewMode === 'flow' && (
+              <>
+                <h3 style={{fontSize:'0.82rem',fontWeight:700,marginBottom:12,display:'flex',alignItems:'center',gap:6}}>
+                  <Activity size={13} color="#10B981"/> Inter-Tie Transfer Corridors & TTC Limits
+                </h3>
+                <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                  {FLOW_EVENTS.map(ev=>{
+                    const col=ev.severity==='critical'?'#DC2626':ev.severity==='high'?'#F97316':ev.severity==='medium'?'#EAB308':'#10B981';
+                    return (
+                      <div key={ev.id} style={{padding:'9px 11px',borderRadius:9,background:'rgba(255,255,255,0.03)',border:`1px solid ${col}22`,borderLeft:`3px solid ${col}`}}>
+                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:3}}>
+                          <span style={{fontSize:'0.78rem',fontWeight:600,color:'var(--text-primary)'}}>{ev.corridor}</span>
+                          <span style={{fontSize:'0.72rem',fontFamily:'monospace',color:col,fontWeight:700}}>{ev.flowMW} / {ev.ttcMW} MW</span>
+                        </div>
+                        <div style={{display:'flex',gap:8,marginBottom:4,fontSize:'0.68rem'}}>
+                          <span style={{color:col,fontWeight:700,textTransform:'uppercase'}}>{ev.severity}</span>
+                          <span style={{color:'#EAB308',fontFamily:'monospace'}}>Loss: {ev.lossRate}</span>
+                        </div>
+                        <div style={{fontSize:'0.7rem',color:'var(--text-tertiary)',lineHeight:1.3}}>{ev.directive}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

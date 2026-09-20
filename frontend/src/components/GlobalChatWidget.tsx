@@ -164,39 +164,26 @@ export const GlobalChatWidget: React.FC = () => {
           onClick={() => setIsOpen(true)}
           style={{
             position: 'fixed',
-            bottom: 24,
-            right: 24,
-            zIndex: 9999,
+            bottom: 20,
+            right: 20,
+            zIndex: 90,
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
-            padding: '12px 20px',
-            borderRadius: 30,
-            background: 'linear-gradient(135deg, #00f0ff 0%, #7000ff 100%)',
+            gap: 8,
+            padding: '10px 16px',
+            borderRadius: 8,
+            background: 'var(--cyan-primary)',
             color: '#070b14',
-            fontWeight: 700,
-            fontSize: '0.95rem',
+            fontWeight: 600,
+            fontSize: '0.88rem',
             border: 'none',
-            boxShadow: '0 8px 32px rgba(0, 240, 255, 0.4), 0 0 15px rgba(112, 0, 255, 0.5)',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
             cursor: 'pointer',
-            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
-          aria-label={t('copilot.widget_open')}
+          aria-label="Ask Copilot"
         >
-          <Sparkles size={20} color="#070b14" />
-          <span>{t('copilot.widget_title')}</span>
-          <span 
-            style={{ 
-              background: '#070b14', 
-              color: '#00f0ff', 
-              fontSize: '0.72rem', 
-              padding: '2px 7px', 
-              borderRadius: 12,
-              fontWeight: 800
-            }}
-          >
-            LIVE
-          </span>
+          <MessageSquare size={18} />
+          <span className="desktop-only">Ask Copilot</span>
         </button>
       )}
 
@@ -208,25 +195,23 @@ export const GlobalChatWidget: React.FC = () => {
             bottom: 20,
             right: 20,
             zIndex: 9999,
-            width: isExpanded ? 'min(720px, calc(100vw - 32px))' : 'min(420px, calc(100vw - 32px))',
-            height: isExpanded ? 'min(780px, calc(100vh - 40px))' : 'min(580px, calc(100vh - 40px))',
-            background: 'rgba(11, 18, 33, 0.96)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 240, 255, 0.3)',
-            borderRadius: 'var(--radius-lg)',
-            boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 240, 255, 0.2)',
+            width: isExpanded ? 'min(720px, calc(100vw - 32px))' : 'min(400px, calc(100vw - 32px))',
+            height: isExpanded ? 'min(760px, calc(100vh - 40px))' : 'min(540px, calc(100vh - 40px))',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 8,
+            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.5)',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            transition: 'width 0.25s ease, height 0.25s ease',
           }}
         >
           {/* Header */}
           <div
             style={{
-              padding: '14px 18px',
-              background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.12) 0%, rgba(112, 0, 255, 0.12) 100%)',
-              borderBottom: '1px solid var(--border-medium)',
+              padding: '12px 16px',
+              background: 'rgba(255, 255, 255, 0.03)',
+              borderBottom: '1px solid var(--border-subtle)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',

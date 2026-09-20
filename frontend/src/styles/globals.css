@@ -225,14 +225,23 @@
   padding: 0;
 }
 
-html, body {
+html {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-family);
   font-size: 15px;
   line-height: 1.6;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -794,7 +803,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   .btn { width: 100%; }
 }
 
-/* Sticky Mobile Bottom Navigation */
+/* Sticky Mobile Bottom Navigation: Hidden by default on Desktop/Tablet */
 .mobile-bottom-nav {
   display: none;
 }

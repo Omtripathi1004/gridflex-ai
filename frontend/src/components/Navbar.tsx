@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { checkBackendHealth } from '../lib/api';
@@ -36,7 +35,8 @@ import {
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
   const { language, setLanguage, t, supportedLanguages } = useLanguage();
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,9 +46,10 @@ export const Navbar: React.FC = () => {
 
   useEffect(() => {
     checkBackendHealth().then(status => setBackendOnline(status));
+    // Gentle periodic health check every 2 minutes (120s) instead of 12s
     const interval = setInterval(() => {
       checkBackendHealth().then(status => setBackendOnline(status));
-    }, 12000);
+    }, 120000);
     return () => clearInterval(interval);
   }, []);
 
@@ -110,7 +111,7 @@ export const Navbar: React.FC = () => {
       <header className="navbar" style={{ position: 'sticky', top: 0, zIndex: 100 }}>
         <div className="navbar-inner">
           {/* Brand */}
-          <Link href="/" className="nav-brand">
+          <Link to="/" className="nav-brand">
             <div className="brand-icon">
               <Zap size={22} />
             </div>
@@ -122,14 +123,14 @@ export const Navbar: React.FC = () => {
           {/* Grouped Desktop Navigation */}
           <nav className="nav-links">
             <Link 
-              href="/" 
+              to="/" 
               className={`nav-item ${pathname === '/' ? 'active' : ''}`}
             >
               Overview
             </Link>
 
             <Link 
-              href="/about" 
+              to="/about" 
               className={`nav-item ${pathname === '/about' ? 'active' : ''}`}
             >
               About
@@ -185,7 +186,7 @@ export const Navbar: React.FC = () => {
                         return (
                           <Link
                             key={item.href}
-                            href={item.href}
+                            to={item.href}
                             className={`nav-item ${isActive ? 'active' : ''}`}
                             onClick={() => setOpenDropdown(null)}
                             style={{
@@ -208,18 +209,9 @@ export const Navbar: React.FC = () => {
               );
             })}
 
-            {/* Direct Link to Explainable AI */}
-            <Link
-              href="/explainable-ai"
-              className={`nav-item ${pathname === '/explainable-ai' ? 'active' : ''}`}
-              style={{ color: '#c084fc', fontWeight: 600 }}
-            >
-              🧠 Explainable AI
-            </Link>
-
             {/* Direct Link to Digital Twin */}
             <Link
-              href="/digital-twin"
+              to="/digital-twin"
               className={`nav-item ${pathname === '/digital-twin' ? 'active' : ''}`}
               style={{ color: 'var(--amber-flow)', fontWeight: 600 }}
             >
@@ -240,7 +232,7 @@ export const Navbar: React.FC = () => {
 
             {/* Judge Mode Highlight Button */}
             <Link
-              href="/judge-mode"
+              to="/judge-mode"
               className={`btn btn-sm ${pathname === '/judge-mode' ? 'btn-amber' : 'btn-secondary'}`}
               style={{ fontSize: '0.8rem' }}
             >
@@ -260,7 +252,7 @@ export const Navbar: React.FC = () => {
 
             {user ? (
               <Link
-                href="/login"
+                to="/login"
                 className="desktop-only"
                 style={{
                   display: 'flex',
@@ -281,7 +273,7 @@ export const Navbar: React.FC = () => {
               </Link>
             ) : (
               <Link
-                href="/login"
+                to="/login"
                 className="desktop-only btn btn-sm btn-secondary"
                 style={{
                   display: 'flex',
@@ -422,7 +414,7 @@ export const Navbar: React.FC = () => {
             {/* Quick Action Shortcuts */}
             <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <Link
-                href="/judge-mode"
+                to="/judge-mode"
                 onClick={() => setMobileMenuOpen(false)}
                 className="btn btn-amber btn-sm"
                 style={{ justifyContent: 'center', fontSize: '0.8rem' }}
@@ -444,7 +436,7 @@ export const Navbar: React.FC = () => {
               {/* Primary Direct Links */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <Link
-                  href="/"
+                  to="/"
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
                     display: 'flex',
@@ -464,7 +456,7 @@ export const Navbar: React.FC = () => {
                 </Link>
 
                 <Link
-                  href="/about"
+                  to="/about"
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
                     display: 'flex',
@@ -509,7 +501,7 @@ export const Navbar: React.FC = () => {
                       return (
                         <Link
                           key={item.href}
-                          href={item.href}
+                          to={item.href}
                           onClick={() => setMobileMenuOpen(false)}
                           style={{
                             display: 'flex',
@@ -540,7 +532,7 @@ export const Navbar: React.FC = () => {
               {/* Login / Portal Link in Drawer */}
               <div style={{ marginTop: 'auto', paddingTop: 16, borderTop: '1px solid var(--border-subtle)' }}>
                 <Link
-                  href="/login"
+                  to="/login"
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
                     display: 'flex',
@@ -573,23 +565,23 @@ export const Navbar: React.FC = () => {
 
       {/* Sticky Mobile Bottom Navigation for Phones (<= 768px) */}
       <nav className="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
-        <Link href="/" className={`bottom-nav-item ${pathname === '/' ? 'active' : ''}`}>
+        <Link to="/" className={`bottom-nav-item ${pathname === '/' ? 'active' : ''}`}>
           <Zap size={18} />
           <span>Home</span>
         </Link>
-        <Link href="/command-center" className={`bottom-nav-item ${pathname === '/command-center' ? 'active' : ''}`}>
+        <Link to="/command-center" className={`bottom-nav-item ${pathname === '/command-center' ? 'active' : ''}`}>
           <Activity size={18} />
           <span>Operate</span>
         </Link>
-        <Link href="/digital-twin" className={`bottom-nav-item ${pathname === '/digital-twin' ? 'active' : ''}`}>
+        <Link to="/digital-twin" className={`bottom-nav-item ${pathname === '/digital-twin' ? 'active' : ''}`}>
           <Sliders size={18} />
           <span>Twin</span>
         </Link>
-        <Link href="/resilience" className={`bottom-nav-item ${pathname === '/resilience' ? 'active' : ''}`}>
+        <Link to="/resilience" className={`bottom-nav-item ${pathname === '/resilience' ? 'active' : ''}`}>
           <ShieldCheck size={18} />
           <span>Resilience</span>
         </Link>
-        <Link href="/judge-mode" className={`bottom-nav-item ${pathname === '/judge-mode' ? 'active' : ''}`}>
+        <Link to="/judge-mode" className={`bottom-nav-item ${pathname === '/judge-mode' ? 'active' : ''}`}>
           <Award size={18} />
           <span>Judges</span>
         </Link>

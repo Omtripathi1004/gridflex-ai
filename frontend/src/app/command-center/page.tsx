@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { fetchLiveTelemetry, runOptimization } from '../../lib/api';
 import { MetricCard } from '../../components/MetricCard';
@@ -38,13 +38,13 @@ export default function CommandCenterPage() {
       setLastUpdated(new Date().toLocaleTimeString());
     });
 
-    // Live update interval
+    // Gentle live update interval: every 60 seconds instead of 5 seconds
     const interval = setInterval(() => {
       fetchLiveTelemetry().then(data => {
         setTelemetry(data);
         setLastUpdated(new Date().toLocaleTimeString());
       });
-    }, 5000);
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
@@ -102,10 +102,10 @@ export default function CommandCenterPage() {
             <Clock size={15} />
             <span>{t('cc.updated')}: <strong>{lastUpdated || t('cc.connecting')}</strong></span>
           </div>
-          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+          <Link to="/explainable-ai" className="btn btn-purple btn-sm">
             <Cpu size={14} style={{ marginRight: 4 }} /> Inspect XAI Rationale
           </Link>
-          <Link href="/judge-mode" className="btn btn-amber btn-sm">
+          <Link to="/judge-mode" className="btn btn-amber btn-sm">
             🎯 {t('nav.judge_mode')}
           </Link>
         </div>

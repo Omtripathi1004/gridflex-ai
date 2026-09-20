@@ -76,7 +76,7 @@ export default function SelfHealingPage() {
   const totalDRMW = selectedBids.reduce((s,b)=>s+b.availableMW,0);
   const avgBidPrice = selectedBids.length ? selectedBids.reduce((s,b)=>s+b.bidPrice,0)/selectedBids.length : 0;
 
-  // Tick for live updates
+  // Gentle tick for live updates (60s instead of 2s)
   useEffect(()=>{
     const iv = setInterval(()=>{
       setTicker(t=>t+1);
@@ -84,7 +84,7 @@ export default function SelfHealingPage() {
         if(n.status==='healing') return {...n,voltage:n.voltage+(Math.random()-0.3)*0.2};
         return {...n,load:Math.max(0,n.load+(Math.random()-0.5)*2)};
       }));
-    },2000);
+    },60000);
     return()=>clearInterval(iv);
   },[]);
 

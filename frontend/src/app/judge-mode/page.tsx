@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { fetchEveningGapScenario } from '../../lib/api';
 import { 
@@ -265,7 +265,7 @@ export default function JudgeModePage() {
 
           {/* Direct Module Deep Link */}
           <Link
-            href={currentStep.module_link}
+            to={currentStep.module_link}
             className="btn btn-sm btn-secondary"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.78rem' }}
           >
@@ -331,10 +331,10 @@ export default function JudgeModePage() {
           </div>
 
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Link href="/command-center" className="btn btn-secondary">
+            <Link to="/command-center" className="btn btn-secondary">
               Open Command Center
             </Link>
-            <Link href="/about" className="btn btn-emerald">
+            <Link to="/about" className="btn btn-emerald">
               Full Platform Directory
             </Link>
           </div>

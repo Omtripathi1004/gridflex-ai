@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { runOptimization } from '../../lib/api';
 import { ProvenanceBadge } from '../../components/ProvenanceBadge';
@@ -56,21 +56,31 @@ export default function FlexibilityPage() {
     co2_emissions_avoided_tonnes: 6.8 // CEA grid emission factor 0.71 kg/kWh
   };
 
-  // 24h Profile Before vs After
-  const balanceSeries = optData?.hourly_balance || Array.from({ length: 24 }, (_, h) => {
-    const time = `${h.toString().padStart(2, '0')}:00`;
-    const original = 45.0 + 18.0 * Math.exp(-Math.pow(h - 10, 2) / 6) + 26.0 * Math.exp(-Math.pow(h - 20, 2) / 8);
-    const shift = (h >= 18 && h <= 21) ? -4.5 : ((h >= 11 && h <= 14) ? 4.5 : 0);
-    const optimized = original + shift;
-    const solar = (h >= 6 && h <= 18) ? Math.sin(Math.PI * (h - 6) / 12) * 52.0 : 0;
-    const wind = 16.0 + 5.0 * Math.cos(h / 3.8);
-    return {
-      time,
-      original_demand: Number(original.toFixed(1)),
-      optimized_demand: Number(optimized.toFixed(1)),
-      renewable_supply: Number((solar + wind).toFixed(1))
-    };
-  });
+  // 24h Profile Before vs After with safe multi-key fallback
+  const rawList = optData?.hourly_balance || optData?.balance_series;
+  const balanceSeries = (Array.isArray(rawList) && rawList.length > 0)
+    ? rawList.map((item: any) => ({
+        time: item.time || `${String(item.hour || 0).padStart(2, '0')}:00`,
+        original_demand: Number((item.original_demand ?? item.demand_before_mw ?? 52.4).toFixed(1)),
+        optimized_demand: Number((item.optimized_demand ?? item.demand_after_mw ?? 44.8).toFixed(1)),
+        renewable_supply: Number((item.renewable_supply ?? item.generation_mw ?? 38.6).toFixed(1)),
+        bess_dispatch: Number((item.bess_dispatch_mw ?? 0).toFixed(1))
+      }))
+    : Array.from({ length: 24 }, (_, h) => {
+        const time = `${h.toString().padStart(2, '0')}:00`;
+        const original = 45.0 + 18.0 * Math.exp(-Math.pow(h - 10, 2) / 6) + 26.0 * Math.exp(-Math.pow(h - 20, 2) / 8);
+        const shift = (h >= 18 && h <= 21) ? -4.5 : ((h >= 11 && h <= 14) ? 4.5 : 0);
+        const optimized = original + shift;
+        const solar = (h >= 6 && h <= 18) ? Math.sin(Math.PI * (h - 6) / 12) * 52.0 : 0;
+        const wind = 16.0 + 5.0 * Math.cos(h / 3.8);
+        return {
+          time,
+          original_demand: Number(original.toFixed(1)),
+          optimized_demand: Number(optimized.toFixed(1)),
+          renewable_supply: Number((solar + wind).toFixed(1)),
+          bess_dispatch: shift < 0 ? 4.5 : (shift > 0 ? -4.5 : 0)
+        };
+      });
 
   // M4: Resilient Fallback Directives (Never empty in SSR or offline mode)
   const recommendations = optData?.recommendations || [
@@ -119,7 +129,7 @@ export default function FlexibilityPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+          <Link to="/explainable-ai" className="btn btn-purple btn-sm">
             <Cpu size={14} style={{ marginRight: 4 }} /> Why This Action? (XAI Rationale)
           </Link>
           <span className="badge badge-live" style={{ padding: '8px 14px' }}>
@@ -150,7 +160,7 @@ export default function FlexibilityPage() {
           <div className="kpi-strip-label" style={{ color: 'var(--gold-accent)' }}>
             <IndianRupee size={13} style={{ display:'inline',marginRight:4 }} />DSM Penalty Avoided
           </div>
-          <div className="kpi-strip-value" style={{ color: '#fef08a' }}>₹{scorecard.estimated_cost_savings_inr.toLocaleString('en-IN')}</div>
+          <div className="kpi-strip-value" style={{ color: '#fef08a' }}>₹{(scorecard?.estimated_cost_savings_inr ?? scorecard?.estimated_cost_savings_usd ?? 142500).toLocaleString('en-IN')}</div>
           <div className="kpi-strip-meta">CERC Deviation Settlement</div>
         </div>
 
@@ -158,7 +168,7 @@ export default function FlexibilityPage() {
           <div className="kpi-strip-label" style={{ color: 'var(--cyan-primary)' }}>
             <Leaf size={13} style={{ display:'inline',marginRight:4 }} />CO₂ Avoided
           </div>
-          <div className="kpi-strip-value" style={{ color: '#a5f3fc' }}>{scorecard.co2_emissions_avoided_tonnes} tCO₂</div>
+          <div className="kpi-strip-value" style={{ color: '#a5f3fc' }}>{scorecard?.co2_emissions_avoided_tonnes ?? 6.8} tCO₂</div>
           <div className="kpi-strip-meta">CEA Factor: 0.71 kg/kWh</div>
         </div>
       </div>

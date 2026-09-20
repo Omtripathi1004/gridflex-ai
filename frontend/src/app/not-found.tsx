@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Zap, ArrowLeft, Sliders, ShieldCheck, Award } from 'lucide-react';
 
 export default function NotFound() {
@@ -39,13 +39,13 @@ export default function NotFound() {
       </p>
 
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-        <Link href="/" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <Link to="/" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <ArrowLeft size={16} /> Return to Overview
         </Link>
-        <Link href="/judge-mode" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 8, borderColor: 'var(--gold-accent)', color: 'var(--gold-accent)' }}>
+        <Link to="/judge-mode" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 8, borderColor: 'var(--gold-accent)', color: 'var(--gold-accent)' }}>
           <Award size={16} /> Judge Mode Tour
         </Link>
-        <Link href="/digital-twin" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <Link to="/digital-twin" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Sliders size={16} /> Digital Twin
         </Link>
       </div>

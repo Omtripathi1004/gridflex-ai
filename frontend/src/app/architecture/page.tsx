@@ -88,7 +88,7 @@ export default function ArchitecturePage() {
             <GitBranch size={20} style={{ color: 'var(--cyan-primary)' }} />
             {t('arch.flow_title')}
           </h3>
-          <span className="badge badge-forecast">Next.js 14 + FastAPI Architecture</span>
+          <span className="badge badge-forecast">React 18 + Vite + FastAPI Architecture</span>
         </div>
 
         <div style={{

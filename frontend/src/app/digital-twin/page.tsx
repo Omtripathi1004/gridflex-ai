@@ -1,8 +1,7 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { runDigitalTwinSimulation } from '../../lib/api';
 import { MetricCard } from '../../components/MetricCard';
@@ -44,7 +43,7 @@ import {
 
 export default function DigitalTwinPage() {
   const { t } = useLanguage();
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // F11: Initialize slider states from URL permalink if present
   const initSolar = searchParams.get('solar') ? parseFloat(searchParams.get('solar')!) / 100 : 1.0;
@@ -267,7 +266,7 @@ export default function DigitalTwinPage() {
 
         {/* Action Controls: Presets, Share to X, Reset */}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+          <Link to="/explainable-ai" className="btn btn-purple btn-sm">
             <Cpu size={13} /> XAI Rationale
           </Link>
           <button onClick={resetSliders} className="btn btn-secondary btn-sm" title="Reset all sliders to baseline 100%">

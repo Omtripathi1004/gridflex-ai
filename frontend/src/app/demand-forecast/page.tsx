@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { fetchDemandForecast } from '../../lib/api';
 import { 
@@ -68,7 +68,7 @@ export default function DemandForecastPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <Link href="/explainable-ai" className="btn btn-purple btn-sm">
+          <Link to="/explainable-ai" className="btn btn-purple btn-sm">
             <Cpu size={14} style={{ marginRight: 4 }} /> TreeSHAP Deficit Attribution
           </Link>
           <span className="badge badge-risk-critical" style={{ padding: '8px 14px' }}>

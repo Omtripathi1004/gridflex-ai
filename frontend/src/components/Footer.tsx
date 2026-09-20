@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { Zap, ShieldCheck, Cpu, Code2 } from 'lucide-react';
 
@@ -38,13 +38,13 @@ export const Footer: React.FC = () => {
           </div>
 
           <div style={{ display: 'flex', gap: 18, fontSize: '0.86rem', color: 'var(--text-secondary)' }}>
-            <Link href="/architecture" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Link to="/architecture" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <Code2 size={15} /> {t('nav.architecture')}
             </Link>
-            <Link href="/resilience" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Link to="/resilience" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <ShieldCheck size={15} /> {t('nav.resilience')}
             </Link>
-            <Link href="/explainable-ai" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Link to="/explainable-ai" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <Cpu size={15} /> {t('nav.explainable_ai')}
             </Link>
           </div>

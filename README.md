@@ -57,8 +57,8 @@ GridFlex AI employs a modern, decoupled architecture designed for high availabil
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        FRONTEND (Next.js 14+)                          │
-│   • App Router with pure Vanilla CSS (zero Tailwind dependency)       │
+│                        FRONTEND (React 18 + Vite)                      │
+│   • Client SPA with pure Vanilla CSS (zero Tailwind dependency)       │
 │   • Recharts telemetry visualization & Lucide icons                   │
 │   • Sticky mobile bottom navigation & touch-optimized drawer           │
 │   • Dual-mode runtime: Live FastAPI proxy + Seeded fallback snapshot  │
@@ -116,7 +116,7 @@ In adherence to the highest standards of hackathon and technical integrity, Grid
    - Health check: `http://127.0.0.1:8008/health`
    - OpenAPI Swagger Docs: `http://127.0.0.1:8008/docs`
 
-3. **Run the Next.js Frontend**:
+3. **Run the Vite Frontend**:
    ```bash
    cd frontend
    npm install

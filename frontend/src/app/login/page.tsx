@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, DefaultAccount } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import {
@@ -23,10 +23,9 @@ import {
   BatteryCharging,
   Globe,
 } from 'lucide-react';
-import Link from 'next/link';
 
 export default function LoginPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { user, login, logout, defaultAccounts, quickLogin } = useAuth();
   const { t } = useLanguage();
 
@@ -45,7 +44,7 @@ export default function LoginPage() {
     setLoading(false);
     if (res.success) {
       setSuccessMsg('Authentication verified. Redirecting…');
-      setTimeout(() => router.push('/'), 900);
+      setTimeout(() => navigate('/'), 900);
     } else {
       setErrorMsg(res.message || 'Invalid credentials. Use a preset demo account below.');
     }
@@ -58,7 +57,7 @@ export default function LoginPage() {
     setLoading(false);
     if (ok) {
       setSuccessMsg(`Logged in as ${account.name}. Redirecting…`);
-      setTimeout(() => router.push('/'), 900);
+      setTimeout(() => navigate('/'), 600);
     } else {
       setErrorMsg('Failed to log in with demo account.');
     }
@@ -242,7 +241,7 @@ export default function LoginPage() {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
-                <Link href="/" className="btn btn-primary" style={{ fontSize: '0.85rem', gap: 6 }}>
+                <Link to="/" className="btn btn-primary" style={{ fontSize: '0.85rem', gap: 6 }}>
                   Go to Dashboard <ArrowRight size={14} />
                 </Link>
                 <button onClick={logout} className="btn btn-secondary" style={{ color: 'var(--red-risk)', fontSize: '0.85rem', gap: 6 }}>

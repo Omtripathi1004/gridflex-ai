@@ -48,6 +48,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Authentication & Audi
 app.include_router(gov_data.router, prefix="/api/gov", tags=["Government & Public Data"])
 
 @app.get("/health")
+@app.get("/api/health")
 def health_check():
     return {
         "status": "healthy",

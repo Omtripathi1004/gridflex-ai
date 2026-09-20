@@ -68,11 +68,14 @@ def run_flexibility_optimization(req: OptimizationRequest):
             "hour": h,
             "time": f"{h:02d}:00",
             "generation_mw": round(gen, 2),
+            "renewable_supply": round(gen, 2),
             "demand_before_mw": round(base_demand, 2),
+            "original_demand": round(base_demand, 2),
             "net_balance_before_mw": round(net_before, 2),
             "bess_dispatch_mw": round(bess_action, 2),
             "load_shift_mw": round(load_shift, 2),
             "demand_after_mw": round(base_demand - load_shift, 2),
+            "optimized_demand": round(base_demand - load_shift, 2),
             "net_balance_after_mw": round(net_after, 2),
             "is_shortage_before": net_before < -2.0,
             "is_shortage_after": net_after < -2.0
@@ -97,8 +100,9 @@ def run_flexibility_optimization(req: OptimizationRequest):
             "shortage_hours_after": total_shortage_hours_after,
             "shortage_elimination_pct": round(((total_shortage_hours_before - total_shortage_hours_after) / max(1, total_shortage_hours_before)) * 100, 1),
             "total_energy_shifted_mwh": round(total_energy_shifted_mwh, 2),
-            "bess_discharged_mwh": round(bess_discharged_mwh, 2),
+            "estimated_cost_savings_inr": round((total_energy_shifted_mwh + bess_discharged_mwh) * 10500.0, 2),
             "estimated_cost_savings_usd": round((total_energy_shifted_mwh + bess_discharged_mwh) * 125.0, 2),
+            "co2_emissions_avoided_tonnes": round((total_energy_shifted_mwh + bess_discharged_mwh) * 0.71, 2),
             "co2_emissions_avoided_kg": round((total_energy_shifted_mwh + bess_discharged_mwh) * 460.0, 1)
         },
         "recommendations": [

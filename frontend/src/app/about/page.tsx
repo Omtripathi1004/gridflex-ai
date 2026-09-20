@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { 
   Zap, 
   Layers, 
@@ -242,7 +242,7 @@ const ALL_PAGES: PageInfo[] = [
     dataMode: "Cached Data",
     dataModeType: "cached",
     dataSource: "Hardware-free software specifications",
-    algorithms: ["Next.js 14 + Python FastAPI Topology", "Ref. ISO 50001 / IEEE 1547.4 Concepts"],
+    algorithms: ["React 18 + Vite + Python FastAPI Topology", "Ref. ISO 50001 / IEEE 1547.4 Concepts"],
     summary: "Detailed end-to-end technical pipeline, mathematical formulation references, API contracts, and compliance documentation demonstrating 100% software-native design.",
     audience: "System Architects & Technical Judges",
     highlightMetric: "Zero physical hardware needed"
@@ -421,7 +421,7 @@ export default function AboutPage() {
               Every page in GridFlex AI explicitly indicates its data source classification so users and evaluators know what is real, what is cached, and what is simulated.
             </p>
           </div>
-          <Link href="/architecture" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Link to="/architecture" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span>View Full Architecture Matrix</span>
             <ArrowRight size={14} />
           </Link>
@@ -557,7 +557,7 @@ export default function AboutPage() {
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               Inspect live frequency, solar/wind balance, and execute quick dispatch alerts.
             </div>
-            <Link href="/command-center" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+            <Link to="/command-center" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
               Go to Command Center →
             </Link>
           </div>
@@ -569,7 +569,7 @@ export default function AboutPage() {
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               Trigger cloud dips, transformer overloads, and test automated islanding safely.
             </div>
-            <Link href="/digital-twin" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+            <Link to="/digital-twin" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
               Go to Digital Twin →
             </Link>
           </div>
@@ -581,7 +581,7 @@ export default function AboutPage() {
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               See Farneback optical-flow tracking cloud vectors 15–30 mins ahead of solar drops.
             </div>
-            <Link href="/sky-vision" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+            <Link to="/sky-vision" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
               Go to SkyVision Radar →
             </Link>
           </div>
@@ -593,7 +593,7 @@ export default function AboutPage() {
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
               Take the guided evaluation tour, run the 1-click test suite, and check mathematical proofs.
             </div>
-            <Link href="/judge-mode" className="btn btn-amber btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+            <Link to="/judge-mode" className="btn btn-amber btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
               Launch Judge Mode →
             </Link>
           </div>
@@ -849,7 +849,7 @@ export default function AboutPage() {
                     For: {page.audience.split('&')[0]}
                   </span>
                   <Link
-                    href={page.path}
+                    to={page.path}
                     className="btn btn-primary btn-sm"
                     style={{
                       display: 'inline-flex',
@@ -907,7 +907,7 @@ export default function AboutPage() {
               <h4 style={{ margin: 0, fontSize: '1.02rem' }}>Frontend &amp; UI Architecture</h4>
             </div>
             <ul style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 18, margin: 0 }}>
-              <li><strong>Next.js 14 App Router</strong>: 23 statically pre-rendered routes for instant page delivery.</li>
+              <li><strong>React 18 + Vite SPA</strong>: High-performance client routing with instant sub-millisecond page transitions.</li>
               <li><strong>TypeScript &amp; React 18</strong>: Strongly typed data contracts across all telemetry models.</li>
               <li><strong>Vanilla CSS Design Tokens</strong>: Pure CSS tokens, zero heavy framework lag, dark obsidian theme.</li>
               <li><strong>Recharts &amp; HTML5 Canvas</strong>: Sub-cycle responsive vector charts and high-fps radar animations.</li>
@@ -979,15 +979,15 @@ export default function AboutPage() {
           Start with the Live Command Center or launch the interactive Judge Evaluation Tour with 1-click test automation.
         </p>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 }}>
-          <Link href="/command-center" className="btn btn-primary" style={{ padding: '12px 24px' }}>
+          <Link to="/command-center" className="btn btn-primary" style={{ padding: '12px 24px' }}>
             <Zap size={18} />
             <span>Launch Command Center</span>
           </Link>
-          <Link href="/judge-mode" className="btn btn-amber" style={{ padding: '12px 24px' }}>
+          <Link to="/judge-mode" className="btn btn-amber" style={{ padding: '12px 24px' }}>
             <Award size={18} />
             <span>Take Judge Evaluation Tour</span>
           </Link>
-          <Link href="/" className="btn btn-secondary" style={{ padding: '12px 24px' }}>
+          <Link to="/" className="btn btn-secondary" style={{ padding: '12px 24px' }}>
             <span>Back to Home Overview</span>
           </Link>
         </div>

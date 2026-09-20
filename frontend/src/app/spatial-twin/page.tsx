@@ -85,13 +85,13 @@ export default function SpatialTwinPage() {
   const [lines, setLines] = useState(LINES);
   const [substations, setSubstations] = useState(SUBSTATIONS);
 
-  // Gentle live drift
+  // Gentle live drift: relaxed to 60s instead of 2.5s
   useEffect(()=>{
     const iv=setInterval(()=>{
       setTicker(t=>t+1);
       setLines(prev=>prev.map(l=>({...l, loadMW: Math.max(0,l.loadMW+(Math.random()-0.48)*8)})));
       setSubstations(prev=>prev.map(s=>({...s, loadMW: Math.max(0,s.loadMW+(Math.random()-0.48)*12), voltage: Math.max(195,Math.min(225,s.voltage+(Math.random()-0.5)*0.4))})));
-    },2500);
+    },60000);
     return()=>clearInterval(iv);
   },[]);
 

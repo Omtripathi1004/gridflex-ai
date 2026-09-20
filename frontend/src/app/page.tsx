@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { fetchLiveTelemetry } from '../lib/api';
 import { 
@@ -94,15 +94,15 @@ export default function LandingPage() {
 
         {/* CTAs */}
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center', marginTop: 10 }}>
-          <Link href="/command-center" className="btn btn-primary" style={{ padding: '14px 28px', fontSize: '1.02rem' }}>
+          <Link to="/command-center" className="btn btn-primary" style={{ padding: '14px 28px', fontSize: '1.02rem' }}>
             <Zap size={20} />
             {t('landing.btn_command_center')}
           </Link>
-          <Link href="/judge-mode" className="btn btn-amber" style={{ padding: '14px 28px', fontSize: '1.02rem' }}>
+          <Link to="/judge-mode" className="btn btn-amber" style={{ padding: '14px 28px', fontSize: '1.02rem' }}>
             <Award size={20} />
             {t('landing.btn_judge_tour')}
           </Link>
-          <Link href="/explainable-ai" className="btn btn-purple" style={{ padding: '14px 24px', fontSize: '1.02rem' }}>
+          <Link to="/explainable-ai" className="btn btn-purple" style={{ padding: '14px 24px', fontSize: '1.02rem' }}>
             <Cpu size={20} />
             <span>Explore XAI Rationale</span>
           </Link>
@@ -220,7 +220,7 @@ export default function LandingPage() {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
-          <Link href="/command-center" className="btn btn-secondary">
+          <Link to="/command-center" className="btn btn-secondary">
             <span>Explore Telemetry & Visualizations</span>
             <ArrowRight size={16} />
           </Link>
@@ -255,7 +255,7 @@ export default function LandingPage() {
               GridFlex AI is an autonomous, hardware-free national energy grid optimizer designed for Indian power grids. Below is a concise breakdown of the tech stack, data provenance types (live, cached, demo), and quick links to help you navigate directly to the right page.
             </p>
           </div>
-          <Link href="/about" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>
+          <Link to="/about" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>
             <span>Full 20-Page Catalog &amp; Specs</span>
             <ArrowRight size={15} />
           </Link>
@@ -352,7 +352,7 @@ export default function LandingPage() {
             <span>Under the Hood: Complete Technology &amp; Math Stack</span>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>Next.js 14 App Router (23 Static Routes)</span>
+            <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>React 18 + Vite SPA (21 Routes)</span>
             <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>TypeScript &amp; React 18</span>
             <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff' }}>Vanilla CSS Design Tokens</span>
             <span className="badge" style={{ background: 'rgba(0, 240, 255, 0.15)', color: 'var(--cyan-primary)' }}>LightGBM Regressor v2.4 (95% CI)</span>
@@ -380,7 +380,7 @@ export default function LandingPage() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: 14
           }}>
-            <Link href="/command-center" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/command-center" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: 'var(--cyan-primary)', fontSize: '0.95rem' }}>⚡ Command Center</span>
                 <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Live</span>
@@ -390,7 +390,7 @@ export default function LandingPage() {
               </p>
             </Link>
 
-            <Link href="/sky-vision" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/sky-vision" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>👁️ SkyVision Radar</span>
                 <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Live Flow</span>
@@ -400,7 +400,7 @@ export default function LandingPage() {
               </p>
             </Link>
 
-            <Link href="/self-healing" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/self-healing" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>🛡️ Self-Healing Grid</span>
                 <span className="badge badge-sim" style={{ fontSize: '0.68rem' }}>Causal AI</span>
@@ -410,7 +410,7 @@ export default function LandingPage() {
               </p>
             </Link>
 
-            <Link href="/spatial-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/spatial-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: '#38bdf8', fontSize: '0.95rem' }}>🗺️ Spatial Twin (3D)</span>
                 <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>Topological</span>
@@ -420,7 +420,7 @@ export default function LandingPage() {
               </p>
             </Link>
 
-            <Link href="/tariff-engine" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/tariff-engine" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.95rem' }}>⚖️ Tariff Engine</span>
                 <span className="badge badge-forecast" style={{ fontSize: '0.68rem' }}>CERC DSM</span>
@@ -430,7 +430,7 @@ export default function LandingPage() {
               </p>
             </Link>
 
-            <Link href="/incident-copilot" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/incident-copilot" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: '#c084fc', fontSize: '0.95rem' }}>🎙️ Incident Co-pilot</span>
                 <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>15 Locales</span>
@@ -440,7 +440,7 @@ export default function LandingPage() {
               </p>
             </Link>
 
-            <Link href="/digital-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/digital-twin" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: 'var(--amber-flow)', fontSize: '0.95rem' }}>🎛️ Digital Twin Sandbox</span>
                 <span className="badge badge-sim" style={{ fontSize: '0.68rem' }}>64.8 MW</span>
@@ -450,7 +450,7 @@ export default function LandingPage() {
               </p>
             </Link>
 
-            <Link href="/judge-mode" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
+            <Link to="/judge-mode" className="card" style={{ padding: 16, textDecoration: 'none', transition: 'all 0.2s ease' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: 'var(--green-renew)', fontSize: '0.95rem' }}>🎯 Judge Mode &amp; Audit</span>
                 <span className="badge badge-live" style={{ fontSize: '0.68rem' }}>Evaluator</span>
@@ -464,7 +464,7 @@ export default function LandingPage() {
 
         {/* Action Link to Full About Page */}
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
-          <Link href="/about" className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '0.95rem' }}>
+          <Link to="/about" className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '0.95rem' }}>
             <span>Explore All 20 Pages in the Complete About &amp; System Directory</span>
             <ArrowRight size={16} />
           </Link>

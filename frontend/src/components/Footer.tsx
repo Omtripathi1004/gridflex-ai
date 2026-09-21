@@ -46,13 +46,19 @@ export const Footer: React.FC = () => {
             </span>
           </div>
 
-          {/* Three Links */}
-          <div style={{ display: 'flex', gap: 20, fontSize: '0.85rem' }}>
+          {/* Links */}
+          <div style={{ display: 'flex', gap: 20, fontSize: '0.85rem', flexWrap: 'wrap' }}>
             <Link 
               to="/architecture" 
               style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}
             >
               {language === 'hi' ? 'सिस्टम वास्तुकला' : 'Architecture'}
+            </Link>
+            <Link 
+              to="/data-audit" 
+              style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}
+            >
+              {language === 'hi' ? 'डेटा सुरक्षा एवं ऑडिट' : 'Data Security & Audit'}
             </Link>
             <Link 
               to="/resilience" 

@@ -29,6 +29,7 @@ import DiscomPage from './app/discom/page';
 import ArchitecturePage from './app/architecture/page';
 import JudgeModePage from './app/judge-mode/page';
 import CopilotPage from './app/copilot/page';
+import DataAuditPage from './app/data-audit/page';
 import NotFoundPage from './app/not-found';
 
 function ScrollToTopOnRouteChange() {
@@ -70,6 +71,9 @@ export default function App() {
                 <Route path="/architecture"     element={<ArchitecturePage />} />
                 <Route path="/judge-mode"       element={<JudgeModePage />} />
                 <Route path="/copilot"          element={<CopilotPage />} />
+                <Route path="/data-audit"       element={<DataAuditPage />} />
+                <Route path="/data-security"    element={<DataAuditPage />} />
+                <Route path="/data-trust"       element={<DataAuditPage />} />
                 {/* Catch-all 404 */}
                 <Route path="*"                 element={<NotFoundPage />} />
               </Routes>

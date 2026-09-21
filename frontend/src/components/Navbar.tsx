@@ -23,7 +23,8 @@ import {
   MessageSquare,
   ShieldCheck,
   Layers,
-  Award
+  Award,
+  Database
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -169,6 +170,12 @@ export const Navbar: React.FC = () => {
       label: language === 'hi' ? 'सिस्टम आर्किटेक्चर' : 'System Architecture', 
       desc: language === 'hi' ? 'पूर्ण तकनीकी स्टैक' : 'Full-Stack Topology',
       icon: Layers 
+    },
+    { 
+      href: '/data-audit', 
+      label: language === 'hi' ? 'डेटा सुरक्षा एवं ऑडिट' : 'Data Security & Audit', 
+      desc: language === 'hi' ? 'सरकारी डेटा लाइनिएज एवं मैपिंग' : 'Government Lineage & Matrix',
+      icon: Database 
     },
   ];
 
@@ -547,6 +554,28 @@ export const Navbar: React.FC = () => {
             <span>{language === 'hi' ? 'जज मोड' : 'Judge Mode'}</span>
           </Link>
 
+          {/* Data Security & Audit button */}
+          <Link
+            to="/data-audit"
+            className="desktop-only"
+            style={{
+              padding: '6px 11px',
+              borderRadius: 6,
+              border: '1px solid var(--border-subtle)',
+              color: pathname === '/data-audit' ? 'var(--cyan-primary)' : 'var(--text-primary)',
+              textDecoration: 'none',
+              fontSize: '0.80rem',
+              fontWeight: 600,
+              background: pathname === '/data-audit' ? 'rgba(0, 240, 255, 0.08)' : '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5
+            }}
+          >
+            <ShieldCheck size={14} style={{ color: '#10b981' }} />
+            <span>{language === 'hi' ? 'डेटा ऑडिट' : 'Data Audit'}</span>
+          </Link>
+
           {/* Sign In Button */}
           <Link
             to="/login"
@@ -815,6 +844,29 @@ export const Navbar: React.FC = () => {
             >
               <Award size={18} />
               <span>{language === 'hi' ? 'जज मोड गाइडेड टूर' : 'Judge Mode Guided Tour'}</span>
+            </Link>
+
+            <Link
+              to="/data-audit"
+              onClick={() => setMobileMenuOpen(false)}
+              style={{
+                marginTop: 8,
+                padding: '12px 14px',
+                minHeight: 48,
+                borderRadius: 8,
+                textDecoration: 'none',
+                color: '#ffffff',
+                fontSize: '0.92rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                fontWeight: 600,
+                background: 'linear-gradient(135deg, #059669 0%, #0284c7 100%)',
+                boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)'
+              }}
+            >
+              <ShieldCheck size={18} />
+              <span>{language === 'hi' ? 'डेटा सुरक्षा एवं ऑडिट' : 'Data Security & Audit Evidence'}</span>
             </Link>
           </div>
         </div>

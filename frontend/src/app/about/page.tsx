@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   Zap, 
   Layers, 
@@ -18,678 +19,703 @@ import {
   Map, 
   Scale, 
   MessageSquare, 
-  Building2, 
   Award, 
-  KeyRound, 
   CheckCircle2, 
   Clock, 
   Database, 
   Search, 
-  ExternalLink, 
   ArrowRight, 
-  Compass, 
-  Filter, 
-  HelpCircle,
-  Server,
-  Code2,
-  Lock,
+  Sparkles,
+  ShieldAlert,
+  Flame,
   Globe2,
-  Sparkles
+  Maximize2
 } from 'lucide-react';
 
-interface PageInfo {
+interface PlatformModule {
+  id: string;
   title: string;
   path: string;
-  category: 'Operations' | 'Forecasting' | 'Optimization' | 'AI Engines' | 'Trust & Governance';
+  category: 'Operations' | 'Forecasting' | 'Optimization' | 'AI Engines';
   icon: any;
-  dataMode: 'Live Data' | 'Cached Data' | 'Demo / Synthetic Data';
-  dataModeType: 'live' | 'cached' | 'demo';
-  dataSource: string;
-  algorithms: string[];
+  dataProvenance: 'Live API' | 'Cached Baseline' | 'Physics Sim';
+  algorithm: string;
   summary: string;
-  audience: string;
-  highlightMetric: string;
+  metric: string;
+  color: string;
 }
 
-const ALL_PAGES: PageInfo[] = [
+const MODULES: PlatformModule[] = [
   {
-    title: "Command Center",
-    path: "/command-center",
-    category: "Operations",
+    id: 'command-center',
+    title: 'Command Center',
+    path: '/command-center',
+    category: 'Operations',
     icon: Zap,
-    dataMode: "Live Data",
-    dataModeType: "live",
-    dataSource: "Live telemetry loop & Open-Meteo API",
-    algorithms: ["Real-time SCADA Aggregator", "Dynamic Frequency Monitor (49.90–50.05 Hz)"],
-    summary: "Real-time dispatch dashboard monitoring substation generation vs. demand balance, live telemetry metrics, alert matrices, and quick-dispatch triggers.",
-    audience: "Grid Control Operators & Shift Engineers",
-    highlightMetric: "< 150 ms telemetry cycle"
+    dataProvenance: 'Live API',
+    algorithm: 'SCADA Telemetry & 50 Hz Grid Droop Monitor',
+    summary: 'Central dispatch dashboard streaming live substation metrics, automated feeder alerts, and 1-click optimization directives.',
+    metric: '< 150 ms dispatch latency',
+    color: '#4f46e5'
   },
   {
-    title: "Digital Twin & Sandbox",
-    path: "/digital-twin",
-    category: "Operations",
+    id: 'digital-twin',
+    title: 'Digital Twin Sandbox',
+    path: '/digital-twin',
+    category: 'Operations',
     icon: Sliders,
-    dataMode: "Demo / Synthetic Data",
-    dataModeType: "demo",
-    dataSource: "Physics-constrained state-space model",
-    algorithms: ["Substation Bus Physical State Solver", "5 Fault Contingency Injectors"],
-    summary: "Hardware-free digital twin of a 64.8 MW virtual substation. Allows operators to trigger cloud burst dips, feeder trips, and transformer overloads safely.",
-    audience: "Control Engineers & Reliability Testers",
-    highlightMetric: "64.8 MW virtual substation"
+    dataProvenance: 'Physics Sim',
+    algorithm: 'State-space physical model with 5 fault contingency injectors',
+    summary: 'Hardware-free simulator for a 64.8 MW virtual substation. Test solar dips, heatwave peaks, and battery dispatch over 24 hours.',
+    metric: '64.8 MW substation model',
+    color: '#0284c7'
   },
   {
-    title: "Renewable Forecast",
-    path: "/renewable-forecast",
-    category: "Forecasting",
+    id: 'renewable-forecast',
+    title: 'Renewable Forecast',
+    path: '/renewable-forecast',
+    category: 'Forecasting',
     icon: Sun,
-    dataMode: "Live Data",
-    dataModeType: "live",
-    dataSource: "Open-Meteo High-Resolution NWP + NASA POWER",
-    algorithms: ["LightGBM Regressor v2.4", "95% Confidence Interval Quantile Loss"],
-    summary: "24h/48h day-ahead solar and wind generation prediction with dynamic weather telemetry (GHI, wind speed, temperature, cloud cover).",
-    audience: "Renewable Asset Managers & Power Schedulers",
-    highlightMetric: "0.942 R² solar accuracy"
+    dataProvenance: 'Live API',
+    algorithm: 'LightGBM Regressor v2.4 + 95% Quantile Loss',
+    summary: '24h/48h solar and wind predictions utilizing high-resolution Open-Meteo NWP weather telemetry and NASA POWER datasets.',
+    metric: '0.942 R² accuracy',
+    color: '#d97706'
   },
   {
-    title: "Demand Forecast",
-    path: "/demand-forecast",
-    category: "Forecasting",
+    id: 'demand-forecast',
+    title: 'Demand Forecast',
+    path: '/demand-forecast',
+    category: 'Forecasting',
     icon: TrendingUp,
-    dataMode: "Cached Data",
-    dataModeType: "cached",
-    dataSource: "Grid-India (NLDC) PSP scaled feeder profiles",
-    algorithms: ["XGBoost Temporal Regressor v3.1", "Peak Hour Anomaly Detection"],
-    summary: "Hourly grid demand forecasting detecting evening peak windows (18:00–22:00) and substation transformer stress before outages occur.",
-    audience: "Load Dispatch Officers & Utility Analysts",
-    highlightMetric: "1.42 MW MAE on peak load"
+    dataProvenance: 'Cached Baseline',
+    algorithm: 'XGBoost Temporal Regressor v3.1 + Anomaly Detector',
+    summary: 'Hourly demand forecasting identifying the critical 18:00–22:00 evening peak and transformer thermal stress windows.',
+    metric: '1.42 MW MAE peak error',
+    color: '#dc2626'
   },
   {
-    title: "SkyVision Optical-Flow Radar",
-    path: "/sky-vision",
-    category: "AI Engines",
+    id: 'sky-vision',
+    title: 'SkyVision Optical Radar',
+    path: '/sky-vision',
+    category: 'AI Engines',
     icon: Eye,
-    dataMode: "Live Data",
-    dataModeType: "live",
-    dataSource: "HTML5 Canvas Farneback Optical-Flow Engine",
-    algorithms: ["Farneback Vector Tracking", "Sub-Hour Solar Ramp-Down Predictor"],
-    summary: "Animated cloud vector radar simulating satellite & sky-cam feeds. Tracks cloud velocity vectors and alerts BESS 15–30 minutes before sudden solar dips.",
-    audience: "Solar Park Dispatchers & Fast-Response Operators",
-    highlightMetric: "15–30 min advance ramp notice"
+    dataProvenance: 'Live API',
+    algorithm: 'HTML5 Farneback Dense Optical-Flow Vector Tracker',
+    summary: 'Cloud motion velocity tracking simulating satellite & sky-cam radar to alert BESS fleet 15–30 minutes before sudden solar dips.',
+    metric: '15–30 min advance ramp alert',
+    color: '#7c3aed'
   },
   {
-    title: "Self-Healing Autonomous Grid",
-    path: "/self-healing",
-    category: "AI Engines",
+    id: 'self-healing',
+    title: 'Self-Healing FLISR',
+    path: '/self-healing',
+    category: 'AI Engines',
     icon: Radio,
-    dataMode: "Demo / Synthetic Data",
-    dataModeType: "demo",
-    dataSource: "Causal DAG inference engine + DSM engine",
-    algorithms: ["Causal Do-Calculus [P(Y|do(X))]", "Automated Islanding & DSM Bidding Agent"],
-    summary: "Autonomous grid restoration proving cause-and-effect interventions rather than mere correlation. Automatically isolates faulty feeders and executes automated DSM bids.",
-    audience: "Autonomous Grid Researchers & Protection Engineers",
-    highlightMetric: "Sub-second causal diagnosis"
+    dataProvenance: 'Physics Sim',
+    algorithm: 'Causal Inference DAG & Automated Tie-Switch Logic',
+    summary: 'Automated Fault Location, Isolation, and Service Restoration restoring power to healthy feeder loops within 140 ms.',
+    metric: '140 ms restoration cycle',
+    color: '#059669'
   },
   {
-    title: "Spatial 3D Transmission Twin",
-    path: "/spatial-twin",
-    category: "AI Engines",
-    icon: Map,
-    dataMode: "Cached Data",
-    dataModeType: "cached",
-    dataSource: "Topological Grid-India Transmission Node Map",
-    algorithms: ["DC Power Flow Approximation", "N-1 Congestion Line Loading Solver"],
-    summary: "Interactive 3D topological map of inter-regional transmission corridors. Visualizes line loading %, bottlenecks, and N-1 contingency redispatch pathways.",
-    audience: "Transmission System Operators (TSOs) & Planners",
-    highlightMetric: "5 Inter-regional nodes modeled"
-  },
-  {
-    title: "CERC Tariff & Arbitrage Solver",
-    path: "/tariff-engine",
-    category: "AI Engines",
-    icon: Scale,
-    dataMode: "Cached Data",
-    dataModeType: "cached",
-    dataSource: "CERC DSM Regulations 2024 & Vidyut PRAVAH",
-    algorithms: ["CERC Frequency Deviation Penalty Matrix", "BESS Time-of-Use Arbitrage Optimizer"],
-    summary: "Official Indian grid tariff optimization engine. Computes commercial deviation settlement mechanism (DSM) penalties and peak/off-peak arbitrage economics.",
-    audience: "DISCOM Commercial Managers & Storage Investors",
-    highlightMetric: "₹18,400 daily arbitrage capture"
-  },
-  {
-    title: "Incident Co-pilot (15-Lang RAG + Voice)",
-    path: "/incident-copilot",
-    category: "AI Engines",
-    icon: MessageSquare,
-    dataMode: "Live Data",
-    dataModeType: "live",
-    dataSource: "Web Speech API + Vector RAG Knowledge Base",
-    algorithms: ["Web Speech Recognition & Synthesis", "Multilingual Vector Semantic Retrieval"],
-    summary: "Multilingual voice-enabled AI copilot supporting 15 Indian regional languages (Hindi, Tamil, Telugu, Bengali, Marathi, etc.). Provides instant step-by-step SOPs.",
-    audience: "Field Technicians & Regional Grid Operators",
-    highlightMetric: "15 Indian languages supported"
-  },
-  {
-    title: "Flexibility Dispatch",
-    path: "/flexibility",
-    category: "Optimization",
-    icon: Sliders,
-    dataMode: "Demo / Synthetic Data",
-    dataModeType: "demo",
-    dataSource: "Deterministic multi-asset load model",
-    algorithms: ["MILP Simplex / Branch-and-Cut Solver", "Demand Response Price-Elasticity Model"],
-    summary: "Mixed-Integer Linear Programming solver calculating optimal dispatch across 4 virtual asset classes: BESS discharge, EV smart charging, HVAC curtailment, and industrial DR.",
-    audience: "Flexibility Aggregators & Demand Response Teams",
-    highlightMetric: "9.6 MW flexible peak relief"
-  },
-  {
-    title: "Virtual Storage (BESS)",
-    path: "/storage",
-    category: "Optimization",
+    id: 'flexibility',
+    title: 'Flexibility Engine',
+    path: '/flexibility',
+    category: 'Optimization',
     icon: BatteryCharging,
-    dataMode: "Demo / Synthetic Data",
-    dataModeType: "demo",
-    dataSource: "State-space electrochemical battery model (Appendix A3)",
-    algorithms: ["C-rate & Thermal ODE Simulator", "Round-Trip Efficiency (88.4%) Constraints"],
-    summary: "Simulates 4 distributed community BESS nodes (40 MWh total capacity). Prevents thermal runaway, tracks degradation, and enforces DoD safety envelopes (10%–90%).",
-    audience: "Energy Storage Engineers & BESS Asset Owners",
-    highlightMetric: "40 MWh capacity modeled"
+    dataProvenance: 'Physics Sim',
+    algorithm: 'PuLP Mixed-Integer Linear Programming (MILP) Solver',
+    summary: 'Multi-asset dispatch optimizer coordinating 40 MWh community BESS and dynamic EV charger curtailment to eliminate shortages.',
+    metric: '0 MWh deficit post-flex',
+    color: '#0284c7'
   },
   {
-    title: "P2P Energy Trading",
-    path: "/p2p",
-    category: "Optimization",
-    icon: Share2,
-    dataMode: "Demo / Synthetic Data",
-    dataModeType: "demo",
-    dataSource: "Prosumer smart meter simulation",
-    algorithms: ["Continuous Double Auction (CDA)", "Dynamic Local Marginal Pricing (DLMP)"],
-    summary: "Local microgrid energy trading sandbox allowing rooftop solar prosumers and EV owners to trade excess renewable energy directly with local settlement ledgers.",
-    audience: "Microgrid Operators & Prosumer Communities",
-    highlightMetric: "100% peer-matched ledger"
+    id: 'tariff-engine',
+    title: 'Dynamic Tariff & P2P Engine',
+    path: '/tariff-engine',
+    category: 'Optimization',
+    icon: Scale,
+    dataProvenance: 'Cached Baseline',
+    algorithm: 'Locational Marginal Pricing (LMP) & Continuous Double Auction',
+    summary: 'Dynamic congestion multipliers linked to CERC DSM deviation settlement and prosumer bilateral peer-to-peer energy trades.',
+    metric: '₹15.25 Lakh saved/month',
+    color: '#c026d3'
   },
   {
-    title: "Grid Resilience Index",
-    path: "/resilience",
-    category: "Trust & Governance",
-    icon: ShieldCheck,
-    dataMode: "Live Data",
-    dataModeType: "live",
-    dataSource: "Live telemetry inputs + IEEE 1547.4 formulation",
-    algorithms: ["4-Pillar Composite Reliability Score", "SAIDI / SAIFI / CAIDI Extrapolator"],
-    summary: "0–100 grid health rating evaluated across 4 equal-weighted pillars: Supply Adequacy, Voltage Stability, Reserve Headroom, and Contingency Margin.",
-    audience: "Chief Reliability Officers & Regulators",
-    highlightMetric: "94.2/100 Composite Score"
-  },
-  {
-    title: "Explainable AI (TreeSHAP)",
-    path: "/explainable-ai",
-    category: "Trust & Governance",
-    icon: Cpu,
-    dataMode: "Cached Data",
-    dataModeType: "cached",
-    dataSource: "Trained LightGBM & XGBoost model trees",
-    algorithms: ["TreeSHAP Factor Decomposition", "Waterfall Feature Attribution"],
-    summary: "Demystifies black-box AI decisions. Shows exact MW feature contributions (solar irradiance, temperature, humidity, time-of-day) for each dispatch recommendation.",
-    audience: "Data Scientists & Compliance Officers",
-    highlightMetric: "Exact MW feature attributions"
-  },
-  {
-    title: "System Architecture",
-    path: "/architecture",
-    category: "Trust & Governance",
-    icon: Layers,
-    dataMode: "Cached Data",
-    dataModeType: "cached",
-    dataSource: "Hardware-free software specifications",
-    algorithms: ["React 18 + Vite + Python FastAPI Topology", "Ref. ISO 50001 / IEEE 1547.4 Concepts"],
-    summary: "Detailed end-to-end technical pipeline, mathematical formulation references, API contracts, and compliance documentation demonstrating 100% software-native design.",
-    audience: "System Architects & Technical Judges",
-    highlightMetric: "Zero physical hardware needed"
-  },
-  {
-    title: "AI Grid Copilot",
-    path: "/copilot",
-    category: "Operations",
+    id: 'incident-copilot',
+    title: 'Incident Copilot',
+    path: '/incident-copilot',
+    category: 'AI Engines',
     icon: MessageSquare,
-    dataMode: "Live Data",
-    dataModeType: "live",
-    dataSource: "Grid Standards Reference RAG & Deterministic Fallback",
-    algorithms: ["Vector Similarity RAG", "Contextual Grid Reasoning Engine"],
-    summary: "Operator conversational assistant for querying grid status, looking up IEEE contingency procedures, and generating instant dispatch summaries.",
-    audience: "Grid Engineers & Operations Trainees",
-    highlightMetric: "Zero API key dependency"
-  },
-  {
-    title: "DISCOM Operations Portal",
-    path: "/discom",
-    category: "Operations",
-    icon: Building2,
-    dataMode: "Cached Data",
-    dataModeType: "cached",
-    dataSource: "State DISCOM feeder billing models",
-    algorithms: ["Feeder Loss Calculator", "AT&C Loss Reduction Estimator"],
-    summary: "Executive portal for distribution companies (DISCOMs) tracking commercial losses, revenue leakage, feeder-level loading, and billing compliance.",
-    audience: "DISCOM Executives & Financial Controllers",
-    highlightMetric: "Feeder-level AT&C tracking"
-  },
-  {
-    title: "Judge Evaluation Mode",
-    path: "/judge-mode",
-    category: "Trust & Governance",
-    icon: Award,
-    dataMode: "Live Data",
-    dataModeType: "live",
-    dataSource: "Automated test harness & live telemetry",
-    algorithms: ["Interactive Feature Tour Runner", "10-Criterion Rubric Verification"],
-    summary: "Dedicated interactive walkthrough built for hackathon evaluators. Features step-by-step guided tours, automated test runners, and mathematical proof sheets.",
-    audience: "Hackathon Judges & Technical Reviewers",
-    highlightMetric: "1-Click automated test runner"
-  },
-  {
-    title: "Operator Login & Roles",
-    path: "/login",
-    category: "Operations",
-    icon: KeyRound,
-    dataMode: "Cached Data",
-    dataModeType: "cached",
-    dataSource: "Local client-side JWT mock store",
-    algorithms: ["Role-Based Access Control (RBAC)", "JWT Demo Session Manager"],
-    summary: "Instant 1-click login allowing judges and operators to test role-based views (Grid Controller, Renewable Operator, DISCOM Executive, System Auditor).",
-    audience: "All Users & Judges",
-    highlightMetric: "Instant 1-click test roles"
+    dataProvenance: 'Live API',
+    algorithm: 'Bilingual Natural Language & Speech Protocol Parser',
+    summary: 'Conversational emergency assistant supporting natural English and Hindi queries for regulatory CEA/CERC operational SOPs.',
+    metric: 'Bilingual EN & HI support',
+    color: '#4f46e5'
   }
 ];
 
 export default function AboutPage() {
+  const { language, t } = useLanguage();
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [selectedDataMode, setSelectedDataMode] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activePersona, setActivePersona] = useState<string>('all');
 
-  const categories = ['All', 'Operations', 'Forecasting', 'Optimization', 'AI Engines', 'Trust & Governance'];
-  const dataModes = ['All', 'Live Data', 'Cached Data', 'Demo / Synthetic Data'];
+  // Filter modules
+  const filteredModules = useMemo(() => {
+    return MODULES.filter(m => {
+      const matchesCategory = selectedCategory === 'All' || m.category === selectedCategory;
+      const matchesSearch = searchTerm === '' || 
+        m.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.algorithm.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [searchTerm, selectedCategory]);
 
-  const personas = [
-    { id: 'all', label: 'All Roles', icon: Globe2 },
-    { id: 'operator', label: 'Grid Operator / Dispatcher', icon: Zap, paths: ['/command-center', '/digital-twin', '/self-healing', '/incident-copilot'] },
-    { id: 'forecaster', label: 'Renewables Analyst', icon: Sun, paths: ['/renewable-forecast', '/sky-vision', '/demand-forecast'] },
-    { id: 'storage', label: 'BESS & Market Trader', icon: BatteryCharging, paths: ['/storage', '/tariff-engine', '/flexibility', '/p2p'] },
-    { id: 'judge', label: 'Hackathon Judge / Auditor', icon: Award, paths: ['/judge-mode', '/about', '/architecture', '/explainable-ai', '/resilience'] }
+  const chainSteps = [
+    { title: t('chain.step1', 'Weather & Telemetry'), desc: 'Open-Meteo & NASA POWER APIs', icon: Activity, color: '#0284c7' },
+    { title: t('chain.step2', 'Forecast Models'), desc: 'LightGBM & XGBoost Multi-Horizon', icon: Sun, color: '#d97706' },
+    { title: t('chain.step3', 'Risk Detection'), desc: 'Shortage & Overload Detection', icon: ShieldAlert, color: '#dc2626' },
+    { title: t('chain.step4', 'MILP Solver'), desc: 'PuLP Multi-Asset Constraint Solver', icon: Cpu, color: '#4f46e5' },
+    { title: t('chain.step5', 'Feeder Directives'), desc: 'Automated SCADA Dispatch Orders', icon: Zap, color: '#ea580c' },
+    { title: t('chain.step6', 'Dynamic BESS Response'), desc: 'Sub-150ms Battery & EV Dispatch', icon: BatteryCharging, color: '#059669' },
+    { title: t('chain.step7', 'Zero Blackouts'), desc: 'Avoided CERC DSM Penalties', icon: Award, color: '#16a34a' },
+    { title: t('chain.step8', 'TreeSHAP Attributions'), desc: '100% Additive Math Transparency', icon: CheckCircle2, color: '#7c3aed' },
   ];
 
-  const filteredPages = useMemo(() => {
-    return ALL_PAGES.filter(p => {
-      // Category filter
-      if (selectedCategory !== 'All' && p.category !== selectedCategory) return false;
-      // Data mode filter
-      if (selectedDataMode !== 'All' && p.dataMode !== selectedDataMode) return false;
-      // Persona filter
-      if (activePersona !== 'all') {
-        const personaObj = personas.find(pr => pr.id === activePersona);
-        if (personaObj && personaObj.paths && !personaObj.paths.includes(p.path)) return false;
-      }
-      // Search query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesTitle = p.title.toLowerCase().includes(q);
-        const matchesDesc = p.summary.toLowerCase().includes(q);
-        const matchesAlgo = p.algorithms.some(a => a.toLowerCase().includes(q));
-        const matchesAudience = p.audience.toLowerCase().includes(q);
-        const matchesSource = p.dataSource.toLowerCase().includes(q);
-        if (!matchesTitle && !matchesDesc && !matchesAlgo && !matchesAudience && !matchesSource) return false;
-      }
-      return true;
-    });
-  }, [selectedCategory, selectedDataMode, searchQuery, activePersona]);
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 40, paddingBottom: 60 }}>
-      {/* Hero Header */}
-      <section style={{
-        background: 'linear-gradient(135deg, rgba(13, 20, 36, 0.95) 0%, rgba(20, 31, 54, 0.85) 100%)',
-        border: '1px solid var(--border-medium)',
-        borderRadius: 'var(--radius-lg)',
-        padding: '40px 30px',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: -40,
-          right: -40,
-          width: 250,
-          height: 250,
-          background: 'radial-gradient(circle, rgba(0, 240, 255, 0.12) 0%, transparent 70%)',
-          pointerEvents: 'none'
-        }} />
-
-        <div style={{ maxWidth: 840 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-            <span className="badge badge-live">
-              <Sparkles size={13} style={{ marginRight: 4 }} />
-              Platform Guide & System Directory
-            </span>
-            <span className="badge badge-forecast">20 Modular Pages</span>
-            <span className="badge badge-sim">100% Hardware-Free</span>
-          </div>
-
-          <h1 style={{ fontSize: '2.5rem', lineHeight: 1.2, margin: '0 0 16px 0', color: 'var(--text-primary)' }}>
-            About <span style={{ color: 'var(--cyan-primary)' }}>GridFlex AI</span>
-          </h1>
-
-          <p style={{ fontSize: '1.08rem', lineHeight: 1.6, color: 'var(--text-secondary)', margin: 0 }}>
-            GridFlex AI is a software-native, autonomous national energy grid optimization platform built to resolve the <strong>Duck Curve</strong>, eliminate renewable curtailment, and prevent blackout cascades across India's transmission network without requiring physical hardware installation.
-          </p>
-
-          {/* Quick Metrics Strip */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 16,
-            marginTop: 28
-          }}>
-            <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '14px 18px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--cyan-primary)' }}>20 Pages</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Complete operational ecosystem</div>
-            </div>
-            <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '14px 18px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--amber-flow)' }}>5 AI Engines</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>SkyVision, Causal, Spatial, Tariff, Voice</div>
-            </div>
-            <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '14px 18px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--green-renew)' }}>3 Data Modes</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Live REST, Cached National, Demo Sim</div>
-            </div>
-            <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '14px 18px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#a855f7' }}>15 Locales</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Web Speech regional Indian voice</div>
-            </div>
-          </div>
+    <div className="synaptix-container">
+      {/* ── Synaptix Top Status Bar & Search ── */}
+      <div className="synaptix-top-bar">
+        <div className="synaptix-search-input-wrap">
+          <Search size={16} style={{ color: '#94a3b8' }} />
+          <input
+            type="text"
+            className="synaptix-search-input"
+            placeholder={language === 'hi' ? 'ग्रिड मॉडल, एल्गोरिदम या डेटा खोजें...' : 'Search grid tools, models, or telemetry...'}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-      </section>
 
-      {/* SECTION 1: DATA PROVENANCE & SYMBOLISM GUIDE */}
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Database size={20} style={{ color: 'var(--cyan-primary)' }} />
-              <h2 style={{ margin: 0, fontSize: '1.5rem' }}>Data Modes &amp; Provenance Symbolism</h2>
-            </div>
-            <p style={{ margin: '4px 0 0 0', fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
-              Every page in GridFlex AI explicitly indicates its data source classification so users and evaluators know what is real, what is cached, and what is simulated.
-            </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <div className="synaptix-badge-active">
+            <span className="synaptix-active-dot" />
+            <span>{language === 'hi' ? 'ग्रिड एआई सक्रिय' : 'Grid AI Active'}</span>
           </div>
-          <Link to="/architecture" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span>View Full Architecture Matrix</span>
-            <ArrowRight size={14} />
+          <span className="badge badge-live">
+            {language === 'hi' ? 'सब-150ms टेलीमेट्री' : '< 150ms Telemetry'}
+          </span>
+          <span className="badge badge-sim">
+            {language === 'hi' ? 'अंग्रेजी और हिन्दी' : 'English & Hindi (2 Languages)'}
+          </span>
+        </div>
+      </div>
+
+      {/* ── Welcome Greeting ── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
+        <div>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 800, margin: '0 0 6px 0', color: 'var(--text-primary)' }}>
+            {language === 'hi' ? 'ग्रिडफ्लेक्स एआई में आपका स्वागत है' : 'Welcome to GridFlex AI'}
+          </h1>
+          <p style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
+            {language === 'hi' 
+              ? 'भारतीय विद्युत ग्रिड के लिए स्वायत्त ऊर्जा ग्रिड अनुकूलन और लचीलापन मंच' 
+              : "Here's what's happening with your autonomous grid optimization and resilience today"}
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10 }}>
+          <Link to="/command-center" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>
+            <Zap size={16} />
+            <span>{language === 'hi' ? 'कमांड सेंटर खोलें' : 'Open Command Center'}</span>
+          </Link>
+          <Link to="/digital-twin" className="btn btn-secondary" style={{ padding: '10px 18px', fontSize: '0.9rem' }}>
+            <Sliders size={16} />
+            <span>{language === 'hi' ? 'डिजिटल ट्विन' : 'Digital Twin'}</span>
           </Link>
         </div>
+      </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
-          gap: 20
-        }}>
-          {/* Live Data Card */}
-          <div className="card" style={{ borderTop: '4px solid #10b981', position: 'relative' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: '50%',
-                  background: '#10b981',
-                  boxShadow: '0 0 10px #10b981',
-                  display: 'inline-block'
-                }} />
-                <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#10b981' }}>Live Data</h3>
+      {/* ── 4 Synaptix Metric Cards with Miniature Sparklines ── */}
+      <div className="synaptix-metric-grid">
+        {/* Card 1: Grid Demand */}
+        <div className="synaptix-metric-card">
+          <div className="synaptix-metric-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div className="synaptix-icon-badge" style={{ background: '#fef3c7', color: '#d97706' }}>
+                <TrendingUp size={18} />
               </div>
-              <span className="badge badge-live">Real-Time</span>
+              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'ग्रिड मांग' : 'Grid Demand'}
+              </span>
             </div>
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 14 }}>
-              Direct programmatic integration with public REST APIs and browser APIs that execute dynamically at runtime.
-            </p>
-            <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '12px 14px', borderRadius: 8, fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <div><strong>Active Feeds:</strong> Open-Meteo NWP Solar/Wind REST API, NASA POWER, Web Speech API (Voice input &amp; synthesis).</div>
-              <div><strong>Symbol:</strong> Green pulsing dot &amp; <code style={{ color: '#10b981', background: 'rgba(16, 185, 129, 0.15)', padding: '1px 6px', borderRadius: 4 }}>Live</code> tag.</div>
-              <div><strong>Latency:</strong> ~120–450 ms dynamic roundtrip.</div>
-            </div>
+            <span className="synaptix-delta-tag synaptix-delta-positive">
+              +12.5% {language === 'hi' ? 'शाम पीक' : 'peak'}
+            </span>
           </div>
-
-          {/* Cached Data Card */}
-          <div className="card" style={{ borderTop: '4px solid #00f0ff', position: 'relative' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Clock size={16} style={{ color: 'var(--cyan-primary)' }} />
-                <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--cyan-primary)' }}>Cached Real Data</h3>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
+            <div>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                64.8 <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-tertiary)' }}>MW</span>
               </div>
-              <span className="badge badge-forecast">National Baselines</span>
-            </div>
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 14 }}>
-              Authentic Indian national utility records scaled and locally cached to guarantee 100% uptime with zero external rate-limit failures during hackathon judging.
-            </p>
-            <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '12px 14px', borderRadius: 8, fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <div><strong>Active Datasets:</strong> Grid-India (NLDC) Daily PSP 64.8 MW profile, Vidyut PRAVAH IEX DAM prices (₹6.80/kWh), CEA installed mix.</div>
-              <div><strong>Symbol:</strong> Cyan clock icon &amp; <code style={{ color: '#00f0ff', background: 'rgba(0, 240, 255, 0.15)', padding: '1px 6px', borderRadius: 4 }}>Cached Real</code> tag.</div>
-              <div><strong>Reliability:</strong> 100% deterministic, 0 ms cold start.</div>
-            </div>
-          </div>
-
-          {/* Demo / Synthetic Data Card */}
-          <div className="card" style={{ borderTop: '4px solid #fbbf24', position: 'relative' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Cpu size={16} style={{ color: 'var(--amber-flow)' }} />
-                <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--amber-flow)' }}>Demo / Synthetic Data</h3>
+              <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
+                {language === 'hi' ? '33/11kV सबस्टेशन थ्रूपुट' : '33/11kV Substation Throughput'}
               </div>
-              <span className="badge badge-sim">Digital Twin</span>
             </div>
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 14 }}>
-              Physics-constrained mathematical state-space differential equations and algorithmic solvers that simulate grid assets without physical sensors or battery racks.
-            </p>
-            <div style={{ background: 'rgba(7, 11, 20, 0.6)', padding: '12px 14px', borderRadius: 8, fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <div><strong>Active Models:</strong> Appendix A3 40 MWh BESS electrochemical model, MILP dispatch solver, P2P Double Auction ledger.</div>
-              <div><strong>Symbol:</strong> Amber chip icon &amp; <code style={{ color: '#fbbf24', background: 'rgba(251, 191, 36, 0.15)', padding: '1px 6px', borderRadius: 4 }}>Simulated</code> tag.</div>
-              <div><strong>Fidelity:</strong> Designed with reference to IEEE 1547.4 &amp; ISO 50001 concepts.</div>
-            </div>
+            {/* Sparkline SVG */}
+            <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
+              <path d="M2 24 C 15 22, 25 28, 40 16 C 55 4, 70 8, 88 12" stroke="#d97706" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
           </div>
         </div>
-      </section>
 
-      {/* SECTION 2: "WHERE SHOULD I GO?" PERSONA QUICK NAVIGATOR */}
-      <section style={{
-        background: 'rgba(13, 20, 36, 0.8)',
-        border: '1px solid var(--border-medium)',
-        borderRadius: 'var(--radius-lg)',
-        padding: '28px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-          <Compass size={22} style={{ color: 'var(--amber-flow)' }} />
-          <h2 style={{ margin: 0, fontSize: '1.4rem' }}>Where Should I Go? (Role-Based Navigator)</h2>
+        {/* Card 2: Renewable Generation */}
+        <div className="synaptix-metric-card">
+          <div className="synaptix-metric-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div className="synaptix-icon-badge" style={{ background: '#ede9fe', color: '#7c3aed' }}>
+                <Sun size={18} />
+              </div>
+              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'नवीकरणीय उत्पादन' : 'Renewable Output'}
+              </span>
+            </div>
+            <span className="synaptix-delta-tag synaptix-delta-positive">
+              93.7% {language === 'hi' ? 'स्वच्छ हिस्सा' : 'share'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
+            <div>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                60.7 <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-tertiary)' }}>MW</span>
+              </div>
+              <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
+                {language === 'hi' ? '42.5 सौर + 18.2 पवन' : '42.5 MW Solar + 18.2 MW Wind'}
+              </div>
+            </div>
+            {/* Sparkline SVG */}
+            <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
+              <path d="M2 18 C 18 10, 32 2, 45 6 C 58 10, 72 26, 88 20" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          </div>
         </div>
-        <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', marginBottom: 20 }}>
-          Select your objective or role to instantly highlight the exact pages relevant to your evaluation:
-        </p>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>
-          {personas.map(pr => {
-            const Icon = pr.icon;
-            const isSelected = activePersona === pr.id;
-            return (
-              <button
-                key={pr.id}
-                type="button"
-                onClick={() => setActivePersona(pr.id)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '10px 18px',
-                  borderRadius: 'var(--radius-full)',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  background: isSelected ? 'var(--cyan-glow)' : 'rgba(20, 31, 54, 0.8)',
-                  color: isSelected ? 'var(--cyan-primary)' : 'var(--text-secondary)',
-                  border: isSelected ? '1px solid var(--cyan-primary)' : '1px solid var(--border-subtle)'
-                }}
+        {/* Card 3: Forecast Precision */}
+        <div className="synaptix-metric-card">
+          <div className="synaptix-metric-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div className="synaptix-icon-badge" style={{ background: '#e0f2fe', color: '#0284c7' }}>
+                <Cpu size={18} />
+              </div>
+              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'पूर्वानुमान सटीकता' : 'Forecast Precision'}
+              </span>
+            </div>
+            <span className="synaptix-delta-tag synaptix-delta-positive">
+              +2.1% {language === 'hi' ? 'इस माह' : 'accuracy'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
+            <div>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                98.5%
+              </div>
+              <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
+                {language === 'hi' ? '0.942 R² LightGBM + XGBoost' : '0.942 R² LightGBM + XGBoost'}
+              </div>
+            </div>
+            {/* Sparkline SVG */}
+            <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
+              <path d="M2 16 C 14 20, 26 8, 42 12 C 58 16, 70 6, 88 8" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Card 4: Resilience Score */}
+        <div className="synaptix-metric-card">
+          <div className="synaptix-metric-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div className="synaptix-icon-badge" style={{ background: '#ecfdf5', color: '#059669' }}>
+                <ShieldCheck size={18} />
+              </div>
+              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                {language === 'hi' ? 'लचीलापन स्कोर' : 'Resilience Score'}
+              </span>
+            </div>
+            <span className="synaptix-delta-tag synaptix-delta-positive">
+              {language === 'hi' ? 'अनुकूल' : 'Optimal'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
+            <div>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                80.7 <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-tertiary)' }}>/ 100</span>
+              </div>
+              <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
+                {language === 'hi' ? '0 घाटा घंटे (पोस्ट-फ्लेक्स)' : '0 Deficit Hours (Post-Flex)'}
+              </div>
+            </div>
+            {/* Sparkline SVG */}
+            <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
+              <path d="M2 28 C 16 26, 30 18, 46 14 C 62 10, 74 6, 88 4" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Synaptix Two-Column Analytics Row ── */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)',
+        gap: 20
+      }} className="synaptix-analytics-grid">
+        {/* Left Column: Grid Performance Index Line Chart Card */}
+        <div className="synaptix-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>
+                  {language === 'hi' ? 'ग्रिड प्रदर्शन सूचकांक' : 'Grid Performance Index'}
+                </h3>
+                <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+                  {language === 'hi' ? 'मासिक पीक शेविंग और परिहार्य DSM विचलन बचत' : 'Autonomous peak-shaving dispatch and avoided DSM deviation penalties'}
+                </p>
+              </div>
+              <Link 
+                to="/command-center" 
+                style={{ 
+                  color: 'var(--text-secondary)', 
+                  padding: 6, 
+                  borderRadius: 6, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  border: '1px solid var(--border-subtle)' 
+                }} 
+                title="View Full Telemetry"
               >
-                <Icon size={16} />
-                <span>{pr.label}</span>
-              </button>
-            );
-          })}
+                <Maximize2 size={15} />
+              </Link>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
+              <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                ₹15.25 Lakh
+              </div>
+              <span className="synaptix-delta-tag synaptix-delta-positive" style={{ fontSize: '0.8rem' }}>
+                +14.3% {language === 'hi' ? 'बचत' : 'monthly savings'}
+              </span>
+            </div>
+          </div>
+
+          {/* Elegant SVG Line Chart with Highlight Bar (Bounded inside card with zero clipping) */}
+          <div style={{ marginTop: 20, position: 'relative', width: '100%', overflow: 'hidden' }}>
+            <svg width="100%" height="165" viewBox="0 0 500 165" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', overflow: 'hidden' }}>
+              <defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.0" />
+                </linearGradient>
+                <linearGradient id="barHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.75" />
+                  <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.15" />
+                </linearGradient>
+              </defs>
+
+              {/* Horizontal Grid Lines */}
+              <line x1="20" y1="30" x2="480" y2="30" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="20" y1="70" x2="480" y2="70" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="20" y1="110" x2="480" y2="110" stroke="#f1f5f9" strokeWidth="1" />
+
+              {/* Highlight Bar for Peak Window (July / 18:00–20:00) */}
+              <rect x="270" y="20" width="50" height="115" rx="8" fill="url(#barHighlight)" />
+
+              {/* Area fill */}
+              <path 
+                d="M 35 105 C 75 105, 105 92, 145 92 C 185 92, 215 102, 245 102 C 270 102, 275 42, 295 42 C 315 42, 350 82, 390 82 C 425 82, 440 68, 470 68 L 470 135 L 35 135 Z" 
+                fill="url(#chartGradient)" 
+              />
+
+              {/* Smooth Forward Progression Curve */}
+              <path 
+                d="M 35 105 C 75 105, 105 92, 145 92 C 185 92, 215 102, 245 102 C 270 102, 275 42, 295 42 C 315 42, 350 82, 390 82 C 425 82, 440 68, 470 68" 
+                fill="none" 
+                stroke="#4f46e5" 
+                strokeWidth="3" 
+                strokeLinecap="round" 
+              />
+
+              {/* Data Nodes */}
+              <circle cx="35" cy="105" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
+              <circle cx="145" cy="92" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
+              <circle cx="245" cy="102" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
+              <circle cx="295" cy="42" r="6" fill="#ffffff" stroke="#6366f1" strokeWidth="3" />
+              <circle cx="390" cy="82" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
+              <circle cx="470" cy="68" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
+
+              {/* SVG-Anchored Month Labels (Never clips or wraps outside card) */}
+              <text x="35" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Jan</text>
+              <text x="145" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Apr</text>
+              <text x="295" y="152" textAnchor="middle" fontSize="11" fill="#4f46e5" fontWeight="700">July (Peak Flex)</text>
+              <text x="390" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Oct</text>
+              <text x="470" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Dec</text>
+            </svg>
+          </div>
         </div>
 
-        {/* Quick intent shortcuts */}
+        {/* Right Column: Grid Resilience Index Radial Gauge Card */}
+        <div className="synaptix-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                {language === 'hi' ? 'ग्रिड विश्वसनीयता सूचकांक' : 'Grid Resilience Index'}
+              </h3>
+              <span className="badge badge-live" style={{ fontSize: '0.72rem' }}>
+                IEEE 1547
+              </span>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+              {language === 'hi' ? 'चार पारदर्शी स्तंभों का समग्र स्कोर' : 'Composite health score across four transparent pillars'}
+            </p>
+          </div>
+
+          {/* Semi-Circular Radial Gauge */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '14px 0' }}>
+            <svg width="200" height="110" viewBox="0 0 200 110">
+              <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#ea580c" />
+                  <stop offset="50%" stopColor="#d97706" />
+                  <stop offset="80%" stopColor="#059669" />
+                  <stop offset="100%" stopColor="#4f46e5" />
+                </linearGradient>
+              </defs>
+              {/* Background track */}
+              <path
+                d="M 20 100 A 80 80 0 0 1 180 100"
+                fill="none"
+                stroke="#f1f5f9"
+                strokeWidth="14"
+                strokeLinecap="round"
+              />
+              {/* Filled progress arc (80.7%) */}
+              <path
+                d="M 20 100 A 80 80 0 0 1 155 45"
+                fill="none"
+                stroke="url(#gaugeGradient)"
+                strokeWidth="14"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div style={{ marginTop: -40, textAlign: 'center' }}>
+              <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>
+                80.7
+              </div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#059669', marginTop: 4 }}>
+                {language === 'hi' ? 'विश्वसनीय सुरक्षा स्तर' : 'Optimal Operating Envelope'}
+              </div>
+            </div>
+          </div>
+
+          {/* Breakdown Legend Chips */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 8,
+            paddingTop: 12,
+            borderTop: '1px solid var(--border-subtle)',
+            fontSize: '0.78rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#d97706' }} />
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>24%</div>
+                <div style={{ color: 'var(--text-tertiary)', fontSize: '0.72rem' }}>Thermal Margin</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#059669' }} />
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>48%</div>
+                <div style={{ color: 'var(--text-tertiary)', fontSize: '0.72rem' }}>Renewable Use</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#4f46e5' }} />
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>28%</div>
+                <div style={{ color: 'var(--text-tertiary)', fontSize: '0.72rem' }}>Storage Flex</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 8-Step Autonomous Resilience & Optimization Chain ── */}
+      <div className="synaptix-card">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10, marginBottom: 18 }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+              <span className="badge badge-live" style={{ fontSize: '0.74rem' }}>
+                <Sparkles size={12} />
+                Autonomous System Pipeline
+              </span>
+            </div>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
+              {language === 'hi' ? '8-चरणीय स्वायत्त अनुकूलन श्रृंखला' : '8-Step Autonomous Optimization & Resilience Pipeline'}
+            </h2>
+            <p style={{ margin: '4px 0 0 0', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+              {language === 'hi' 
+                ? 'मौसम पूर्वानुमान से लेकर MILP सॉल्वर और 150ms BESS नियंत्रण तक' 
+                : 'Deterministic multi-horizon forecasting, mathematical MILP solving, and TreeSHAP explainability.'}
+            </p>
+          </div>
+        </div>
+
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: 14
+          gap: 12
         }}>
-          <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid var(--cyan-primary)' }}>
-            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              Monitor Live Grid &amp; SCADA
-            </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
-              Inspect live frequency, solar/wind balance, and execute quick dispatch alerts.
-            </div>
-            <Link to="/command-center" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
-              Go to Command Center →
-            </Link>
-          </div>
-
-          <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid var(--amber-flow)' }}>
-            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              Test Blackouts &amp; Fault Injections
-            </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
-              Trigger cloud dips, transformer overloads, and test automated islanding safely.
-            </div>
-            <Link to="/digital-twin" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
-              Go to Digital Twin →
-            </Link>
-          </div>
-
-          <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid #a855f7' }}>
-            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              Watch Cloud Velocity Radar
-            </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
-              See Farneback optical-flow tracking cloud vectors 15–30 mins ahead of solar drops.
-            </div>
-            <Link to="/sky-vision" className="btn btn-secondary btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
-              Go to SkyVision Radar →
-            </Link>
-          </div>
-
-          <div style={{ background: 'rgba(7, 11, 20, 0.7)', padding: '14px 16px', borderRadius: 8, borderLeft: '3px solid #10b981' }}>
-            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 4 }}>
-              Evaluate for Hackathon Judging
-            </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
-              Take the guided evaluation tour, run the 1-click test suite, and check mathematical proofs.
-            </div>
-            <Link to="/judge-mode" className="btn btn-amber btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
-              Launch Judge Mode →
-            </Link>
-          </div>
+          {chainSteps.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <div 
+                key={idx} 
+                style={{
+                  background: '#f8fafc',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 12,
+                  padding: '14px 16px',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 12,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <div style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background: `${step.color}15`,
+                  color: step.color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  marginTop: 2
+                }}>
+                  <Icon size={16} />
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: '0.74rem', fontWeight: 700, color: step.color }}>Step {idx + 1}</span>
+                    <strong style={{ fontSize: '0.88rem', color: 'var(--text-primary)' }}>{step.title}</strong>
+                  </div>
+                  <p style={{ margin: '3px 0 0 0', fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                    {step.desc}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </section>
+      </div>
 
-      {/* SECTION 3: INTERACTIVE CATALOG OF ALL PAGES */}
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Layers size={22} style={{ color: 'var(--cyan-primary)' }} />
-              <h2 style={{ margin: 0, fontSize: '1.5rem' }}>All Platform Pages &amp; Specifications ({filteredPages.length})</h2>
+      {/* ── Core Problems & Structural Challenges (Concise) ── */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: 16
+      }}>
+        {/* Problem 1 */}
+        <div className="synaptix-card" style={{ borderTop: '3px solid #d97706' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#fef3c7', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Flame size={18} />
             </div>
-            <p style={{ margin: '4px 0 0 0', fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
-              Explore the detailed purpose, algorithms, and data source for each page in the GridFlex ecosystem.
+            <div>
+              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#d97706', textTransform: 'uppercase' }}>Structural Challenge 1</span>
+              <h4 style={{ margin: 0, fontSize: '1.02rem', color: 'var(--text-primary)' }}>
+                {language === 'hi' ? 'डक कर्व और शाम का अचानक रैंप-डाउन' : 'Evening Duck Curve Ramp-Down'}
+              </h4>
+            </div>
+          </div>
+          <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+            At 17:00 IST, solar generation plunges from 48.5 MW to zero within 90 minutes across Indian distribution networks, right as domestic cooling, cooking, and commuter EV loads surge, creating a severe 18.2 MW deficit window.
+          </p>
+        </div>
+
+        {/* Problem 2 */}
+        <div className="synaptix-card" style={{ borderTop: '3px solid #dc2626' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#fef2f2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <ShieldAlert size={18} />
+            </div>
+            <div>
+              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#dc2626', textTransform: 'uppercase' }}>Regulatory Challenge 2</span>
+              <h4 style={{ margin: 0, fontSize: '1.02rem', color: 'var(--text-primary)' }}>
+                {language === 'hi' ? 'CERC DSM वैधानिक दंड जोखिम' : 'CERC DSM Statutory Penalties'}
+              </h4>
+            </div>
+          </div>
+          <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+            Under Indian CERC Deviation Settlement Mechanism (DSM) 2023 regulations, overdrawing from the grid when national frequency falls below 49.90 Hz attracts punitive tariffs up to ₹14.60/kWh, incurring lakhs in avoidable utility penalties.
+          </p>
+        </div>
+
+        {/* Problem 3 */}
+        <div className="synaptix-card" style={{ borderTop: '3px solid #0284c7' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#e0f2fe', color: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Zap size={18} />
+            </div>
+            <div>
+              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#0284c7', textTransform: 'uppercase' }}>Operational Challenge 3</span>
+              <h4 style={{ margin: 0, fontSize: '1.02rem', color: 'var(--text-primary)' }}>
+                {language === 'hi' ? 'ट्रांसफॉर्मर थर्मल ओवरलोड जोखिम' : 'Transformer Thermal Bottlenecks'}
+              </h4>
+            </div>
+          </div>
+          <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+            Without localized BESS dispatch and dynamic flexibility scheduling, distribution feeder sections exceed 90% thermal continuous rating, triggering rolling emergency load shedding and transformer degradation.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Filterable Platform Module Directory ── */}
+      <div className="synaptix-card">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 18 }}>
+          <div>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>
+              {language === 'hi' ? 'प्लेटफ़ॉर्म मॉड्यूल निर्देशिका' : 'Platform Modules & Operational Engines'}
+            </h2>
+            <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+              {language === 'hi' 
+                ? 'सभी मुख्य मॉड्यूल का संक्षिप्त अवलोकन। किसी भी कार्ड पर क्लिक करके सीधे उस पृष्ठ पर जाएं।' 
+                : 'Click any module below to inspect live telemetry, physics simulations, and dispatch controls.'}
             </p>
           </div>
 
-          {/* Search bar */}
-          <div style={{
-            position: 'relative',
-            minWidth: 280,
-            maxWidth: 360,
-            width: '100%'
-          }}>
-            <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
-            <input
-              type="text"
-              placeholder="Search by name, algorithm, or feature..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '9px 12px 9px 36px',
-                borderRadius: 'var(--radius-full)',
-                background: 'rgba(13, 20, 36, 0.9)',
-                border: '1px solid var(--border-medium)',
-                color: 'var(--text-primary)',
-                fontSize: '0.85rem',
-                outline: 'none'
-              }}
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                style={{
-                  position: 'absolute',
-                  right: 12,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--text-tertiary)',
-                  cursor: 'pointer',
-                  fontSize: '0.8rem'
-                }}
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Filters Strip */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-          padding: '12px 18px',
-          background: 'rgba(13, 20, 36, 0.5)',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--border-subtle)'
-        }}>
-          {/* Category Tabs */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)', marginRight: 4 }}>
-              Category:
-            </span>
-            {categories.map(cat => (
+          {/* Category Filter Pills */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {['All', 'Operations', 'Forecasting', 'Optimization', 'AI Engines'].map((cat) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
                 style={{
-                  padding: '4px 12px',
-                  borderRadius: 6,
-                  fontSize: '0.8rem',
+                  padding: '5px 12px',
+                  borderRadius: 20,
+                  fontSize: '0.78rem',
                   fontWeight: 600,
+                  border: selectedCategory === cat ? '1px solid var(--brand)' : '1px solid var(--border-subtle)',
+                  background: selectedCategory === cat ? 'var(--brand)' : '#f8fafc',
+                  color: selectedCategory === cat ? '#ffffff' : 'var(--text-secondary)',
                   cursor: 'pointer',
-                  background: selectedCategory === cat ? 'var(--cyan-primary)' : 'transparent',
-                  color: selectedCategory === cat ? '#070b14' : 'var(--text-secondary)',
-                  border: 'none',
                   transition: 'all 0.15s ease'
                 }}
               >
@@ -697,298 +723,141 @@ export default function AboutPage() {
               </button>
             ))}
           </div>
-
-          {/* Data Mode Filter */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)', marginRight: 4 }}>
-              Data Provenance:
-            </span>
-            {dataModes.map(dm => (
-              <button
-                key={dm}
-                type="button"
-                onClick={() => setSelectedDataMode(dm)}
-                style={{
-                  padding: '4px 10px',
-                  borderRadius: 6,
-                  fontSize: '0.76rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  background: selectedDataMode === dm ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                  color: selectedDataMode === dm ? 'var(--cyan-primary)' : 'var(--text-secondary)',
-                  border: selectedDataMode === dm ? '1px solid var(--cyan-primary)' : '1px solid transparent',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                {dm}
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* Catalog Cards Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
-          gap: 18
-        }}>
-          {filteredPages.map((page) => {
-            const Icon = page.icon;
-            return (
-              <div
-                key={page.path}
-                className="card"
-                style={{
-                  padding: 22,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  gap: 14,
-                  transition: 'transform 0.2s ease, border-color 0.2s ease',
-                  border: '1px solid var(--border-subtle)'
-                }}
-              >
-                <div>
-                  {/* Card Header */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: 10,
-                        background: 'rgba(0, 240, 255, 0.1)',
-                        border: '1px solid rgba(0, 240, 255, 0.25)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--cyan-primary)',
-                        flexShrink: 0
-                      }}>
-                        <Icon size={20} />
-                      </div>
-                      <div>
-                        <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)' }}>{page.title}</h3>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--cyan-primary)', fontFamily: 'monospace' }}>{page.path}</span>
-                      </div>
-                    </div>
-
-                    <span className="badge badge-sim" style={{ fontSize: '0.72rem', whiteSpace: 'nowrap' }}>
-                      {page.category}
-                    </span>
-                  </div>
-
-                  {/* Summary */}
-                  <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: '0 0 14px 0' }}>
-                    {page.summary}
-                  </p>
-
-                  {/* Algorithms & Tech tags */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 12 }}>
-                    {page.algorithms.map((algo, i) => (
-                      <span
-                        key={i}
-                        style={{
-                          fontSize: '0.72rem',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          padding: '2px 8px',
-                          borderRadius: 4,
-                          color: '#e2e8f0'
-                        }}
-                      >
-                        {algo}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Metadata Row */}
-                  <div style={{
-                    background: 'rgba(7, 11, 20, 0.6)',
-                    borderRadius: 8,
-                    padding: '10px 12px',
-                    fontSize: '0.78rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 5
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-tertiary)' }}>Data Provenance:</span>
-                      <span style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 5,
-                        fontWeight: 600,
-                        color: page.dataModeType === 'live' ? '#10b981' : page.dataModeType === 'cached' ? 'var(--cyan-primary)' : 'var(--amber-flow)'
-                      }}>
-                        {page.dataModeType === 'live' && (
-                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
-                        )}
-                        {page.dataModeType === 'cached' && <Clock size={11} />}
-                        {page.dataModeType === 'demo' && <Cpu size={11} />}
-                        {page.dataMode}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-tertiary)' }}>Data Source:</span>
-                      <span style={{ color: 'var(--text-secondary)', textAlign: 'right', maxWidth: '65%', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                        {page.dataSource}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-tertiary)' }}>Benchmark:</span>
-                      <span style={{ color: 'var(--amber-flow)', fontWeight: 600 }}>{page.highlightMetric}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer Action */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 10, borderTop: '1px solid var(--border-subtle)' }}>
-                  <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)' }}>
-                    For: {page.audience.split('&')[0]}
-                  </span>
-                  <Link
-                    to={page.path}
-                    className="btn btn-primary btn-sm"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 5,
-                      fontSize: '0.8rem',
-                      padding: '5px 14px'
-                    }}
-                  >
-                    <span>Launch Page</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {filteredPages.length === 0 && (
-          <div style={{
-            textAlign: 'center',
-            padding: 48,
-            background: 'rgba(13, 20, 36, 0.4)',
-            borderRadius: 12,
-            border: '1px dashed var(--border-subtle)'
-          }}>
-            <p style={{ color: 'var(--text-secondary)', margin: '0 0 12px 0' }}>No pages match your current filter and search query.</p>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={() => { setSelectedCategory('All'); setSelectedDataMode('All'); setSearchQuery(''); setActivePersona('all'); }}
-            >
-              Reset All Filters
-            </button>
-          </div>
-        )}
-      </section>
-
-      {/* SECTION 4: FULL TECH STACK & ARCHITECTURE MATRIX */}
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Code2 size={22} style={{ color: 'var(--cyan-primary)' }} />
-          <h2 style={{ margin: 0, fontSize: '1.5rem' }}>Complete Technology Stack &amp; Algorithms</h2>
-        </div>
-
+        {/* Modules Grid */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: 18
+          gap: 14
         }}>
-          {/* Layer 1 */}
-          <div className="card" style={{ padding: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, color: 'var(--cyan-primary)' }}>
-              <Layers size={18} />
-              <h4 style={{ margin: 0, fontSize: '1.02rem' }}>Frontend &amp; UI Architecture</h4>
-            </div>
-            <ul style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 18, margin: 0 }}>
-              <li><strong>React 18 + Vite SPA</strong>: High-performance client routing with instant sub-millisecond page transitions.</li>
-              <li><strong>TypeScript &amp; React 18</strong>: Strongly typed data contracts across all telemetry models.</li>
-              <li><strong>Vanilla CSS Design Tokens</strong>: Pure CSS tokens, zero heavy framework lag, dark obsidian theme.</li>
-              <li><strong>Recharts &amp; HTML5 Canvas</strong>: Sub-cycle responsive vector charts and high-fps radar animations.</li>
-              <li><strong>Lucide React</strong>: Unified iconography system across all pages.</li>
-            </ul>
-          </div>
+          {filteredModules.map((mod) => {
+            const Icon = mod.icon;
+            return (
+              <Link
+                key={mod.id}
+                to={mod.path}
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 14,
+                  padding: '16px 18px',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  gap: 10,
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)',
+                  transition: 'all 0.2s ease'
+                }}
+                className="synaptix-module-item"
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ width: 30, height: 30, borderRadius: 8, background: `${mod.color}15`, color: mod.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Icon size={16} />
+                      </div>
+                      <strong style={{ fontSize: '0.98rem', color: 'var(--text-primary)' }}>{mod.title}</strong>
+                    </div>
+                    <span 
+                      className={`badge ${mod.dataProvenance === 'Live API' ? 'badge-live' : mod.dataProvenance === 'Physics Sim' ? 'badge-sim' : 'badge-forecast'}`}
+                      style={{ fontSize: '0.68rem', padding: '2px 8px' }}
+                    >
+                      {mod.dataProvenance}
+                    </span>
+                  </div>
 
-          {/* Layer 2 */}
-          <div className="card" style={{ padding: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, color: 'var(--amber-flow)' }}>
-              <Cpu size={18} />
-              <h4 style={{ margin: 0, fontSize: '1.02rem' }}>AI &amp; Forecasting Engines</h4>
-            </div>
-            <ul style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 18, margin: 0 }}>
-              <li><strong>LightGBM Regressor v2.4</strong>: Multi-horizon solar/wind prediction with 95% quantile loss CI.</li>
-              <li><strong>XGBoost Temporal v3.1</strong>: 24-hour demand forecasting with weather and day-type features.</li>
-              <li><strong>TreeSHAP Attribution</strong>: Exact feature attribution waterfall (GHI, temp, wind, time).</li>
-              <li><strong>Farneback Optical Flow</strong>: Dense canvas vector tracking for cloud shadow trajectories.</li>
-              <li><strong>Causal Do-Calculus DAG</strong>: Pearlian causal graph [P(Y|do(X))] for automated self-healing.</li>
-            </ul>
-          </div>
+                  <p style={{ margin: '0 0 8px 0', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                    {mod.summary}
+                  </p>
+                </div>
 
-          {/* Layer 3 */}
-          <div className="card" style={{ padding: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, color: 'var(--green-renew)' }}>
-              <Scale size={18} />
-              <h4 style={{ margin: 0, fontSize: '1.02rem' }}>Optimization &amp; Markets</h4>
-            </div>
-            <ul style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 18, margin: 0 }}>
-              <li><strong>MILP PuLP Solver</strong>: Mixed-Integer Linear Programming for multi-asset flexibility dispatch.</li>
-              <li><strong>Appendix A3 BESS ODE</strong>: Electrochemical state-space simulation with thermal and C-rate safety.</li>
-              <li><strong>Continuous Double Auction</strong>: Microgrid P2P energy matching with dynamic local pricing.</li>
-              <li><strong>CERC DSM Matrix</strong>: Commercial frequency deviation penalty ledger conforming to 2024 regulations.</li>
-              <li><strong>DC Power Flow</strong>: Topological transmission line loading and N-1 contingency routing.</li>
-            </ul>
-          </div>
-
-          {/* Layer 4 */}
-          <div className="card" style={{ padding: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, color: '#a855f7' }}>
-              <Lock size={18} />
-              <h4 style={{ margin: 0, fontSize: '1.02rem' }}>Data, Security &amp; Speech</h4>
-            </div>
-            <ul style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 18, margin: 0 }}>
-              <li><strong>Web Speech API</strong>: Native browser speech recognition and synthesis for English and Hindi.</li>
-              <li><strong>Client-Side Mock Auth</strong>: LocalStorage JWT simulation with 4 preset operator roles.</li>
-              <li><strong>Open-Meteo REST API</strong>: High-resolution global atmospheric telemetry feed.</li>
-              <li><strong>Grid-India (NLDC) PSP</strong>: Real Indian power profile benchmark scaled to 64.8 MW feeder.</li>
-              <li><strong>Ref. IEEE 1547.4 &amp; ISO 50001</strong>: Microgrid islanding and energy management reference guidelines.</li>
-            </ul>
-          </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingTop: 8,
+                  borderTop: '1px solid #f1f5f9',
+                  fontSize: '0.74rem'
+                }}>
+                  <span style={{ fontWeight: 600, color: mod.color }}>
+                    {mod.metric}
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 2, color: 'var(--text-tertiary)' }}>
+                    Open <ArrowRight size={12} />
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
-      </section>
+      </div>
 
-      {/* CTA Footer */}
+      {/* ── Data Provenance & Integrity Statement (Concise) ── */}
       <div style={{
-        textAlign: 'center',
-        padding: '36px 20px',
-        background: 'linear-gradient(180deg, rgba(13, 20, 36, 0.4) 0%, rgba(20, 31, 54, 0.8) 100%)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-medium)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: 16
       }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem' }}>Ready to Experience GridFlex AI?</h3>
-        <p style={{ margin: 0, maxWidth: 640, color: 'var(--text-secondary)', fontSize: '0.94rem' }}>
-          Start with the Live Command Center or launch the interactive Judge Evaluation Tour with 1-click test automation.
-        </p>
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 }}>
-          <Link to="/command-center" className="btn btn-primary" style={{ padding: '12px 24px' }}>
-            <Zap size={18} />
-            <span>Launch Command Center</span>
+        <div className="synaptix-card" style={{ borderLeft: '4px solid #059669' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#059669' }} />
+            <strong style={{ color: '#059669', fontSize: '0.95rem' }}>Live REST APIs</strong>
+          </div>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
+            Dynamic real-time telemetry from Open-Meteo High-Resolution NWP and NASA POWER atmospheric APIs, with sub-150ms SCADA dispatch cycle.
+          </p>
+        </div>
+
+        <div className="synaptix-card" style={{ borderLeft: '4px solid #0284c7' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <strong style={{ color: '#0284c7', fontSize: '0.95rem' }}>Cached National Data</strong>
+          </div>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
+            Real Indian utility profiles (Grid-India NLDC Daily PSP 64.8 MW, Vidyut PRAVAH IEX DAM ₹6.80/kWh benchmark, CEA v19 CO₂ baseline).
+          </p>
+        </div>
+
+        <div className="synaptix-card" style={{ borderLeft: '4px solid #d97706' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <strong style={{ color: '#d97706', fontSize: '0.95rem' }}>Physics Twin Simulation</strong>
+          </div>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.45 }}>
+            State-space mathematical models and PuLP MILP solver simulating 40 MWh community BESS, fault contingency injections, and prosumer P2P double auctions.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Footer CTA ── */}
+      <div style={{
+        background: 'linear-gradient(135deg, #f8fafc 0%, #ede9fe 100%)',
+        border: '1px solid #ddd6fe',
+        borderRadius: 16,
+        padding: '24px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: 16
+      }}>
+        <div>
+          <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', color: 'var(--text-primary)' }}>
+            {language === 'hi' ? 'लाइव ग्रिड संचालन का अन्वेषण करें' : 'Ready to inspect the live energy grid?'}
+          </h3>
+          <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+            {language === 'hi' 
+              ? 'कमांड सेंटर पर जाएं या डिजिटल ट्विन में कस्टम परिदृश्य चलाएं।' 
+              : 'Switch to the Command Center for real-time dispatch or run custom what-if scenarios in the Digital Twin.'}
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <Link to="/command-center" className="btn btn-primary" style={{ padding: '10px 22px' }}>
+            <Zap size={16} />
+            <span>Open Command Center</span>
           </Link>
-          <Link to="/judge-mode" className="btn btn-amber" style={{ padding: '12px 24px' }}>
-            <Award size={18} />
-            <span>Take Judge Evaluation Tour</span>
-          </Link>
-          <Link to="/" className="btn btn-secondary" style={{ padding: '12px 24px' }}>
-            <span>Back to Home Overview</span>
+          <Link to="/digital-twin" className="btn btn-secondary" style={{ padding: '10px 20px' }}>
+            <span>Explore Digital Twin</span>
           </Link>
         </div>
       </div>

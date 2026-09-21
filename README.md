@@ -1,8 +1,8 @@
 # GridFlex AI — Smart Energy Management & Local Grid Resilience Platform
 > **Yuva Yodha — Challenge 3: Renewable Energy Integration & Local Grid Resilience**  
 > *Target DISCOM Archetype*: **BESCOM** (Bangalore Electricity Supply Company Ltd) — Mahadevapura 33/11kV Distribution Substation
-
-🌐 **Live Web Application**: [https://frontend-xi-khaki-78.vercel.app](https://frontend-xi-khaki-78.vercel.app)  
+🌐 **Live Web Application (Project Link)**: [https://gridflexai.vercel.app](https://gridflexai.vercel.app)  
+🔗 **Alternative Mirrors**: [https://gridflex-ai-portal.vercel.app](https://gridflex-ai-portal.vercel.app) | [https://frontend-xi-khaki-78.vercel.app](https://frontend-xi-khaki-78.vercel.app)  
 📜 **License**: [MIT License](file:///LICENSE)
 
 ---

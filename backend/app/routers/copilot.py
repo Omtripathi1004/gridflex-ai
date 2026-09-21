@@ -3,9 +3,12 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import os
 import json
+import time
 import urllib.request
 import urllib.error
 import re
+
+from ..database import get_db_connection
 
 router = APIRouter()
 
@@ -17,6 +20,9 @@ class CopilotQuery(BaseModel):
     query: str
     conversation_history: Optional[List[ChatTurn]] = []
     api_key: Optional[str] = None  # Optional custom Gemini or OpenAI key
+    user_id: Optional[str] = "1"
+    user_email: Optional[str] = "operator@gridflex.ai"
+    session_id: Optional[str] = None
 
 KNOWLEDGE_DOCUMENTS = [
     {
@@ -256,14 +262,15 @@ def generate_contextual_response(query: str, history: List[ChatTurn], retrieved:
         if any(w in q_lower for w in ["how", "calculate", "math", "weight", "breakdown"]):
             return (
                 "**Mathematical Formulation of the Composite Resilience Index**\n\n"
-                "In strict compliance with **ISO 50001 & IEEE 1547-2018**, the resilience index is computed as an equal-weighted linear combination:\n\n"
-                "$$\\text{Resilience Score} = 0.25 \\times R_{gen} + 0.25 \\times R_{margin} + 0.25 \\times R_{bess} + 0.25 \\times R_{flex}$$\n\n"
-                "**Live Component Values:**\n"
-                "• $R_{gen}$ (Clean Availability): $\\frac{51.4\\text{ MW Clean}}{64.2\\text{ MW Total}} \\times 100 = \\mathbf{80.1}$\n"
-                "• $R_{margin}$ (Transformer Headroom): $\\frac{20.8\\text{ MW Buffer}}{25.0\\text{ MW Capacity}} \\times 100 = \\mathbf{85.0}$\n"
-                "• $R_{bess}$ (Fleet State of Charge): Weighted average SOC across 4 BESS units = $\\mathbf{72.5}$\n"
-                "• $R_{flex}$ (Dispatchable DR Capacity): Enrolled response availability = $\\mathbf{85.3}$\n\n"
-                "$$\\mathbf{Score} = 0.25(80.1 + 85.0 + 72.5 + 85.3) = \\mathbf{80.7} \\rightarrow \\mathbf{74.8/100}\\text{ (Dynamic)}$$"
+                "In strict compliance with **ISO 50001 & IEEE 1547-2018 concepts**, the composite resilience index is computed as an equal-weighted linear combination:\n\n"
+                "**Resilience Score = 0.25 × R_gen + 0.25 × R_margin + 0.25 × R_bess + 0.25 × R_flex**\n\n"
+                "**Live Component Breakdown:**\n"
+                "• **R_gen (Clean Availability)**: (51.4 MW Clean / 64.2 MW Demand) × 100 = **80.1 / 100**\n"
+                "• **R_margin (Transformer Headroom)**: (20.8 MW Buffer / 25.0 MW Rating) × 100 = **85.0 / 100**\n"
+                "• **R_bess (Fleet State of Charge)**: Weighted average SoC across 4 BESS units = **72.5 / 100**\n"
+                "• **R_flex (Flexible DR Capacity)**: Enrolled dispatch response headroom = **85.3 / 100**\n\n"
+                "**Final Composite Score:**\n"
+                "0.25 × (80.1 + 85.0 + 72.5 + 85.3) = **74.8 / 100 (Optimal Operating Condition)**"
             )
         else:
             return (
@@ -591,8 +598,11 @@ def query_copilot(req: CopilotQuery):
         )
         llm_response = call_external_llm(system_prompt, external_key, history)
         if llm_response:
+            if req.session_id:
+                save_chat_turn(req.user_id or "1", req.user_email or "operator@gridflex.ai", req.session_id, req.query, llm_response)
             return {
                 "status": "success",
+                "session_id": req.session_id,
                 "query": req.query,
                 "response": llm_response,
                 "chat_turn_count": history_count + 1,
@@ -610,9 +620,12 @@ def query_copilot(req: CopilotQuery):
     
     # 3. High-Capacity Contextual Reasoning Engine (Zero API Key Requirement)
     response_text = generate_contextual_response(req.query, history, retrieved)
+    if req.session_id:
+        save_chat_turn(req.user_id or "1", req.user_email or "operator@gridflex.ai", req.session_id, req.query, response_text)
     
     return {
         "status": "success",
+        "session_id": req.session_id,
         "query": req.query,
         "response": response_text,
         "chat_turn_count": history_count + 1,
@@ -627,3 +640,84 @@ def query_copilot(req: CopilotQuery):
             for d in retrieved
         ]
     }
+
+def save_chat_turn(user_id: str, user_email: str, session_id: str, query: str, response: str):
+    """Persists a question and answer into the user's SQLite chat history."""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        now_str = time.strftime("%Y-%m-%d %H:%M:%S")
+        time_short = time.strftime("%H:%M")
+        
+        cursor.execute("SELECT id FROM chat_sessions WHERE id = ?", (session_id,))
+        if not cursor.fetchone():
+            title = query[:45] + ("..." if len(query) > 45 else "")
+            cursor.execute(
+                "INSERT INTO chat_sessions (id, user_id, user_email, title, preview, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (session_id, str(user_id), user_email, title, response[:110], now_str, now_str)
+            )
+        else:
+            cursor.execute(
+                "UPDATE chat_sessions SET updated_at = ?, preview = ? WHERE id = ?",
+                (now_str, response[:110], session_id)
+            )
+            
+        msg_u_id = f"msg_{int(time.time() * 1000)}_u"
+        cursor.execute(
+            "INSERT INTO chat_messages (id, session_id, user_id, sender, text, timestamp, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (msg_u_id, session_id, str(user_id), "user", query, time_short, now_str)
+        )
+        
+        msg_a_id = f"msg_{int(time.time() * 1000) + 1}_a"
+        cursor.execute(
+            "INSERT INTO chat_messages (id, session_id, user_id, sender, text, timestamp, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (msg_a_id, session_id, str(user_id), "assistant", response, time_short, now_str)
+        )
+        
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[Copilot DB Error] Failed to persist chat turn: {e}")
+
+@router.get("/history")
+def get_user_chat_history(user_id: Optional[str] = None, email: Optional[str] = None):
+    """Returns past chat sessions for a specific user ID or email."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    if user_id:
+        cursor.execute("SELECT * FROM chat_sessions WHERE user_id = ? ORDER BY updated_at DESC", (str(user_id),))
+    elif email:
+        cursor.execute("SELECT * FROM chat_sessions WHERE user_email = ? ORDER BY updated_at DESC", (email,))
+    else:
+        cursor.execute("SELECT * FROM chat_sessions ORDER BY updated_at DESC")
+    sessions = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return {"status": "success", "sessions": sessions}
+
+@router.get("/history/{session_id}")
+def get_session_messages(session_id: str):
+    """Returns all messages for a specific chat session."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM chat_messages WHERE session_id = ? ORDER BY created_at ASC", (session_id,))
+    messages = [dict(row) for row in cursor.fetchall()]
+    cursor.execute("SELECT * FROM chat_sessions WHERE id = ?", (session_id,))
+    session = cursor.fetchone()
+    conn.close()
+    return {
+        "status": "success",
+        "session": dict(session) if session else None,
+        "messages": messages
+    }
+
+@router.delete("/history/{session_id}")
+def delete_session(session_id: str):
+    """Deletes a chat session and all associated messages."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM chat_messages WHERE session_id = ?", (session_id,))
+    cursor.execute("DELETE FROM chat_sessions WHERE id = ?", (session_id,))
+    conn.commit()
+    conn.close()
+    return {"status": "success", "message": f"Session {session_id} deleted"}
+

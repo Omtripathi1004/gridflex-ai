@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -175,27 +175,27 @@ export default function DemandForecastPage() {
         </div>
 
         <div className="grid-4">
-          <div className="card-crimson" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Home size={15} color="var(--red-risk)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--red-risk)' }}>{t('df.seg_residential')}</span></div>
-            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#fca5a5' }}>42%</div>
+          <div style={{ background: '#ffffff', border: '1px solid #fecaca', borderTop: '3px solid #dc2626', padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Home size={15} color="#dc2626" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'#dc2626' }}>{t('df.seg_residential')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#991b1b' }}>42%</div>
             <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_residential_meta')}</div>
           </div>
 
-          <div className="card-cyan" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Building size={15} color="var(--cyan-primary)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--cyan-primary)' }}>{t('df.seg_commercial')}</span></div>
-            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#a5f3fc' }}>26%</div>
+          <div style={{ background: '#ffffff', border: '1px solid #bae6fd', borderTop: '3px solid #0284c7', padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Building size={15} color="#0284c7" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'#0284c7' }}>{t('df.seg_commercial')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#0369a1' }}>26%</div>
             <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_commercial_meta')}</div>
           </div>
 
-          <div className="card-gold" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Factory size={15} color="var(--gold-accent)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--gold-accent)' }}>{t('df.seg_industrial')}</span></div>
-            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#fef08a' }}>20%</div>
+          <div style={{ background: '#ffffff', border: '1px solid #fde68a', borderTop: '3px solid #d97706', padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Factory size={15} color="#d97706" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'#d97706' }}>{t('df.seg_industrial')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#92400e' }}>20%</div>
             <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_industrial_meta')}</div>
           </div>
 
-          <div className="card-emerald" style={{ padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Car size={15} color="var(--green-renew)" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'var(--green-renew)' }}>{t('df.seg_ev')}</span></div>
-            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#6ee7b7' }}>12%</div>
+          <div style={{ background: '#ffffff', border: '1px solid #a7f3d0', borderTop: '3px solid #059669', padding: '16px 18px', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:6 }}><Car size={15} color="#059669" /><span style={{ fontSize:'0.72rem',fontWeight:700,textTransform:'uppercase',color:'#059669' }}>{t('df.seg_ev')}</span></div>
+            <div style={{ fontSize:'1.8rem',fontWeight:800,color:'#047857' }}>12%</div>
             <div style={{ fontSize:'0.74rem',color:'var(--text-secondary)',marginTop:3 }}>{t('df.segment_ev_meta')}</div>
           </div>
         </div>

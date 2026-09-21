@@ -329,7 +329,7 @@ export default function IncidentCopilotPage() {
               <AlertTriangle size={12} />
               Emergency Incident Desk
             </span>
-            <span className="badge badge-live">15 Indian Locales Voice AI</span>
+            <span className="badge badge-live">Bilingual Voice AI (EN &amp; HI)</span>
             <span className="badge badge-sim">Sub-150ms Telemetry Interlock</span>
           </div>
           <h1 style={{ fontSize: '2.1rem', fontWeight: 800, margin: '4px 0 6px 0' }}>

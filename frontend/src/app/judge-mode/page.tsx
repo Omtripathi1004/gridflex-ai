@@ -106,7 +106,7 @@ export default function JudgeModePage() {
       module_icon: MessageSquare,
       badge_color: "var(--blue-bright)",
       card_class: "card-cyan",
-      details: "Natural language voice assistant supporting 15 Indian regional languages (Hindi, Tamil, Telugu, Bengali, Marathi, etc.). Generates immutable SQLite audit records and CEA regulatory compliance documentation instantly.",
+      details: "Natural language voice assistant supporting bilingual English and Hindi. Generates immutable SQLite audit records and CEA regulatory compliance documentation instantly.",
       telemetry_snippet: { supported_languages: "EN + Hindi", voice_stt_accuracy: "Prototype", dispatch_protocol: "Ref. IEEE 1547 / CEA concepts", audit_trail: "SQLite Immutable" }
     },
     {
@@ -202,8 +202,8 @@ export default function JudgeModePage() {
                 key={st.step_number}
                 onClick={() => { setActiveStep(st.step_number); setIsPlayingAutoTour(false); }}
                 style={{
-                  background: isCurrent ? 'rgba(0, 240, 255, 0.18)' : (isCompleted ? 'rgba(16, 185, 129, 0.12)' : 'rgba(255, 255, 255, 0.03)'),
-                  border: isCurrent ? '1.5px solid var(--cyan-primary)' : (isCompleted ? '1px solid var(--green-renew)' : '1px solid var(--border-subtle)'),
+                  background: isCurrent ? 'rgba(79, 70, 229, 0.1)' : (isCompleted ? 'rgba(5, 150, 105, 0.08)' : '#f8fafc'),
+                  border: isCurrent ? '1.5px solid var(--brand)' : (isCompleted ? '1px solid #059669' : '1px solid var(--border-subtle)'),
                   borderRadius: 'var(--radius-md)',
                   padding: '10px 8px',
                   cursor: 'pointer',
@@ -219,8 +219,8 @@ export default function JudgeModePage() {
                   width: 22,
                   height: 22,
                   borderRadius: '50%',
-                  background: isCurrent ? 'var(--cyan-primary)' : (isCompleted ? 'var(--green-renew)' : 'rgba(255, 255, 255, 0.1)'),
-                  color: isCurrent || isCompleted ? '#070b14' : 'var(--text-tertiary)',
+                  background: isCurrent ? 'var(--brand)' : (isCompleted ? '#059669' : '#e2e8f0'),
+                  color: isCurrent || isCompleted ? '#ffffff' : 'var(--text-secondary)',
                   fontSize: '0.72rem',
                   fontWeight: 700,
                   display: 'flex',
@@ -232,7 +232,7 @@ export default function JudgeModePage() {
                 <span style={{
                   fontSize: '0.74rem',
                   fontWeight: isCurrent ? 700 : 500,
-                  color: isCurrent ? 'var(--cyan-primary)' : (isCompleted ? 'var(--green-renew)' : 'var(--text-secondary)'),
+                  color: isCurrent ? 'var(--brand)' : (isCompleted ? '#059669' : 'var(--text-secondary)'),
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -250,7 +250,8 @@ export default function JudgeModePage() {
       <div className={currentStep.card_class} style={{
         padding: '32px 36px',
         borderRadius: 'var(--radius-lg)',
-        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)'
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
+        background: '#ffffff'
       }}>
         {/* Step Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
@@ -278,13 +279,13 @@ export default function JudgeModePage() {
           {currentStep.headline}
         </h2>
 
-        <p style={{ fontSize: '1.05rem', color: '#e2e8f0', lineHeight: 1.6, maxWidth: 960, marginBottom: 26 }}>
+        <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 960, marginBottom: 26 }}>
           {currentStep.details}
         </p>
 
         {/* Telemetry & Optimization Signals Box */}
         <div style={{
-          background: 'rgba(7, 11, 20, 0.85)',
+          background: '#f8fafc',
           border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius-md)',
           padding: '18px 22px',
@@ -296,7 +297,7 @@ export default function JudgeModePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
             {Object.entries(currentStep.telemetry_snippet).map(([key, val]: [string, any]) => (
               <div key={key}>
-                <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', textTransform: 'capitalize' }}>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', textTransform: 'capitalize', fontWeight: 500 }}>
                   {key.replace(/_/g, ' ')}
                 </span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: 2 }}>

@@ -23,7 +23,7 @@ interface DataTrustCenterModalProps {
 
 export const DataTrustCenterModal: React.FC<DataTrustCenterModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'provenance' | 'citations' | 'export'>('provenance');
-  const [dataMode, setDataMode] = useState<'live' | 'cached' | 'seeded'>('cached');
+  const [dataMode, setDataMode] = useState<'live' | 'cached'>('cached');
 
   if (!isOpen) return null;
 
@@ -154,7 +154,7 @@ export const DataTrustCenterModal: React.FC<DataTrustCenterModalProps> = ({ isOp
             <span style={{ fontSize: '0.82rem', fontWeight: 600 }}>Active Ingestion Pipeline:</span>
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
-            {(['live', 'cached', 'seeded'] as const).map(mode => (
+            {(['live', 'cached'] as const).map(mode => (
               <button
                 key={mode}
                 onClick={() => setDataMode(mode)}

@@ -29,12 +29,14 @@ import {
   Sparkles,
   ExternalLink
 } from 'lucide-react';
+import { ArchitectureProvenanceModal } from '../../components/ArchitectureProvenanceModal';
 
 export default function JudgeModePage() {
   const { t } = useLanguage();
   const [activeStep, setActiveStep] = useState<number>(1);
   const [isPlayingAutoTour, setIsPlayingAutoTour] = useState<boolean>(false);
   const [actionDispatched, setActionDispatched] = useState<boolean>(false);
+  const [showArchitectureModal, setShowArchitectureModal] = useState<boolean>(false);
 
   const steps = [
     {
@@ -120,6 +122,18 @@ export default function JudgeModePage() {
       card_class: "card-emerald",
       details: "Complete elimination of evening shortage. Shortage hours cut from 4.0h to 0. Feeder loading safely capped at 78.4%. ₹15.25 lakh in emergency gas peaker costs avoided and 14.2 metric tons of carbon emissions prevented.",
       telemetry_snippet: { blackout_hours: "0.0 Hours", cost_saved: "₹15.25 Lakh INR", co2_avoided: "14.2 Metric Tons", rubric_score: "10/10 Verification" }
+    },
+    {
+      step_number: 8,
+      title: "Architecture & Provenance",
+      headline: "Transparent Technical Disclosure: AI Methods, Data Lineage & Guardrails",
+      module_name: "Architecture & Provenance",
+      module_link: "/architecture",
+      module_icon: Layers,
+      badge_color: "var(--cyan-primary)",
+      card_class: "card-cyan",
+      details: "Full architectural disclosure aligned with CERC regulations and IEEE 1547. Inspect data lineage from NLDC & Vidyut PRAVAH, hybrid LightGBM + PyTorch LSTM models, and strict advisory-first SCADA safety interlocks.",
+      telemetry_snippet: { front_end: "Vanilla High-Density HUD CSS", telemetry_interlock: "<150ms Telemetry", xai_attribution: "TreeSHAP Waterfall (100% Additive)", operational_ethics: "Human-in-the-Loop Trip Interlock" }
     }
   ];
 
@@ -167,6 +181,22 @@ export default function JudgeModePage() {
 
         {/* Tour Controls */}
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <button 
+            onClick={() => setShowArchitectureModal(true)}
+            className="btn btn-secondary btn-sm"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              borderColor: 'rgba(0, 240, 255, 0.5)',
+              color: 'var(--cyan-primary)',
+              background: 'rgba(0, 240, 255, 0.08)'
+            }}
+          >
+            <Layers size={14} />
+            <span>System Architecture &amp; Provenance</span>
+          </button>
+
           <button 
             onClick={() => setIsPlayingAutoTour(!isPlayingAutoTour)}
             className={`btn btn-sm ${isPlayingAutoTour ? 'btn-amber' : 'btn-primary'}`}
@@ -332,6 +362,22 @@ export default function JudgeModePage() {
           </div>
 
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setShowArchitectureModal(true)}
+              className="btn btn-primary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                background: 'linear-gradient(135deg, #4f46e5 0%, #00f0ff 100%)',
+                color: '#ffffff',
+                border: 'none',
+                fontWeight: 600
+              }}
+            >
+              <Layers size={15} />
+              <span>Inspect System Architecture</span>
+            </button>
             <Link to="/command-center" className="btn btn-secondary">
               Open Command Center
             </Link>
@@ -341,6 +387,12 @@ export default function JudgeModePage() {
           </div>
         </div>
       </div>
+
+      {/* Full Architecture & Provenance Modal matching prompt specification */}
+      <ArchitectureProvenanceModal 
+        isOpen={showArchitectureModal} 
+        onClose={() => setShowArchitectureModal(false)} 
+      />
     </div>
   );
 }

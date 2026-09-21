@@ -92,49 +92,144 @@ export default function DigitalTwinPage() {
     setWeather('NORMAL');
   };
 
-  // Base Summary calculations
-  const baseDeficit = Number((18.2 * demandMult - (solarMult * 8.0 + windMult * 4.0)).toFixed(1));
-  const peakDeficit = Math.max(0, baseDeficit);
+  // Unified 24-hour simulation calculation (guarantees identical results online, offline, mobile, laptop)
+  const clientSim = React.useMemo(() => {
+    let weatherDemandFactor = 1.0;
+    let weatherSolarFactor = 1.0;
+    let weatherWindFactor = 1.0;
 
-  const summary = simResult?.summary || {
-    total_daily_generation_mwh: Number((1240.5 * (solarMult * 0.7 + windMult * 0.3)).toFixed(1)),
-    total_daily_demand_mwh: Number((1350.2 * demandMult).toFixed(1)),
-    net_daily_balance_mwh: Number((1240.5 * (solarMult * 0.7 + windMult * 0.3) - 1350.2 * demandMult).toFixed(1)),
-    peak_deficit_mw: peakDeficit,
-    shortage_hours_unmitigated: 4,
-    shortage_hours_mitigated: peakDeficit > 22 ? 1 : 0,
-    risk_classification: peakDeficit > 20 ? (language === 'hi' ? 'उच्च घाटा जोखिम' : 'Elevated deficit risk') : (language === 'hi' ? 'स्थिर परिचालन' : 'Stable operating envelope'),
-    composite_resilience_score: Math.max(45, Math.min(98, Math.round(80.7 - (demandMult - 1.0) * 20 + (solarMult - 1.0) * 10 - (100 - batteryPct) * 0.15))),
-    recommended_operational_action: language === 'hi'
-      ? `शाम के समय बैटरी से ${(batteryPct * 0.1).toFixed(1)} MW बिजली की आपूर्ति करें और सौर उत्पादन चरम पर होने के दौरान ${(flexPct * 0.045).toFixed(1)} MW व्यावसायिक एसी लोड को स्थानांतरित करें।`
-      : `Schedule BESS evening discharge of ${(batteryPct * 0.1).toFixed(1)} MW and shift ${(flexPct * 0.045).toFixed(1)} MW of commercial cooling load to the midday solar peak.`
-  };
+    if (weather === 'HEATWAVE') {
+      weatherDemandFactor = 1.25;
+      weatherSolarFactor = 1.05;
+    } else if (weather === 'STORM_FRONT') {
+      weatherDemandFactor = 1.05;
+      weatherSolarFactor = 0.25;
+      weatherWindFactor = 1.35;
+    }
 
-  const shortageHoursEliminated = Math.max(0, summary.shortage_hours_unmitigated - summary.shortage_hours_mitigated);
+    let totalGen = 0.0;
+    let totalDem = 0.0;
+    let maxDeficit = 0.0;
+    let shortageHoursUnmit = 0;
+    let shortageHoursMit = 0;
 
-  // 24-hour simulation curve
-  const curve = Array.from({ length: 24 }, (_, h) => {
-    const solar = (h >= 6 && h <= 18) ? Math.sin(Math.PI * (h - 6) / 12) * 52.0 * solarMult : 0;
-    const wind = (16.0 + 5.0 * Math.cos(h / 3.8)) * windMult;
-    const demand = (45.0 + 18.0 * Math.exp(-Math.pow(h - 10, 2) / 6) + 26.0 * Math.exp(-Math.pow(h - 20, 2) / 8)) * demandMult;
-    const unmitigatedBalance = Number((solar + wind - demand).toFixed(2));
-    
-    const bessDischarge = (h >= 18 && h <= 21) ? Math.min(demand - solar - wind, 6.5 * (batteryPct / 100)) : 0;
-    const loadShift = (h >= 18 && h <= 21) ? 3.5 * (flexPct / 100) : ((h >= 11 && h <= 14) ? -3.5 * (flexPct / 100) : 0);
-    const mitigatedBalance = Number((solar + wind + bessDischarge - (demand - loadShift)).toFixed(2));
+    const curveData = Array.from({ length: 24 }, (_, h) => {
+      const baseSolar = (h >= 6 && h <= 18) ? Math.max(0, Math.sin(Math.PI * (h - 6) / 12)) * 48.0 : 0.0;
+      const baseWind = 18.0 + 4.5 * Math.cos(h / 3.2);
 
-    const sigma = 2.5 + Math.abs(solar * 0.12);
-    const p10 = Number((mitigatedBalance - 1.645 * sigma).toFixed(2));
-    const p90 = Number((mitigatedBalance + 1.645 * sigma).toFixed(2));
+      const simSolar = baseSolar * solarMult * weatherSolarFactor;
+      const simWind = baseWind * windMult * weatherWindFactor;
+      const simGen = simSolar + simWind;
+
+      const baseDemand = (46.0 + 16.0 * Math.exp(-Math.pow(h - 10, 2) / 6) + 26.0 * Math.exp(-Math.pow(h - 20, 2) / 8));
+      const simDemand = baseDemand * demandMult * weatherDemandFactor;
+
+      const netBalance = simGen - simDemand;
+      totalGen += simGen;
+      totalDem += simDemand;
+
+      const bessDischarge = (h >= 17 && h <= 22) ? Math.min(Math.max(0, -netBalance), 9.5 * (batteryPct / 100)) : 0;
+      const loadShift = (h >= 18 && h <= 21) ? 4.5 * (flexPct / 100) : ((h >= 11 && h <= 14) ? -3.0 * (flexPct / 100) : 0);
+      const mitigatedBalance = simGen + bessDischarge - (simDemand - loadShift);
+
+      if (netBalance < 0) {
+        shortageHoursUnmit += 1;
+        if (Math.abs(netBalance) > maxDeficit) {
+          maxDeficit = Math.abs(netBalance);
+        }
+      }
+      if (mitigatedBalance < 0) {
+        shortageHoursMit += 1;
+      }
+
+      const sigma = 2.5 + Math.abs(simSolar * 0.12);
+      return {
+        hour: `${h.toString().padStart(2, '0')}:00`,
+        unmitigated_balance: Number(netBalance.toFixed(2)),
+        mitigated_balance: Number(mitigatedBalance.toFixed(2)),
+        p10_lower: Number((mitigatedBalance - 1.645 * sigma).toFixed(2)),
+        p90_upper: Number((mitigatedBalance + 1.645 * sigma).toFixed(2))
+      };
+    });
+
+    const hoursEliminated = Math.max(0, shortageHoursUnmit - shortageHoursMit);
+
+    const renewableAvail = Math.min(100.0, (totalGen / Math.max(1.0, totalDem)) * 100.0);
+    const demandStress = Math.max(0.0, 100.0 - (maxDeficit / 30.0 * 100.0));
+    const storageReadiness = batteryPct;
+    const flexReadiness = flexPct;
+
+    const compositeResilience = Number((
+      (renewableAvail * 0.25) +
+      (demandStress * 0.25) +
+      (storageReadiness * 0.25) +
+      (flexReadiness * 0.25)
+    ).toFixed(1));
+
+    let riskLevel = 'Stable operating envelope';
+    let riskLevelHi = 'स्थिर परिचालन';
+    let recommendedAction = 'System balanced. Optimize storage arbitrage and maximize local P2P prosumer trading.';
+    let recommendedActionHi = 'प्रणाली संतुलित है। स्टोरेज आर्बिट्राज को अनुकूलित करें और स्थानीय P2P व्यापार को अधिकतम करें।';
+
+    if (maxDeficit > 22.0 || compositeResilience < 45.0) {
+      riskLevel = 'Critical Grid Stress';
+      riskLevelHi = 'गंभीर ग्रिड तनाव';
+      recommendedAction = 'Trigger Stage 3 Demand Response, dispatch 100% BESS emergency reserves, and prepare spinning thermal backup.';
+      recommendedActionHi = 'स्टेज 3 मांग प्रतिक्रिया शुरू करें, 100% BESS आपातकालीन भंडार भेजें, और बैकअप तैयार रखें।';
+    } else if (maxDeficit > 10.0 || compositeResilience < 70.0) {
+      riskLevel = 'Elevated deficit risk';
+      riskLevelHi = 'उच्च घाटा जोखिम';
+      recommendedAction = `Schedule evening BESS discharge of ${(batteryPct * 0.1).toFixed(1)} MW and shift ${(flexPct * 0.045).toFixed(1)} MW of commercial cooling load to the midday solar peak.`;
+      recommendedActionHi = `शाम को ${(batteryPct * 0.1).toFixed(1)} MW BESS डिस्चार्ज शेड्यूल करें और ${(flexPct * 0.045).toFixed(1)} MW भार को दोपहर में स्थानांतरित करें।`;
+    }
 
     return {
-      hour: `${h.toString().padStart(2, '0')}:00`,
-      unmitigated_balance: unmitigatedBalance,
-      mitigated_balance: mitigatedBalance,
-      p10_lower: p10,
-      p90_upper: p90
+      curveData,
+      summary: {
+        total_daily_generation_mwh: Number(totalGen.toFixed(1)),
+        total_daily_demand_mwh: Number(totalDem.toFixed(1)),
+        net_daily_balance_mwh: Number((totalGen - totalDem).toFixed(1)),
+        peak_deficit_mw: Number(maxDeficit.toFixed(2)),
+        shortage_hours_unmitigated: shortageHoursUnmit,
+        shortage_hours_mitigated: shortageHoursMit,
+        shortage_hours_eliminated: hoursEliminated,
+        risk_classification: riskLevel,
+        risk_classification_hi: riskLevelHi,
+        composite_resilience_score: compositeResilience,
+        recommended_operational_action: recommendedAction,
+        recommended_operational_action_hi: recommendedActionHi
+      }
     };
-  });
+  }, [solarMult, windMult, demandMult, batteryPct, flexPct, weather]);
+
+  // Merge simResult when backend responds, otherwise use client simulation
+  const summary = simResult?.summary ? {
+    ...clientSim.summary,
+    ...simResult.summary,
+    shortage_hours_eliminated: (
+      typeof simResult.summary.shortage_hours_eliminated === 'number' && !isNaN(simResult.summary.shortage_hours_eliminated)
+        ? simResult.summary.shortage_hours_eliminated
+        : (typeof simResult.summary.shortage_hours_unmitigated === 'number' && typeof simResult.summary.shortage_hours_mitigated === 'number'
+            ? Math.max(0, simResult.summary.shortage_hours_unmitigated - simResult.summary.shortage_hours_mitigated)
+            : clientSim.summary.shortage_hours_eliminated)
+    ),
+    risk_classification: language === 'hi'
+      ? (clientSim.summary.risk_classification_hi || simResult.summary.risk_classification)
+      : simResult.summary.risk_classification,
+    recommended_operational_action: language === 'hi'
+      ? (clientSim.summary.recommended_operational_action_hi || simResult.summary.recommended_operational_action)
+      : simResult.summary.recommended_operational_action
+  } : {
+    ...clientSim.summary,
+    risk_classification: language === 'hi' ? clientSim.summary.risk_classification_hi : clientSim.summary.risk_classification,
+    recommended_operational_action: language === 'hi' ? clientSim.summary.recommended_operational_action_hi : clientSim.summary.recommended_operational_action
+  };
+
+  const rawEliminated = Number(summary.shortage_hours_eliminated);
+  const shortageHoursEliminated = isNaN(rawEliminated) ? clientSim.summary.shortage_hours_eliminated : rawEliminated;
+
+  // 24-hour simulation curve from simulation
+  const curve = clientSim.curveData;
 
   return (
     <div style={{
@@ -562,7 +657,7 @@ export default function DigitalTwinPage() {
                 fontFamily: 'monospace',
                 color: '#10b981'
               }}>
-                {shortageHoursEliminated}{' '}
+                {isNaN(Number(shortageHoursEliminated)) ? 0 : shortageHoursEliminated}{' '}
                 <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
                   {language === 'hi' ? 'घंटे' : 'hours'}
                 </span>

@@ -320,28 +320,28 @@ export default function IncidentCopilotPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1080, margin: '0 auto', paddingBottom: 40 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1080, margin: '0 auto', paddingBottom: 60 }}>
       {/* Header Banner */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14 }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <span className="badge badge-risk-critical" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+            <span className="badge badge-risk-critical" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
               <AlertTriangle size={12} />
               Emergency Incident Desk
             </span>
-            <span className="badge badge-live">Bilingual Voice AI (EN &amp; HI)</span>
-            <span className="badge badge-sim">Sub-150ms Telemetry Interlock</span>
+            <span className="badge badge-live" style={{ whiteSpace: 'nowrap' }}>Bilingual Voice AI (EN &amp; HI)</span>
+            <span className="badge badge-sim" style={{ whiteSpace: 'nowrap' }}>Sub-150ms Telemetry Interlock</span>
           </div>
-          <h1 style={{ fontSize: '2.1rem', fontWeight: 800, margin: '4px 0 6px 0' }}>
+          <h1 style={{ fontSize: 'clamp(1.45rem, 4vw, 2.1rem)', fontWeight: 800, margin: '4px 0 6px 0', lineHeight: 1.25 }}>
             Voice Incident Co-pilot <span className="text-gradient-cyan">&amp; Fault Remediation</span>
           </h1>
-          <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--text-secondary)', maxWidth: 840 }}>
+          <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', maxWidth: 840, lineHeight: 1.5 }}>
             Real-time emergency assistant with automated fault isolation (FLISR), BESS ramp dispatch, and CERC DSM penalty avoidance. Click any scenario or use the microphone to speak.
           </p>
         </div>
 
         {/* Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           {/* Language Selector */}
           <div style={{ position: 'relative' }}>
             <button
@@ -364,7 +364,7 @@ export default function IncidentCopilotPage() {
                 padding: 8,
                 zIndex: 100,
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, 110px)',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
                 gap: 4,
                 boxShadow: '0 10px 30px rgba(0,0,0,0.6)'
               }}>
@@ -407,22 +407,22 @@ export default function IncidentCopilotPage() {
         background: 'rgba(13, 20, 36, 0.75)',
         border: '1px solid var(--border-medium)',
         borderRadius: 'var(--radius-lg)',
-        padding: '16px 18px',
+        padding: '14px 16px',
         display: 'flex',
         flexDirection: 'column',
         gap: 10
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--amber-flow)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--amber-flow)', display: 'flex', alignItems: 'center', gap: 6 }}>
             <AlertTriangle size={15} />
-            <span>12 Direct Incident Prompts (Click to Execute Remediations):</span>
+            <span>12 Direct Incident Prompts (Click to Execute):</span>
           </span>
           <span style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>Immediate Action Protocols</span>
         </div>
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
           gap: 8
         }}>
           {QUICK_INCIDENT_QUESTIONS.map((q, idx) => {
@@ -439,10 +439,13 @@ export default function IncidentCopilotPage() {
                   gap: 8,
                   textAlign: 'left',
                   fontSize: '0.76rem',
-                  padding: '8px 12px',
+                  padding: '10px 12px',
                   background: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid var(--border-subtle)',
-                  borderRadius: 8
+                  borderRadius: 8,
+                  wordBreak: 'break-word',
+                  minWidth: 0,
+                  width: '100%'
                 }}
               >
                 <Icon size={14} style={{ color: q.color, flexShrink: 0 }} />
@@ -567,14 +570,16 @@ export default function IncidentCopilotPage() {
       {/* Input / Voice Bar */}
       <form
         onSubmit={(e) => { e.preventDefault(); sendMessage(input); }}
-        style={{ display: 'flex', gap: 10 }}
+        style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%' }}
       >
         <button
           type="button"
           onClick={toggleVoice}
           className={`btn ${isListening ? 'btn-danger' : 'btn-secondary'}`}
           style={{
-            padding: '0 18px',
+            flexShrink: 0,
+            padding: '0 clamp(10px, 2.5vw, 16px)',
+            height: 48,
             display: 'flex',
             alignItems: 'center',
             gap: 6,
@@ -591,16 +596,18 @@ export default function IncidentCopilotPage() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={`Describe any grid fault or contingency in ${selectedLang.name}...`}
+          placeholder={`Describe grid fault in ${selectedLang.name}...`}
           disabled={isTyping}
           style={{
             flex: 1,
+            minWidth: 0,
+            height: 48,
             background: 'var(--bg-tertiary)',
             border: '1px solid var(--border-medium)',
             color: 'var(--text-primary)',
-            padding: '14px 18px',
+            padding: '0 14px',
             borderRadius: 'var(--radius-md)',
-            fontSize: '0.94rem',
+            fontSize: '0.92rem',
             outline: 'none'
           }}
         />
@@ -609,9 +616,17 @@ export default function IncidentCopilotPage() {
           type="submit"
           disabled={isTyping || !input.trim()}
           className="btn btn-primary"
-          style={{ padding: '0 24px', display: 'flex', alignItems: 'center', gap: 6 }}
+          style={{
+            flexShrink: 0,
+            padding: '0 clamp(14px, 3.5vw, 22px)',
+            height: 48,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            whiteSpace: 'nowrap'
+          }}
         >
-          <Send size={18} />
+          <Send size={16} />
           <span>Dispatch</span>
         </button>
       </form>

@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { ArchitectureProvenanceModal } from '../../components/ArchitectureProvenanceModal';
 import { 
   Layers, 
   Database, 
@@ -16,6 +17,7 @@ import {
 
 export default function ArchitecturePage() {
   const { t } = useLanguage();
+  const [showModal, setShowModal] = useState(false);
 
   const matrix = [
     {
@@ -71,14 +73,37 @@ export default function ArchitecturePage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
       {/* Header */}
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-          <h1>
-            <span className="text-gradient-cyan">{t('arch.title')}</span> &amp; <span className="text-gradient-gold">Data Integrity</span>
-          </h1>
-          <span className="badge badge-live">Ref. ISO 50001 &amp; IEEE 1547 Concepts</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4, flexWrap: 'wrap' }}>
+            <h1 style={{ margin: 0 }}>
+              <span className="text-gradient-cyan">{t('arch.title')}</span> &amp; <span className="text-gradient-gold">Data Integrity</span>
+            </h1>
+            <span className="badge badge-live">Ref. ISO 50001 &amp; IEEE 1547 Concepts</span>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', margin: 0 }}>{t('arch.subtitle')}</p>
         </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>{t('arch.subtitle')}</p>
+
+        <button
+          onClick={() => setShowModal(true)}
+          className="btn btn-primary"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            background: 'linear-gradient(135deg, #4f46e5 0%, #00f0ff 100%)',
+            color: '#ffffff',
+            border: 'none',
+            fontWeight: 700,
+            cursor: 'pointer',
+            padding: '10px 18px',
+            borderRadius: 8,
+            boxShadow: '0 4px 15px rgba(0, 240, 255, 0.25)'
+          }}
+        >
+          <Layers size={16} />
+          <span>Architecture &amp; Provenance Disclosure</span>
+        </button>
       </div>
 
       {/* End-to-End Pipeline Card */}
@@ -175,6 +200,11 @@ export default function ArchitecturePage() {
           </table>
         </div>
       </div>
+
+      <ArchitectureProvenanceModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   );
 }

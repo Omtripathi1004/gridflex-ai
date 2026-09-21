@@ -28,6 +28,7 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { parseMarkdown } from '../lib/markdown';
+import { useLocation } from 'react-router-dom';
 
 interface Message {
   id: string;
@@ -62,9 +63,15 @@ const QUICK_PROMPTS = [
 ];
 
 export const GlobalChatWidget: React.FC = () => {
+  const location = useLocation();
   const { t } = useLanguage();
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+
+  // If user is already on the dedicated incident copilot page, do not display the floating widget
+  if (location.pathname === '/incident-copilot') {
+    return null;
+  }
   const [isExpanded, setIsExpanded] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [input, setInput] = useState('');

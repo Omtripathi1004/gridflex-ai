@@ -37,7 +37,8 @@ def run_digital_twin_simulation(params: SimulationParams):
     total_generation = 0.0
     total_demand = 0.0
     max_deficit = 0.0
-    shortage_hours = 0
+    shortage_hours_unmitigated = 0
+    shortage_hours_mitigated = 0
     
     for h in hours:
         # Base generation
@@ -57,10 +58,18 @@ def run_digital_twin_simulation(params: SimulationParams):
         total_generation += sim_gen
         total_demand += sim_demand
         
+        # Mitigation dispatch (BESS discharge + DR load shifting)
+        bess_discharge = min(max(0.0, -net_balance), 9.5 * (params.battery_capacity_pct / 100.0)) if (17 <= h <= 22) else 0.0
+        load_shift = 4.5 * (params.flexible_load_pct / 100.0) if (18 <= h <= 21) else (-3.0 * (params.flexible_load_pct / 100.0) if (11 <= h <= 14) else 0.0)
+        mitigated_balance = sim_gen + bess_discharge - (sim_demand - load_shift)
+        
         if net_balance < 0:
-            shortage_hours += 1
+            shortage_hours_unmitigated += 1
             if abs(net_balance) > max_deficit:
                 max_deficit = abs(net_balance)
+                
+        if mitigated_balance < 0:
+            shortage_hours_mitigated += 1
                 
         profile.append({
             "hour": h,
@@ -70,9 +79,12 @@ def run_digital_twin_simulation(params: SimulationParams):
             "total_gen_mw": round(sim_gen, 2),
             "demand_mw": round(sim_demand, 2),
             "net_balance_mw": round(net_balance, 2),
+            "mitigated_balance_mw": round(mitigated_balance, 2),
             "is_deficit": net_balance < 0
         })
         
+    shortage_hours_eliminated = max(0, shortage_hours_unmitigated - shortage_hours_mitigated)
+    
     # Recalculate Risk & Resilience
     avg_gen = total_generation / 24.0
     avg_dem = total_demand / 24.0
@@ -108,7 +120,10 @@ def run_digital_twin_simulation(params: SimulationParams):
             "total_daily_demand_mwh": round(total_demand, 1),
             "net_daily_balance_mwh": round(total_generation - total_demand, 1),
             "peak_deficit_mw": round(max_deficit, 2),
-            "shortage_hours_count": shortage_hours,
+            "shortage_hours_count": shortage_hours_unmitigated,
+            "shortage_hours_unmitigated": shortage_hours_unmitigated,
+            "shortage_hours_mitigated": shortage_hours_mitigated,
+            "shortage_hours_eliminated": shortage_hours_eliminated,
             "risk_classification": risk_level,
             "composite_resilience_score": composite_resilience,
             "recommended_operational_action": recommended_action

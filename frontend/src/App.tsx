@@ -6,6 +6,7 @@ import { AuthGuard } from './components/AuthGuard';
 import { NavbarWrapper } from './components/NavbarWrapper';
 import { Footer } from './components/Footer';
 import { GlobalChatWidget } from './components/GlobalChatWidget';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Direct synchronous imports for 0ms instantaneous navigation without Suspense layout jumps
 import HomePage from './app/page';
@@ -34,8 +35,11 @@ import NotFoundPage from './app/not-found';
 
 function ScrollToTopOnRouteChange() {
   const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  React.useLayoutEffect(() => {
+    // Synchronously jump to top-left before paint to avoid blank scroll artifacts
+    window.scrollTo(0, 0);
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
   }, [pathname]);
   return null;
 }
@@ -45,42 +49,44 @@ export default function App() {
     <LanguageProvider>
       <AuthProvider>
         <AuthGuard>
-          <div className="app-container">
-            <ScrollToTopOnRouteChange />
-            <NavbarWrapper />
-            <main className="main-content">
-              <Routes>
-                <Route path="/"                 element={<HomePage />} />
-                <Route path="/about"            element={<AboutPage />} />
-                <Route path="/login"            element={<LoginPage />} />
-                <Route path="/demand-forecast"  element={<DemandForecastPage />} />
-                <Route path="/renewable-forecast" element={<RenewablePage />} />
-                <Route path="/flexibility"      element={<FlexibilityPage />} />
-                <Route path="/digital-twin"     element={<DigitalTwinPage />} />
-                <Route path="/p2p"              element={<P2PPage />} />
-                <Route path="/resilience"       element={<ResiliencePage />} />
-                <Route path="/storage"          element={<StoragePage />} />
-                <Route path="/sky-vision"       element={<SkyVisionPage />} />
-                <Route path="/spatial-twin"     element={<SpatialTwinPage />} />
-                <Route path="/tariff-engine"    element={<TariffEnginePage />} />
-                <Route path="/command-center"   element={<CommandCenterPage />} />
-                <Route path="/explainable-ai"   element={<ExplainableAIPage />} />
-                <Route path="/self-healing"     element={<SelfHealingPage />} />
-                <Route path="/incident-copilot" element={<IncidentCopilotPage />} />
-                <Route path="/discom"           element={<DiscomPage />} />
-                <Route path="/architecture"     element={<ArchitecturePage />} />
-                <Route path="/judge-mode"       element={<JudgeModePage />} />
-                <Route path="/copilot"          element={<CopilotPage />} />
-                <Route path="/data-audit"       element={<DataAuditPage />} />
-                <Route path="/data-security"    element={<DataAuditPage />} />
-                <Route path="/data-trust"       element={<DataAuditPage />} />
-                {/* Catch-all 404 */}
-                <Route path="*"                 element={<NotFoundPage />} />
-              </Routes>
-            </main>
-            <GlobalChatWidget />
-            <Footer />
-          </div>
+          <ErrorBoundary>
+            <div className="app-container">
+              <ScrollToTopOnRouteChange />
+              <NavbarWrapper />
+              <main className="main-content">
+                <Routes>
+                  <Route path="/"                 element={<HomePage />} />
+                  <Route path="/about"            element={<AboutPage />} />
+                  <Route path="/login"            element={<LoginPage />} />
+                  <Route path="/demand-forecast"  element={<DemandForecastPage />} />
+                  <Route path="/renewable-forecast" element={<RenewablePage />} />
+                  <Route path="/flexibility"      element={<FlexibilityPage />} />
+                  <Route path="/digital-twin"     element={<DigitalTwinPage />} />
+                  <Route path="/p2p"              element={<P2PPage />} />
+                  <Route path="/resilience"       element={<ResiliencePage />} />
+                  <Route path="/storage"          element={<StoragePage />} />
+                  <Route path="/sky-vision"       element={<SkyVisionPage />} />
+                  <Route path="/spatial-twin"     element={<SpatialTwinPage />} />
+                  <Route path="/tariff-engine"    element={<TariffEnginePage />} />
+                  <Route path="/command-center"   element={<CommandCenterPage />} />
+                  <Route path="/explainable-ai"   element={<ExplainableAIPage />} />
+                  <Route path="/self-healing"     element={<SelfHealingPage />} />
+                  <Route path="/incident-copilot" element={<IncidentCopilotPage />} />
+                  <Route path="/discom"           element={<DiscomPage />} />
+                  <Route path="/architecture"     element={<ArchitecturePage />} />
+                  <Route path="/judge-mode"       element={<JudgeModePage />} />
+                  <Route path="/copilot"          element={<CopilotPage />} />
+                  <Route path="/data-audit"       element={<DataAuditPage />} />
+                  <Route path="/data-security"    element={<DataAuditPage />} />
+                  <Route path="/data-trust"       element={<DataAuditPage />} />
+                  {/* Catch-all 404 */}
+                  <Route path="*"                 element={<NotFoundPage />} />
+                </Routes>
+              </main>
+              <GlobalChatWidget />
+              <Footer />
+            </div>
+          </ErrorBoundary>
         </AuthGuard>
       </AuthProvider>
     </LanguageProvider>

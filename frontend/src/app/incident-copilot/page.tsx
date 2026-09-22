@@ -239,11 +239,19 @@ export default function IncidentCopilotPage() {
   const [isListening, setIsListening] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [showLangPicker, setShowLangPicker] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages, isTyping]);
 
   const sendMessage = useCallback(async (text: string) => {
@@ -305,8 +313,25 @@ export default function IncidentCopilotPage() {
     };
 
     recognitionRef.current = recognition;
-    recognition.start();
+    try {
+      recognition.start();
+    } catch (err) {
+      console.warn("Speech recognition error:", err);
+      setIsListening(false);
+    }
   }, [isListening, selectedLang, sendMessage]);
+
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {
+          // ignore
+        }
+      }
+    };
+  }, []);
 
   const handleResetChat = () => {
     setMessages([{
@@ -404,26 +429,27 @@ export default function IncidentCopilotPage() {
 
       {/* 12 Curated Emergency Incident Prompts */}
       <div style={{
-        background: 'rgba(13, 20, 36, 0.75)',
-        border: '1px solid var(--border-medium)',
+        background: 'rgba(11, 20, 38, 0.92)',
+        border: '1px solid rgba(2, 132, 199, 0.25)',
         borderRadius: 'var(--radius-lg)',
-        padding: '14px 16px',
+        padding: '16px 18px',
         display: 'flex',
         flexDirection: 'column',
-        gap: 10
+        gap: 12,
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--amber-flow)', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <AlertTriangle size={15} />
+          <span style={{ fontSize: '0.86rem', fontWeight: 700, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <AlertTriangle size={16} style={{ color: '#38bdf8' }} />
             <span>12 Direct Incident Prompts (Click to Execute):</span>
           </span>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>Immediate Action Protocols</span>
+          <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 500 }}>Immediate Action Protocols</span>
         </div>
 
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
-          gap: 8
+          gap: 9
         }}>
           {QUICK_INCIDENT_QUESTIONS.map((q, idx) => {
             const Icon = q.icon;
@@ -432,23 +458,41 @@ export default function IncidentCopilotPage() {
                 key={idx}
                 onClick={() => sendMessage(q.text)}
                 disabled={isTyping}
-                className="btn btn-secondary btn-sm"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 8,
+                  gap: 10,
                   textAlign: 'left',
-                  fontSize: '0.76rem',
-                  padding: '10px 12px',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 8,
+                  fontSize: '0.80rem',
+                  fontWeight: 600,
+                  lineHeight: 1.4,
+                  padding: '11px 14px',
+                  background: 'rgba(2, 132, 199, 0.10)',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  borderRadius: 9,
+                  color: '#e0f2fe',
                   wordBreak: 'break-word',
                   minWidth: 0,
-                  width: '100%'
+                  width: '100%',
+                  cursor: isTyping ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isTyping) {
+                    e.currentTarget.style.background = 'rgba(2, 132, 199, 0.22)';
+                    e.currentTarget.style.borderColor = '#38bdf8';
+                    e.currentTarget.style.color = '#ffffff';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(2, 132, 199, 0.10)';
+                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+                  e.currentTarget.style.color = '#e0f2fe';
+                  e.currentTarget.style.transform = 'none';
                 }}
               >
-                <Icon size={14} style={{ color: q.color, flexShrink: 0 }} />
+                <Icon size={16} style={{ color: q.color || '#38bdf8', flexShrink: 0 }} />
                 <span style={{ flex: 1 }}>{q.text}</span>
               </button>
             );
@@ -457,7 +501,10 @@ export default function IncidentCopilotPage() {
       </div>
 
       {/* Incident Chat Window */}
-      <div className="card" style={{
+      <div 
+        ref={chatContainerRef}
+        className="card" 
+        style={{
         minHeight: 460,
         maxHeight: 600,
         overflowY: 'auto',

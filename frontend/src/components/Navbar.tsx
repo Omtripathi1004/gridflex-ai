@@ -66,17 +66,18 @@ export const Navbar: React.FC = () => {
   };
 
   const handleDropdownLeave = () => {
+    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
     dropdownTimeoutRef.current = setTimeout(() => {
       setOpenDropdown(null);
-    }, 150);
+    }, 300);
   };
 
   // Forecast & Radar items
   const forecastItems = [
     { 
       href: '/renewable-forecast', 
-      label: language === 'hi' ? 'नवीकरणीय पूर्वानुमान' : 'Renewable Forecast', 
-      desc: language === 'hi' ? 'सौर एवं पवन उत्पादन' : 'Solar & Wind Generation',
+      label: language === 'hi' ? 'विश्वसनीयता कमांड सेंटर' : 'Reliability Command Center', 
+      desc: language === 'hi' ? 'फीडर विश्वसनीयता, गैप व पूर्वानुमान' : 'Feeder Reliability, Gaps & Forecast',
       icon: Sun 
     },
     { 
@@ -276,6 +277,10 @@ export const Navbar: React.FC = () => {
           >
             <button
               type="button"
+              onClick={() => {
+                if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                setOpenDropdown(prev => prev === 'forecasts' ? null : 'forecasts');
+              }}
               style={{
                 padding: '7px 11px',
                 borderRadius: 6,
@@ -295,21 +300,27 @@ export const Navbar: React.FC = () => {
             </button>
 
             {openDropdown === 'forecasts' && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                minWidth: 260,
-                background: '#ffffff',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 10,
-                padding: 6,
-                boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
-                zIndex: 1100,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2
-              }}>
+              <div 
+                onMouseEnter={() => {
+                  if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                }}
+                onMouseLeave={handleDropdownLeave}
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  minWidth: 260,
+                  background: '#ffffff',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 10,
+                  padding: 6,
+                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
+                  zIndex: 1100,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2
+                }}
+              >
                 {forecastItems.map(item => {
                   const Icon = item.icon;
                   const isActive = pathname === item.href;
@@ -317,7 +328,10 @@ export const Navbar: React.FC = () => {
                     <Link
                       key={item.href}
                       to={item.href}
-                      onClick={() => setOpenDropdown(null)}
+                      onClick={() => {
+                        setOpenDropdown(null);
+                        window.scrollTo(0, 0);
+                      }}
                       style={{
                         padding: '8px 12px',
                         borderRadius: 6,
@@ -349,6 +363,10 @@ export const Navbar: React.FC = () => {
           >
             <button
               type="button"
+              onClick={() => {
+                if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                setOpenDropdown(prev => prev === 'gridtools' ? null : 'gridtools');
+              }}
               style={{
                 padding: '7px 11px',
                 borderRadius: 6,
@@ -368,21 +386,27 @@ export const Navbar: React.FC = () => {
             </button>
 
             {openDropdown === 'gridtools' && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                minWidth: 260,
-                background: '#ffffff',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 10,
-                padding: 6,
-                boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
-                zIndex: 1100,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2
-              }}>
+              <div 
+                onMouseEnter={() => {
+                  if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                }}
+                onMouseLeave={handleDropdownLeave}
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  minWidth: 260,
+                  background: '#ffffff',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 10,
+                  padding: 6,
+                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
+                  zIndex: 1100,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2
+                }}
+              >
                 {gridToolItems.map(item => {
                   const Icon = item.icon;
                   const isActive = pathname === item.href;
@@ -390,7 +414,10 @@ export const Navbar: React.FC = () => {
                     <Link
                       key={item.href}
                       to={item.href}
-                      onClick={() => setOpenDropdown(null)}
+                      onClick={() => {
+                        setOpenDropdown(null);
+                        window.scrollTo(0, 0);
+                      }}
                       style={{
                         padding: '8px 12px',
                         borderRadius: 6,
@@ -422,6 +449,10 @@ export const Navbar: React.FC = () => {
           >
             <button
               type="button"
+              onClick={() => {
+                if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                setOpenDropdown(prev => prev === 'airesilience' ? null : 'airesilience');
+              }}
               style={{
                 padding: '7px 11px',
                 borderRadius: 6,
@@ -441,21 +472,27 @@ export const Navbar: React.FC = () => {
             </button>
 
             {openDropdown === 'airesilience' && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                left: -20,
-                minWidth: 280,
-                background: '#ffffff',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 10,
-                padding: 6,
-                boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
-                zIndex: 1100,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2
-              }}>
+              <div 
+                onMouseEnter={() => {
+                  if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                }}
+                onMouseLeave={handleDropdownLeave}
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: -20,
+                  minWidth: 280,
+                  background: '#ffffff',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 10,
+                  padding: 6,
+                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
+                  zIndex: 1100,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2
+                }}
+              >
                 {aiResilienceItems.map(item => {
                   const Icon = item.icon;
                   const isActive = pathname === item.href;
@@ -463,7 +500,10 @@ export const Navbar: React.FC = () => {
                     <Link
                       key={item.href}
                       to={item.href}
-                      onClick={() => setOpenDropdown(null)}
+                      onClick={() => {
+                        setOpenDropdown(null);
+                        window.scrollTo(0, 0);
+                      }}
                       style={{
                         padding: '8px 12px',
                         borderRadius: 6,
@@ -801,7 +841,10 @@ export const Navbar: React.FC = () => {
               <Link
                 key={item.href}
                 to={item.href}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.scrollTo(0, 0);
+                }}
                 style={{
                   padding: '9px 12px',
                   minHeight: 44,

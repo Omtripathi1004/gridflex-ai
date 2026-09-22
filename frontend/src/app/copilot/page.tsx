@@ -109,7 +109,12 @@ export default function CopilotPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 

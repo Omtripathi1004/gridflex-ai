@@ -68,10 +68,6 @@ export const GlobalChatWidget: React.FC = () => {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  // If user is already on the dedicated incident copilot page, do not display the floating widget
-  if (location.pathname === '/incident-copilot') {
-    return null;
-  }
   const [isExpanded, setIsExpanded] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [input, setInput] = useState('');
@@ -289,6 +285,11 @@ export const GlobalChatWidget: React.FC = () => {
       return dateStr;
     }
   };
+
+  // Hide the floating widget on dedicated copilot pages (now safely after all hooks)
+  if (location.pathname === '/incident-copilot' || location.pathname === '/copilot') {
+    return null;
+  }
 
   return (
     <>

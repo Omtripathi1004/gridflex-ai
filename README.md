@@ -23,7 +23,20 @@ As high-penetration rooftop solar and distributed energy resources (DERs) surge 
 
 ## 🌟 Standout Capabilities
 
-### 1. Digital Twin Substation Simulator (`/digital-twin`)
+### 1. Neighbourhood Energy Reliability Command Center (`/renewable-forecast`)
+- **Complete Operational Decision-Support Workflow**: Transforms solar/wind forecast into a 5-step reliability engine: **Forecast → Detect → Respond → Coordinate → Measure**.
+- **Multi-Feeder Selection**: Switch between 4 distinct feeder archetypes:
+  - *Feeder F-01 (Mayur Vihar Industrial)*: High solar penetration, heavy industrial shiftable loads.
+  - *Feeder F-02 (Rohini Sector 9 Residential)*: High residential evening duck-curve ramp, residential battery storage.
+  - *Feeder F-03 (Nehru Place Commercial)*: Commercial HVAC/EV charging clusters with high daytime flexibility.
+  - *Feeder F-04 (Dwarka University Microgrid)*: Rooftop PV + academic microgrid with critical research labs.
+- **Intermittency Gap Engine**: Real-time deficit detection highlighting deficit timing, peak deficit magnitude (MW), duration, and CERC DSM penalty risk.
+- **Explainable Actionable Recommendations**: Prioritized Demand Response (EV charging smart-shift, industrial chillers, agricultural pumps) and Community BESS dispatch cards with execution status, estimated MW impact, and operator rationale.
+- **Equity-Aware Local Coordination Matrix**: 100% uncurtailed guarantees for critical community life-support loads (primary clinics, water pumping stations, cold-storage warehouses) with zero PII exposure.
+- **Interactive What-If Scenario Simulator**: Sliders for Solar Delta (-50% to +50%), Feeder Demand (-30% to +50%), Battery Availability, and DR Participation with real-time recalculation of net reliability score.
+- **DISCOM Audit Report Export**: One-click generation, clipboard copy, and `.txt` export of formal Substation Feeder Reliability & Flexibility Audit Reports.
+
+### 2. Digital Twin Substation Simulator (`/digital-twin`)
 - Physics-based what-if scenario engine calibrated against real 64.8 MW Mahadevapura feeder load profiles.
 - Interactive parameter sliders for solar generation, wind velocity, baseline demand, BESS fleet readiness, and flexible load enrollment.
 - Real-day analog presets: *Evening Ramp Deficit*, *Midday Solar Surge (+40%)*, *Summer Heatwave (May 15)*, and *Monsoon Cloudburst (July 22)*.

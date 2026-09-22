@@ -244,7 +244,7 @@ export default function AboutPage() {
         <div className="synaptix-metric-card">
           <div className="synaptix-metric-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div className="synaptix-icon-badge" style={{ background: '#fef3c7', color: '#d97706' }}>
+              <div className="synaptix-icon-badge" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B' }}>
                 <TrendingUp size={18} />
               </div>
               <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -257,8 +257,8 @@ export default function AboutPage() {
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
             <div>
-              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                64.8 <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-tertiary)' }}>MW</span>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: '#F59E0B', fontVariantNumeric: 'tabular-nums', textShadow: '0 0 16px rgba(245, 158, 11, 0.25)' }}>
+                64.8 <span style={{ fontSize: '1rem', fontWeight: 600, color: '#22D3EE' }}>MW</span>
               </div>
               <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
                 {language === 'hi' ? '33/11kV सबस्टेशन थ्रूपुट' : '33/11kV Substation Throughput'}
@@ -266,7 +266,7 @@ export default function AboutPage() {
             </div>
             {/* Sparkline SVG */}
             <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
-              <path d="M2 24 C 15 22, 25 28, 40 16 C 55 4, 70 8, 88 12" stroke="#d97706" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M2 24 C 15 22, 25 28, 40 16 C 55 4, 70 8, 88 12" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
         </div>
@@ -275,7 +275,7 @@ export default function AboutPage() {
         <div className="synaptix-metric-card">
           <div className="synaptix-metric-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div className="synaptix-icon-badge" style={{ background: '#ede9fe', color: '#7c3aed' }}>
+              <div className="synaptix-icon-badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10B981' }}>
                 <Sun size={18} />
               </div>
               <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -288,8 +288,8 @@ export default function AboutPage() {
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
             <div>
-              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                60.7 <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-tertiary)' }}>MW</span>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: '#10B981', fontVariantNumeric: 'tabular-nums', textShadow: '0 0 16px rgba(16, 185, 129, 0.25)' }}>
+                60.7 <span style={{ fontSize: '1rem', fontWeight: 600, color: '#22D3EE' }}>MW</span>
               </div>
               <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
                 {language === 'hi' ? '42.5 सौर + 18.2 पवन' : '42.5 MW Solar + 18.2 MW Wind'}
@@ -297,7 +297,7 @@ export default function AboutPage() {
             </div>
             {/* Sparkline SVG */}
             <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
-              <path d="M2 18 C 18 10, 32 2, 45 6 C 58 10, 72 26, 88 20" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M2 18 C 18 10, 32 2, 45 6 C 58 10, 72 26, 88 20" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function AboutPage() {
         <div className="synaptix-metric-card">
           <div className="synaptix-metric-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div className="synaptix-icon-badge" style={{ background: '#e0f2fe', color: '#0284c7' }}>
+              <div className="synaptix-icon-badge" style={{ background: 'rgba(34, 211, 238, 0.15)', color: '#22D3EE' }}>
                 <Cpu size={18} />
               </div>
               <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -319,7 +319,7 @@ export default function AboutPage() {
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
             <div>
-              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: '#22D3EE', fontVariantNumeric: 'tabular-nums', textShadow: '0 0 16px rgba(34, 211, 238, 0.3)' }}>
                 98.5%
               </div>
               <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
@@ -328,7 +328,7 @@ export default function AboutPage() {
             </div>
             {/* Sparkline SVG */}
             <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
-              <path d="M2 16 C 14 20, 26 8, 42 12 C 58 16, 70 6, 88 8" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M2 16 C 14 20, 26 8, 42 12 C 58 16, 70 6, 88 8" stroke="#22d3ee" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
         </div>
@@ -337,7 +337,7 @@ export default function AboutPage() {
         <div className="synaptix-metric-card">
           <div className="synaptix-metric-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div className="synaptix-icon-badge" style={{ background: '#ecfdf5', color: '#059669' }}>
+              <div className="synaptix-icon-badge" style={{ background: 'rgba(52, 211, 153, 0.15)', color: '#34D399' }}>
                 <ShieldCheck size={18} />
               </div>
               <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -350,7 +350,7 @@ export default function AboutPage() {
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
             <div>
-              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+              <div style={{ fontSize: '1.95rem', fontWeight: 800, color: '#34D399', fontVariantNumeric: 'tabular-nums', textShadow: '0 0 16px rgba(52, 211, 153, 0.25)' }}>
                 80.7 <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-tertiary)' }}>/ 100</span>
               </div>
               <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: 2 }}>
@@ -359,7 +359,7 @@ export default function AboutPage() {
             </div>
             {/* Sparkline SVG */}
             <svg width="90" height="34" viewBox="0 0 90 34" fill="none">
-              <path d="M2 28 C 16 26, 30 18, 46 14 C 62 10, 74 6, 88 4" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M2 28 C 16 26, 30 18, 46 14 C 62 10, 74 6, 88 4" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
         </div>
@@ -400,7 +400,7 @@ export default function AboutPage() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
-              <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+              <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#F59E0B', fontVariantNumeric: 'tabular-nums', textShadow: '0 0 16px rgba(245, 158, 11, 0.25)' }}>
                 ₹15.25 Lakh
               </div>
               <span className="synaptix-delta-tag synaptix-delta-positive" style={{ fontSize: '0.8rem' }}>
@@ -414,19 +414,19 @@ export default function AboutPage() {
             <svg width="100%" height="165" viewBox="0 0 500 165" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', overflow: 'hidden' }}>
               <defs>
                 <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.2" />
-                  <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.0" />
                 </linearGradient>
                 <linearGradient id="barHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.75" />
-                  <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.15" />
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.05" />
                 </linearGradient>
               </defs>
 
               {/* Horizontal Grid Lines */}
-              <line x1="20" y1="30" x2="480" y2="30" stroke="#f1f5f9" strokeWidth="1" />
-              <line x1="20" y1="70" x2="480" y2="70" stroke="#f1f5f9" strokeWidth="1" />
-              <line x1="20" y1="110" x2="480" y2="110" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="20" y1="30" x2="480" y2="30" stroke="rgba(148, 163, 184, 0.15)" strokeWidth="1" />
+              <line x1="20" y1="70" x2="480" y2="70" stroke="rgba(148, 163, 184, 0.15)" strokeWidth="1" />
+              <line x1="20" y1="110" x2="480" y2="110" stroke="rgba(148, 163, 184, 0.15)" strokeWidth="1" />
 
               {/* Highlight Bar for Peak Window (July / 18:00–20:00) */}
               <rect x="270" y="20" width="50" height="115" rx="8" fill="url(#barHighlight)" />
@@ -441,25 +441,25 @@ export default function AboutPage() {
               <path 
                 d="M 35 105 C 75 105, 105 92, 145 92 C 185 92, 215 102, 245 102 C 270 102, 275 42, 295 42 C 315 42, 350 82, 390 82 C 425 82, 440 68, 470 68" 
                 fill="none" 
-                stroke="#4f46e5" 
+                stroke="#22d3ee" 
                 strokeWidth="3" 
                 strokeLinecap="round" 
               />
 
               {/* Data Nodes */}
-              <circle cx="35" cy="105" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
-              <circle cx="145" cy="92" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
-              <circle cx="245" cy="102" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
-              <circle cx="295" cy="42" r="6" fill="#ffffff" stroke="#6366f1" strokeWidth="3" />
-              <circle cx="390" cy="82" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
-              <circle cx="470" cy="68" r="4" fill="#ffffff" stroke="#4f46e5" strokeWidth="2.5" />
+              <circle cx="35" cy="105" r="4" fill="#0a1b2d" stroke="#22d3ee" strokeWidth="2.5" />
+              <circle cx="145" cy="92" r="4" fill="#0a1b2d" stroke="#22d3ee" strokeWidth="2.5" />
+              <circle cx="245" cy="102" r="4" fill="#0a1b2d" stroke="#22d3ee" strokeWidth="2.5" />
+              <circle cx="295" cy="42" r="6" fill="#0a1b2d" stroke="#38bdf8" strokeWidth="3" />
+              <circle cx="390" cy="82" r="4" fill="#0a1b2d" stroke="#22d3ee" strokeWidth="2.5" />
+              <circle cx="470" cy="68" r="4" fill="#0a1b2d" stroke="#22d3ee" strokeWidth="2.5" />
 
-              {/* SVG-Anchored Month Labels (Never clips or wraps outside card) */}
-              <text x="35" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Jan</text>
-              <text x="145" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Apr</text>
-              <text x="295" y="152" textAnchor="middle" fontSize="11" fill="#4f46e5" fontWeight="700">July (Peak Flex)</text>
-              <text x="390" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Oct</text>
-              <text x="470" y="152" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="500">Dec</text>
+              {/* SVG-Anchored Month Labels */}
+              <text x="35" y="152" textAnchor="middle" fontSize="11" fill="#94a3b8" fontWeight="500">Jan</text>
+              <text x="145" y="152" textAnchor="middle" fontSize="11" fill="#94a3b8" fontWeight="500">Apr</text>
+              <text x="295" y="152" textAnchor="middle" fontSize="11" fill="#22d3ee" fontWeight="700">July (Peak Flex)</text>
+              <text x="390" y="152" textAnchor="middle" fontSize="11" fill="#94a3b8" fontWeight="500">Oct</text>
+              <text x="470" y="152" textAnchor="middle" fontSize="11" fill="#94a3b8" fontWeight="500">Dec</text>
             </svg>
           </div>
         </div>
@@ -488,14 +488,14 @@ export default function AboutPage() {
                   <stop offset="0%" stopColor="#ea580c" />
                   <stop offset="50%" stopColor="#d97706" />
                   <stop offset="80%" stopColor="#059669" />
-                  <stop offset="100%" stopColor="#4f46e5" />
+                  <stop offset="100%" stopColor="#22d3ee" />
                 </linearGradient>
               </defs>
               {/* Background track */}
               <path
                 d="M 20 100 A 80 80 0 0 1 180 100"
                 fill="none"
-                stroke="#f1f5f9"
+                stroke="rgba(148, 163, 184, 0.15)"
                 strokeWidth="14"
                 strokeLinecap="round"
               />
@@ -509,10 +509,10 @@ export default function AboutPage() {
               />
             </svg>
             <div style={{ marginTop: -40, textAlign: 'center' }}>
-              <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>
+              <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#34D399', lineHeight: 1, textShadow: '0 0 16px rgba(52, 211, 153, 0.25)' }}>
                 80.7
               </div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#059669', marginTop: 4 }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#34d399', marginTop: 4 }}>
                 {language === 'hi' ? 'विश्वसनीय सुरक्षा स्तर' : 'Optimal Operating Envelope'}
               </div>
             </div>
@@ -586,8 +586,8 @@ export default function AboutPage() {
               <div 
                 key={idx} 
                 style={{
-                  background: '#f8fafc',
-                  border: '1px solid var(--border-subtle)',
+                  background: 'rgba(10, 27, 45, 0.65)',
+                  border: '1px solid rgba(148, 163, 184, 0.15)',
                   borderRadius: 12,
                   padding: '14px 16px',
                   display: 'flex',
@@ -634,11 +634,11 @@ export default function AboutPage() {
         {/* Problem 1 */}
         <div className="synaptix-card" style={{ borderTop: '3px solid #d97706' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#fef3c7', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Flame size={18} />
             </div>
             <div>
-              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#d97706', textTransform: 'uppercase' }}>Structural Challenge 1</span>
+              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase' }}>Structural Challenge 1</span>
               <h4 style={{ margin: 0, fontSize: '1.02rem', color: 'var(--text-primary)' }}>
                 {language === 'hi' ? 'डक कर्व और शाम का अचानक रैंप-डाउन' : 'Evening Duck Curve Ramp-Down'}
               </h4>
@@ -652,11 +652,11 @@ export default function AboutPage() {
         {/* Problem 2 */}
         <div className="synaptix-card" style={{ borderTop: '3px solid #dc2626' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#fef2f2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <ShieldAlert size={18} />
             </div>
             <div>
-              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#dc2626', textTransform: 'uppercase' }}>Regulatory Challenge 2</span>
+              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#ef4444', textTransform: 'uppercase' }}>Regulatory Challenge 2</span>
               <h4 style={{ margin: 0, fontSize: '1.02rem', color: 'var(--text-primary)' }}>
                 {language === 'hi' ? 'CERC DSM वैधानिक दंड जोखिम' : 'CERC DSM Statutory Penalties'}
               </h4>
@@ -670,11 +670,11 @@ export default function AboutPage() {
         {/* Problem 3 */}
         <div className="synaptix-card" style={{ borderTop: '3px solid #0284c7' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#e0f2fe', color: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(34, 211, 238, 0.15)', color: '#22d3ee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Zap size={18} />
             </div>
             <div>
-              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#0284c7', textTransform: 'uppercase' }}>Operational Challenge 3</span>
+              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#22d3ee', textTransform: 'uppercase' }}>Operational Challenge 3</span>
               <h4 style={{ margin: 0, fontSize: '1.02rem', color: 'var(--text-primary)' }}>
                 {language === 'hi' ? 'ट्रांसफॉर्मर थर्मल ओवरलोड जोखिम' : 'Transformer Thermal Bottlenecks'}
               </h4>
@@ -712,9 +712,9 @@ export default function AboutPage() {
                   borderRadius: 20,
                   fontSize: '0.78rem',
                   fontWeight: 600,
-                  border: selectedCategory === cat ? '1px solid var(--brand)' : '1px solid var(--border-subtle)',
-                  background: selectedCategory === cat ? 'var(--brand)' : '#f8fafc',
-                  color: selectedCategory === cat ? '#ffffff' : 'var(--text-secondary)',
+                  border: selectedCategory === cat ? '1px solid #22d3ee' : '1px solid rgba(148, 163, 184, 0.2)',
+                  background: selectedCategory === cat ? 'linear-gradient(135deg, #0284c7, #06b6d4)' : 'rgba(10, 27, 45, 0.8)',
+                  color: selectedCategory === cat ? '#ffffff' : '#94a3b8',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
                 }}
@@ -738,8 +738,8 @@ export default function AboutPage() {
                 key={mod.id}
                 to={mod.path}
                 style={{
-                  background: '#ffffff',
-                  border: '1px solid var(--border-subtle)',
+                  background: 'rgba(10, 27, 45, 0.65)',
+                  border: '1px solid rgba(148, 163, 184, 0.15)',
                   borderRadius: 14,
                   padding: '16px 18px',
                   textDecoration: 'none',
@@ -747,7 +747,7 @@ export default function AboutPage() {
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   gap: 10,
-                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
                   transition: 'all 0.2s ease'
                 }}
                 className="synaptix-module-item"
@@ -778,7 +778,7 @@ export default function AboutPage() {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   paddingTop: 8,
-                  borderTop: '1px solid #f1f5f9',
+                  borderTop: '1px solid rgba(148, 163, 184, 0.12)',
                   fontSize: '0.74rem'
                 }}>
                   <span style={{ fontWeight: 600, color: mod.color }}>
@@ -831,15 +831,16 @@ export default function AboutPage() {
 
       {/* ── Footer CTA ── */}
       <div style={{
-        background: 'linear-gradient(135deg, #f8fafc 0%, #ede9fe 100%)',
-        border: '1px solid #ddd6fe',
+        background: 'linear-gradient(135deg, rgba(13, 33, 53, 0.95) 0%, rgba(10, 27, 45, 0.95) 100%)',
+        border: '1px solid rgba(34, 211, 238, 0.3)',
         borderRadius: 16,
         padding: '24px 28px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: 16
+        gap: 16,
+        boxShadow: '0 8px 32px rgba(6, 17, 31, 0.5), inset 0 1px 0 rgba(34, 211, 238, 0.2)'
       }}>
         <div>
           <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', color: 'var(--text-primary)' }}>

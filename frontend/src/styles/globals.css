@@ -744,19 +744,38 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-size: 0.88rem;
 }
 .custom-table th {
-  background: #f8fafc;
+  background: rgba(10, 27, 45, 0.95);
   padding: 12px 16px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-subtle);
+  font-weight: 700;
+  color: #22D3EE;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  text-transform: uppercase;
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
 }
 .custom-table td {
   padding: 12px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-primary);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  color: #F8FAFC;
+}
+.custom-table code {
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: #38bdf8;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+  display: inline-block;
 }
 .custom-table tr:hover td {
-  background: #f8fafc;
+  background: rgba(34, 211, 238, 0.12) !important;
+}
+.custom-table tr:hover code {
+  background: rgba(34, 211, 238, 0.2) !important;
+  color: #22D3EE !important;
+  border-color: rgba(34, 211, 238, 0.6) !important;
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
 }
 
 /* Animations */
@@ -1041,9 +1060,9 @@ img, canvas {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #ede9fe;
-  color: #6d28d9;
-  border: 1px solid #ddd6fe;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
   padding: 6px 14px;
   border-radius: 9999px;
   font-size: 0.82rem;
@@ -1053,21 +1072,23 @@ img, canvas {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #7c3aed;
-  box-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  animation: pulse 2s infinite;
 }
 
 .synaptix-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: rgba(13, 33, 53, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.15);
   border-radius: 18px;
-  padding: 22px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(16px);
   transition: all 0.2s ease;
 }
 .synaptix-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(34, 211, 238, 0.1);
 }
 
 .synaptix-metric-grid {
@@ -1077,22 +1098,23 @@ img, canvas {
 }
 
 .synaptix-metric-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: rgba(13, 33, 53, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.15);
   border-radius: 16px;
-  padding: 18px 20px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(16px);
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
 }
 .synaptix-metric-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(34, 211, 238, 0.1);
   transform: translateY(-2px);
 }
 
@@ -1103,8 +1125,8 @@ img, canvas {
 }
 
 .synaptix-icon-badge {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -1121,21 +1143,19 @@ img, canvas {
   gap: 3px;
 }
 .synaptix-delta-positive {
-  background: #ecfdf5;
-  color: #059669;
-  border: 1px solid #a7f3d0;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 .synaptix-delta-neutral {
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .synaptix-chart-bar-highlight {
   position: relative;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0.05) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.35);
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.25) 0%, rgba(34, 211, 238, 0.05) 100%);
+  border: 1px solid rgba(34, 211, 238, 0.35);
 }
-
-

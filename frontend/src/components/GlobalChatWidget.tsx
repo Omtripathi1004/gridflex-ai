@@ -334,10 +334,10 @@ export const GlobalChatWidget: React.FC = () => {
             width: isExpanded ? 'min(760px, calc(100vw - 28px))' : 'min(440px, calc(100vw - 28px))',
             height: isExpanded ? 'min(780px, calc(100vh - 40px))' : 'min(580px, calc(100vh - 40px))',
             maxHeight: 'calc(100dvh - 28px)',
-            background: '#ffffff',
-            border: '1px solid var(--border-subtle)',
+            background: '#0a1b2d',
+            border: '1px solid rgba(34, 211, 238, 0.3)',
             borderRadius: 16,
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.15)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(34, 211, 238, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
@@ -347,8 +347,8 @@ export const GlobalChatWidget: React.FC = () => {
           <div
             style={{
               padding: '12px 16px',
-              background: '#ffffff',
-              borderBottom: '1px solid var(--border-subtle)',
+              background: '#06111f',
+              borderBottom: '1px solid rgba(148, 163, 184, 0.15)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -360,15 +360,15 @@ export const GlobalChatWidget: React.FC = () => {
                   onClick={() => setShowHistory(false)}
                   title="Back to chat"
                   style={{
-                    background: '#f1f5f9',
-                    border: '1px solid var(--border-subtle)',
+                    background: 'rgba(10, 27, 45, 0.8)',
+                    border: '1px solid rgba(148, 163, 184, 0.2)',
                     borderRadius: 6,
                     padding: '6px 8px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 5,
                     cursor: 'pointer',
-                    color: 'var(--text-primary)',
+                    color: '#F8FAFC',
                     fontSize: '0.8rem',
                     fontWeight: 600
                   }}
@@ -395,7 +395,7 @@ export const GlobalChatWidget: React.FC = () => {
 
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, color: '#F8FAFC' }}>
                     {showHistory ? 'Stored Chat History' : 'GridFlex AI Copilot'}
                   </h4>
                   {!showHistory && (
@@ -410,7 +410,7 @@ export const GlobalChatWidget: React.FC = () => {
                     />
                   )}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
                   {showHistory ? `Stored by User: ${user?.full_name || 'Rajesh Sharma'}` : 'Contextual RAG • Multi-Month History Active'}
                 </div>
               </div>
@@ -425,9 +425,9 @@ export const GlobalChatWidget: React.FC = () => {
                 }}
                 title={showHistory ? "Return to active chat" : "View stored past conversations"}
                 style={{
-                  background: showHistory ? 'rgba(79, 70, 229, 0.12)' : '#f8fafc',
-                  border: '1px solid var(--border-subtle)',
-                  color: showHistory ? 'var(--brand)' : 'var(--text-primary)',
+                  background: showHistory ? 'rgba(34, 211, 238, 0.15)' : 'rgba(10, 27, 45, 0.8)',
+                  border: '1px solid rgba(148, 163, 184, 0.2)',
+                  color: showHistory ? '#22d3ee' : '#F8FAFC',
                   cursor: 'pointer',
                   padding: '5px 9px',
                   borderRadius: 6,
@@ -447,9 +447,9 @@ export const GlobalChatWidget: React.FC = () => {
                 onClick={startNewChat}
                 title="Start a new chat session"
                 style={{
-                  background: '#f8fafc',
-                  border: '1px solid var(--border-subtle)',
-                  color: 'var(--text-primary)',
+                  background: 'rgba(10, 27, 45, 0.8)',
+                  border: '1px solid rgba(148, 163, 184, 0.2)',
+                  color: '#F8FAFC',
                   cursor: 'pointer',
                   padding: '5px 8px',
                   borderRadius: 6,
@@ -484,16 +484,16 @@ export const GlobalChatWidget: React.FC = () => {
 
           {/* VIEW A: CHAT HISTORY PANEL */}
           {showHistory ? (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f8fafc', overflow: 'hidden' }}>
-              <div style={{ padding: '12px 16px', background: '#ffffff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                  <Calendar size={14} color="var(--brand)" />
-                  <span>Previous sessions saved for <strong>{user?.email || 'operator@gridflex.ai'}</strong></span>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#06111f', overflow: 'hidden' }}>
+              <div style={{ padding: '12px 16px', background: '#0a1b2d', borderBottom: '1px solid rgba(148, 163, 184, 0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: '#94A3B8' }}>
+                  <Calendar size={14} color="#22D3EE" />
+                  <span>Previous sessions saved for <strong style={{ color: '#F8FAFC' }}>{user?.email || 'operator@gridflex.ai'}</strong></span>
                 </div>
                 <button
                   onClick={startNewChat}
                   style={{
-                    background: 'var(--brand)',
+                    background: 'linear-gradient(135deg, #0284c7, #06b6d4)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: 6,
@@ -512,11 +512,11 @@ export const GlobalChatWidget: React.FC = () => {
 
               <div style={{ flex: 1, overflowY: 'auto', padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {historyLoading ? (
-                  <div style={{ textAlign: 'center', padding: 30, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                  <div style={{ textAlign: 'center', padding: 30, color: '#94A3B8', fontSize: '0.85rem' }}>
                     Loading past conversations...
                   </div>
                 ) : pastSessions.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: 30, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                  <div style={{ textAlign: 'center', padding: 30, color: '#94A3B8', fontSize: '0.85rem' }}>
                     No past sessions found for this account. Start a conversation to store history.
                   </div>
                 ) : (
@@ -527,8 +527,8 @@ export const GlobalChatWidget: React.FC = () => {
                         key={session.id}
                         onClick={() => loadSession(session)}
                         style={{
-                          background: isCurrent ? 'rgba(79, 70, 229, 0.06)' : '#ffffff',
-                          border: isCurrent ? '1.5px solid var(--brand)' : '1px solid var(--border-subtle)',
+                          background: isCurrent ? 'rgba(34, 211, 238, 0.12)' : 'rgba(10, 27, 45, 0.7)',
+                          border: isCurrent ? '1.5px solid #22D3EE' : '1px solid rgba(148, 163, 184, 0.15)',
                           borderRadius: 10,
                           padding: '12px 14px',
                           cursor: 'pointer',
@@ -537,24 +537,24 @@ export const GlobalChatWidget: React.FC = () => {
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           gap: 12,
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
                         }}
                       >
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#F8FAFC', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {session.title}
                             </span>
                             {isCurrent && (
-                              <span style={{ fontSize: '0.68rem', background: 'rgba(79, 70, 229, 0.15)', color: 'var(--brand)', padding: '2px 6px', borderRadius: 4, fontWeight: 700, flexShrink: 0 }}>
+                              <span style={{ fontSize: '0.68rem', background: 'rgba(34, 211, 238, 0.2)', color: '#22D3EE', padding: '2px 6px', borderRadius: 4, fontWeight: 700, flexShrink: 0 }}>
                                 ACTIVE
                               </span>
                             )}
                           </div>
-                          <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.4 }}>
+                          <p style={{ margin: 0, fontSize: '0.78rem', color: '#94A3B8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.4 }}>
                             {session.preview || 'Historical grid dispatch consultation'}
                           </p>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, fontSize: '0.72rem', color: '#64748B' }}>
                             <Clock size={11} />
                             <span>{formatSessionDate(session.created_at)}</span>
                             <span>•</span>
@@ -569,7 +569,7 @@ export const GlobalChatWidget: React.FC = () => {
                             style={{
                               background: 'transparent',
                               border: 'none',
-                              color: 'var(--text-muted)',
+                              color: '#94A3B8',
                               cursor: 'pointer',
                               padding: 6,
                               borderRadius: 4
@@ -577,7 +577,7 @@ export const GlobalChatWidget: React.FC = () => {
                           >
                             <Trash2 size={14} />
                           </button>
-                          <ChevronRight size={16} color="var(--text-tertiary)" />
+                          <ChevronRight size={16} color="#64748B" />
                         </div>
                       </div>
                     );
@@ -586,10 +586,10 @@ export const GlobalChatWidget: React.FC = () => {
               </div>
 
               {/* Bottom user indicator */}
-              <div style={{ padding: '10px 14px', background: '#ffffff', borderTop: '1px solid var(--border-subtle)', fontSize: '0.76rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ padding: '10px 14px', background: '#0a1b2d', borderTop: '1px solid rgba(148, 163, 184, 0.15)', fontSize: '0.76rem', color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <User size={13} color="var(--brand)" />
-                  <span>Session History ID: <strong>{user?.id ? `User #${user.id}` : 'Operator #1'}</strong> ({user?.role || 'DISCOM Lead'})</span>
+                  <User size={13} color="#22D3EE" />
+                  <span>Session History ID: <strong style={{ color: '#F8FAFC' }}>{user?.id ? `User #${user.id}` : 'Operator #1'}</strong> ({user?.role || 'DISCOM Lead'})</span>
                 </div>
               </div>
             </div>
@@ -597,18 +597,18 @@ export const GlobalChatWidget: React.FC = () => {
             /* VIEW B: MAIN ACTIVE CHAT VIEW */
             <>
               {/* API Key Collapsible */}
-              <div style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+              <div style={{ borderBottom: '1px solid rgba(148, 163, 184, 0.15)' }}>
                 <button
                   onClick={() => setShowApiKey(v => !v)}
                   style={{
                     width: '100%',
-                    background: '#f8fafc',
+                    background: 'rgba(10, 27, 45, 0.85)',
                     border: 'none',
                     padding: '6px 14px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 6,
-                    color: apiKey ? '#059669' : 'var(--text-secondary)',
+                    color: apiKey ? '#10b981' : '#94A3B8',
                     fontSize: '0.72rem',
                     cursor: 'pointer',
                     justifyContent: 'space-between',
@@ -621,7 +621,7 @@ export const GlobalChatWidget: React.FC = () => {
                   {showApiKey ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                 </button>
                 {showApiKey && (
-                  <div style={{ padding: '8px 14px', background: '#f1f5f9' }}>
+                  <div style={{ padding: '8px 14px', background: '#06111f' }}>
                     <input
                       type="password"
                       value={apiKey}
@@ -629,17 +629,17 @@ export const GlobalChatWidget: React.FC = () => {
                       placeholder="AIza... (Gemini API Key)"
                       style={{
                         width: '100%',
-                        background: '#ffffff',
-                        border: `1px solid ${apiKey ? '#059669' : 'var(--border-subtle)'}`,
+                        background: 'rgba(13, 33, 53, 0.9)',
+                        border: `1px solid ${apiKey ? '#10b981' : 'rgba(148, 163, 184, 0.2)'}`,
                         borderRadius: 6,
                         padding: '6px 10px',
-                        color: 'var(--text-primary)',
+                        color: '#F8FAFC',
                         fontSize: '0.8rem',
                         outline: 'none',
                         boxSizing: 'border-box',
                       }}
                     />
-                    <p style={{ fontSize: '0.68rem', color: 'var(--text-tertiary)', marginTop: 4 }}>
+                    <p style={{ fontSize: '0.68rem', color: '#64748B', marginTop: 4 }}>
                       Key is used only client-side for this session and never stored.
                     </p>
                   </div>
@@ -650,8 +650,8 @@ export const GlobalChatWidget: React.FC = () => {
               <div
                 style={{
                   padding: '8px 14px',
-                  background: '#f8fafc',
-                  borderBottom: '1px solid var(--border-subtle)',
+                  background: '#06111f',
+                  borderBottom: '1px solid rgba(148, 163, 184, 0.15)',
                   display: 'flex',
                   gap: 8,
                   overflowX: 'auto',
@@ -664,17 +664,17 @@ export const GlobalChatWidget: React.FC = () => {
                     onClick={() => handleSend(prompt)}
                     disabled={loading}
                     style={{
-                      background: '#ffffff',
-                      border: '1px solid var(--border-subtle)',
+                      background: 'rgba(10, 27, 45, 0.7)',
+                      border: '1px solid rgba(34, 211, 238, 0.25)',
                       borderRadius: 14,
                       padding: '4px 10px',
                       fontSize: '0.74rem',
-                      color: 'var(--brand)',
+                      color: '#38bdf8',
                       fontWeight: 500,
                       cursor: 'pointer',
                       flexShrink: 0,
                       transition: 'all 0.15s ease',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
                     }}
                   >
                     {prompt}
@@ -691,7 +691,7 @@ export const GlobalChatWidget: React.FC = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 14,
-                  background: '#ffffff'
+                  background: '#06111f'
                 }}
               >
                 {messages.map((m) => {
@@ -720,13 +720,13 @@ export const GlobalChatWidget: React.FC = () => {
                             width: 28,
                             height: 28,
                             borderRadius: '50%',
-                            background: isUser ? 'rgba(79, 70, 229, 0.15)' : '#f1f5f9',
-                            border: '1px solid var(--border-subtle)',
+                            background: isUser ? 'rgba(14, 165, 233, 0.2)' : 'rgba(34, 211, 238, 0.12)',
+                            border: isUser ? '1px solid rgba(14, 165, 233, 0.35)' : '1px solid rgba(34, 211, 238, 0.25)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
-                            color: isUser ? 'var(--brand)' : 'var(--text-secondary)',
+                            color: isUser ? '#38bdf8' : '#22d3ee',
                           }}
                         >
                           {isUser ? <User size={14} /> : <Bot size={14} />}
@@ -735,15 +735,15 @@ export const GlobalChatWidget: React.FC = () => {
                         <div
                           style={{
                             background: isUser 
-                              ? 'rgba(79, 70, 229, 0.08)' 
-                              : '#f8fafc',
-                            border: isUser ? '1px solid rgba(79, 70, 229, 0.25)' : '1px solid var(--border-subtle)',
+                              ? 'rgba(14, 165, 233, 0.2)' 
+                              : 'rgba(13, 33, 53, 0.85)',
+                            border: isUser ? '1px solid rgba(14, 165, 233, 0.35)' : '1px solid rgba(148, 163, 184, 0.15)',
                             borderRadius: 'var(--radius-md)',
                             padding: '10px 14px',
-                            color: 'var(--text-primary)',
+                            color: '#F8FAFC',
                             fontSize: '0.86rem',
                             lineHeight: 1.55,
-                            boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.25)'
                           }}
                         >
                           {isUser ? (
@@ -754,13 +754,13 @@ export const GlobalChatWidget: React.FC = () => {
 
                           {/* Attached Knowledge References */}
                           {m.references && m.references.length > 0 && (
-                            <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid var(--border-subtle)' }}>
-                              <div style={{ fontSize: '0.72rem', color: 'var(--amber-flow)', fontWeight: 700, marginBottom: 4 }}>
+                            <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid rgba(148, 163, 184, 0.15)' }}>
+                              <div style={{ fontSize: '0.72rem', color: '#fbbf24', fontWeight: 700, marginBottom: 4 }}>
                                 Grounding Documents:
                               </div>
                               {m.references.map(ref => (
-                                <div key={ref.doc_id} style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                  <FileText size={12} color="var(--cyan-primary)" />
+                                <div key={ref.doc_id} style={{ fontSize: '0.74rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                  <FileText size={12} color="#22D3EE" />
                                   <span>{ref.title}</span>
                                 </div>
                               ))}
@@ -770,14 +770,14 @@ export const GlobalChatWidget: React.FC = () => {
                       </div>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, paddingRight: 4, paddingLeft: 4 }}>
-                        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{m.timestamp}</span>
+                        <span style={{ fontSize: '0.7rem', color: '#64748B' }}>{m.timestamp}</span>
                         {!isUser && (
                           <button
                             onClick={() => handleCopy(m.id, m.text)}
                             title="Copy response"
-                            style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 2 }}
+                            style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: 2 }}
                           >
-                            {copiedId === m.id ? <Check size={11} color="#059669" /> : <Copy size={11} />}
+                            {copiedId === m.id ? <Check size={11} color="#10b981" /> : <Copy size={11} />}
                           </button>
                         )}
                       </div>
@@ -787,10 +787,10 @@ export const GlobalChatWidget: React.FC = () => {
 
                 {loading && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 8 }}>
-                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(79, 70, 229, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Sparkles size={13} color="var(--brand)" />
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(34, 211, 238, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Sparkles size={13} color="#22D3EE" />
                     </div>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                    <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
                       Evaluating telemetry and retrieving regulatory playbook...
                     </span>
                   </div>
@@ -802,8 +802,8 @@ export const GlobalChatWidget: React.FC = () => {
               <div
                 style={{
                   padding: '12px 14px',
-                  background: '#ffffff',
-                  borderTop: '1px solid var(--border-subtle)',
+                  background: '#0a1b2d',
+                  borderTop: '1px solid rgba(148, 163, 184, 0.15)',
                   display: 'flex',
                   gap: 8,
                   alignItems: 'center',
@@ -823,11 +823,11 @@ export const GlobalChatWidget: React.FC = () => {
                   disabled={loading}
                   style={{
                     flex: 1,
-                    background: '#f8fafc',
-                    border: '1px solid var(--border-subtle)',
+                    background: '#06111f',
+                    border: '1px solid rgba(148, 163, 184, 0.2)',
                     borderRadius: 8,
                     padding: '9px 12px',
-                    color: 'var(--text-primary)',
+                    color: '#F8FAFC',
                     fontSize: '0.85rem',
                     outline: 'none',
                   }}
@@ -836,8 +836,8 @@ export const GlobalChatWidget: React.FC = () => {
                   onClick={() => handleSend()}
                   disabled={loading || !input.trim()}
                   style={{
-                    background: input.trim() && !loading ? 'var(--brand)' : '#e2e8f0',
-                    color: input.trim() && !loading ? '#ffffff' : '#94a3b8',
+                    background: input.trim() && !loading ? 'linear-gradient(135deg, #0284c7, #06b6d4)' : 'rgba(148, 163, 184, 0.15)',
+                    color: input.trim() && !loading ? '#ffffff' : '#64748B',
                     border: 'none',
                     borderRadius: 8,
                     padding: '9px 14px',

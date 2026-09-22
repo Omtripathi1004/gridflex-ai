@@ -232,8 +232,8 @@ export default function JudgeModePage() {
                 key={st.step_number}
                 onClick={() => { setActiveStep(st.step_number); setIsPlayingAutoTour(false); }}
                 style={{
-                  background: isCurrent ? 'rgba(79, 70, 229, 0.1)' : (isCompleted ? 'rgba(5, 150, 105, 0.08)' : '#f8fafc'),
-                  border: isCurrent ? '1.5px solid var(--brand)' : (isCompleted ? '1px solid #059669' : '1px solid var(--border-subtle)'),
+                  background: isCurrent ? 'rgba(34, 211, 238, 0.15)' : (isCompleted ? 'rgba(16, 185, 129, 0.12)' : 'rgba(10, 27, 45, 0.6)'),
+                  border: isCurrent ? '1.5px solid #22d3ee' : (isCompleted ? '1px solid #10b981' : '1px solid rgba(148, 163, 184, 0.15)'),
                   borderRadius: 'var(--radius-md)',
                   padding: '10px 8px',
                   cursor: 'pointer',
@@ -249,8 +249,8 @@ export default function JudgeModePage() {
                   width: 22,
                   height: 22,
                   borderRadius: '50%',
-                  background: isCurrent ? 'var(--brand)' : (isCompleted ? '#059669' : '#e2e8f0'),
-                  color: isCurrent || isCompleted ? '#ffffff' : 'var(--text-secondary)',
+                  background: isCurrent ? '#22d3ee' : (isCompleted ? '#10b981' : 'rgba(148, 163, 184, 0.2)'),
+                  color: isCurrent || isCompleted ? '#06111f' : '#94a3b8',
                   fontSize: '0.72rem',
                   fontWeight: 700,
                   display: 'flex',
@@ -262,7 +262,7 @@ export default function JudgeModePage() {
                 <span style={{
                   fontSize: '0.74rem',
                   fontWeight: isCurrent ? 700 : 500,
-                  color: isCurrent ? 'var(--brand)' : (isCompleted ? '#059669' : 'var(--text-secondary)'),
+                  color: isCurrent ? '#22d3ee' : (isCompleted ? '#34d399' : '#94a3b8'),
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -280,8 +280,10 @@ export default function JudgeModePage() {
       <div className={currentStep.card_class} style={{
         padding: '32px 36px',
         borderRadius: 'var(--radius-lg)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
-        background: '#ffffff'
+        boxShadow: '0 8px 32px rgba(6, 17, 31, 0.5)',
+        background: 'rgba(13, 33, 53, 0.85)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(148, 163, 184, 0.2)'
       }}>
         {/* Step Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
@@ -315,8 +317,8 @@ export default function JudgeModePage() {
 
         {/* Telemetry & Optimization Signals Box */}
         <div style={{
-          background: '#f8fafc',
-          border: '1px solid var(--border-subtle)',
+          background: 'rgba(10, 27, 45, 0.75)',
+          border: '1px solid rgba(148, 163, 184, 0.15)',
           borderRadius: 'var(--radius-md)',
           padding: '18px 22px',
           marginBottom: 28
@@ -330,7 +332,7 @@ export default function JudgeModePage() {
                 <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', textTransform: 'capitalize', fontWeight: 500 }}>
                   {key.replace(/_/g, ' ')}
                 </span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: 2 }}>
+                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: currentStep.badge_color, textShadow: `0 0 12px ${currentStep.badge_color}40`, marginTop: 2 }}>
                   {val.toString()}
                 </div>
               </div>

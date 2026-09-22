@@ -327,11 +327,11 @@ export default function ExplainableAIPage() {
 
       {/* KPI Overview Strip in Contrast Colors (Dynamic per Scenario) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-        <div style={{ background: '#ffffff', border: '1px solid #fde68a', borderTop: '4px solid #d97706', padding: 20, borderRadius: 'var(--radius-md)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#b45309', marginBottom: 6 }}>
+        <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(245, 158, 11, 0.3)', borderTop: '4px solid #f59e0b', padding: 20, borderRadius: 'var(--radius-md)', backdropFilter: 'blur(12px)' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#fbbf24', marginBottom: 6 }}>
             Prediction Accuracy
           </div>
-          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#92400e' }}>
+          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#f59e0b', textShadow: '0 0 16px rgba(245, 158, 11, 0.3)' }}>
             {kpis.accuracy}
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 4 }}>
@@ -339,11 +339,11 @@ export default function ExplainableAIPage() {
           </div>
         </div>
 
-        <div style={{ background: '#ffffff', border: '1px solid #bae6fd', borderTop: '4px solid #0284c7', padding: 20, borderRadius: 'var(--radius-md)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#0284c7', marginBottom: 6 }}>
+        <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(14, 165, 233, 0.3)', borderTop: '4px solid #0ea5e9', padding: 20, borderRadius: 'var(--radius-md)', backdropFilter: 'blur(12px)' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#38bdf8', marginBottom: 6 }}>
             Peak Deficit Identified
           </div>
-          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#0369a1' }}>
+          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#38bdf8', textShadow: '0 0 16px rgba(56, 189, 248, 0.3)' }}>
             {kpis.deficit}
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 4 }}>
@@ -351,11 +351,11 @@ export default function ExplainableAIPage() {
           </div>
         </div>
 
-        <div style={{ background: '#ffffff', border: '1px solid #fbcfe8', borderTop: '4px solid #db2777', padding: 20, borderRadius: 'var(--radius-md)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#db2777', marginBottom: 6 }}>
+        <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(244, 114, 182, 0.3)', borderTop: '4px solid #ec4899', padding: 20, borderRadius: 'var(--radius-md)', backdropFilter: 'blur(12px)' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#f472b6', marginBottom: 6 }}>
             Dispatch Cost Saved
           </div>
-          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#9d174d' }}>
+          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#ec4899', textShadow: '0 0 16px rgba(236, 72, 153, 0.3)' }}>
             {kpis.costSaved}
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 4 }}>
@@ -363,11 +363,11 @@ export default function ExplainableAIPage() {
           </div>
         </div>
 
-        <div style={{ background: '#ffffff', border: '1px solid #a7f3d0', borderTop: '4px solid #059669', padding: 20, borderRadius: 'var(--radius-md)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#059669', marginBottom: 6 }}>
+        <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(16, 185, 129, 0.3)', borderTop: '4px solid #10b981', padding: 20, borderRadius: 'var(--radius-md)', backdropFilter: 'blur(12px)' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', color: '#34d399', marginBottom: 6 }}>
             Carbon Emissions Cut
           </div>
-          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#047857' }}>
+          <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#10b981', textShadow: '0 0 16px rgba(16, 185, 129, 0.3)' }}>
             {kpis.carbonCut}
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 4 }}>
@@ -377,20 +377,20 @@ export default function ExplainableAIPage() {
       </div>
 
       {/* SECTION 1: RECOMMENDATION RATIONALE ENGINE ("WHY THIS ACTION?") */}
-      <div style={{ background: '#ffffff', border: '1px solid var(--border-subtle)', padding: 26, borderRadius: 'var(--radius-lg)', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(148, 163, 184, 0.15)', padding: 26, borderRadius: 'var(--radius-lg)', backdropFilter: 'blur(12px)', boxShadow: '0 8px 32px rgba(6, 17, 31, 0.4)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-              <Scale size={22} color="#7c3aed" />
+              <Scale size={22} color="#a855f7" />
               <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                Recommendation Rationale: <span style={{ color: '#7c3aed' }}>Why This Dispatch Was Chosen</span>
+                Recommendation Rationale: <span style={{ color: '#a855f7' }}>Why This Dispatch Was Chosen</span>
               </h2>
             </div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
               The Mixed-Integer Linear Programming (MILP) solver evaluated 8 dispatch topologies across economic, thermal, and regulatory constraints:
             </p>
           </div>
-          <span className="badge badge-live" style={{ background: 'rgba(124, 58, 237, 0.1)', color: '#7c3aed', border: '1px solid #c4b5fd' }}>
+          <span className="badge badge-live" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
             MILP Pareto-Optimal Solver
           </span>
         </div>
@@ -403,8 +403,8 @@ export default function ExplainableAIPage() {
               <div 
                 key={idx}
                 style={{
-                  background: '#f8fafc',
-                  border: '1px solid var(--border-subtle)',
+                  background: 'rgba(10, 27, 45, 0.65)',
+                  border: '1px solid rgba(148, 163, 184, 0.15)',
                   borderLeft: `4px solid ${rec.badge_color}`,
                   borderRadius: 'var(--radius-md)',
                   padding: 18
@@ -412,7 +412,7 @@ export default function ExplainableAIPage() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 8, background: '#ffffff', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(13, 33, 53, 0.9)', border: '1px solid rgba(148, 163, 184, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon size={18} color={rec.badge_color} />
                     </div>
                     <div>
@@ -421,7 +421,7 @@ export default function ExplainableAIPage() {
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>{rec.amount_mw} MW</div>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38bdf8' }}>{rec.amount_mw} MW</div>
                     <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>{rec.latency_ms}ms Latency</span>
                   </div>
                 </div>
@@ -430,9 +430,9 @@ export default function ExplainableAIPage() {
                   <strong style={{ color: 'var(--text-primary)' }}>Why Chosen:</strong> {rec.why_chosen}
                 </p>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border-subtle)', paddingTop: 8 }}>
-                  <span>Levelized Cost: <strong style={{ color: 'var(--text-primary)' }}>${rec.cost_usd_mwh}/MWh</strong></span>
-                  <span>Carbon Penalty: <strong style={{ color: 'var(--green-renew)' }}>0 kg CO₂</strong></span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', borderTop: '1px solid rgba(148, 163, 184, 0.12)', paddingTop: 8 }}>
+                  <span>Levelized Cost: <strong style={{ color: '#fbbf24' }}>${rec.cost_usd_mwh}/MWh</strong></span>
+                  <span>Carbon Penalty: <strong style={{ color: '#34d399' }}>0 kg CO₂</strong></span>
                 </div>
               </div>
             );
@@ -440,19 +440,19 @@ export default function ExplainableAIPage() {
         </div>
 
         {/* Counterfactual Audit: Rejected Alternatives */}
-        <div style={{ background: '#fef2f2', padding: 20, borderRadius: 'var(--radius-md)', border: '1px solid #fecaca' }}>
-          <h4 style={{ fontSize: '0.98rem', fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: '#b91c1c' }}>
+        <div style={{ background: 'rgba(239, 68, 68, 0.08)', padding: 20, borderRadius: 'var(--radius-md)', border: '1px solid rgba(239, 68, 68, 0.25)' }}>
+          <h4 style={{ fontSize: '0.98rem', fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: '#f87171' }}>
             <AlertTriangle size={18} /> Counterfactual Audit: Why Alternative Options Were Rejected
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
             {rejectedAlternatives.map((alt, i) => (
-              <div key={i} style={{ background: '#ffffff', border: '1px solid #fca5a5', borderRadius: 'var(--radius-sm)', padding: 14 }}>
+              <div key={i} style={{ background: 'rgba(10, 27, 45, 0.8)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: 'var(--radius-sm)', padding: 14 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                  <h5 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#991b1b', margin: 0 }}>{alt.action}</h5>
-                  <span style={{ fontSize: '0.7rem', color: '#dc2626', fontWeight: 700, background: '#fee2e2', padding: '2px 6px', borderRadius: 4 }}>{alt.tag}</span>
+                  <h5 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#f87171', margin: 0 }}>{alt.action}</h5>
+                  <span style={{ fontSize: '0.7rem', color: '#f87171', fontWeight: 700, background: 'rgba(239, 68, 68, 0.18)', padding: '2px 6px', borderRadius: 4 }}>{alt.tag}</span>
                 </div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 6 }}>
-                  Financial: <span style={{ color: '#b91c1c', fontWeight: 600 }}>{alt.cost_penalty}</span> | Carbon: {alt.carbon_penalty}
+                  Financial: <span style={{ color: '#fbbf24', fontWeight: 600 }}>{alt.cost_penalty}</span> | Carbon: {alt.carbon_penalty}
                 </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                   <strong style={{ color: 'var(--text-primary)' }}>Rejection Audit:</strong> {alt.rejection_reason}
@@ -466,7 +466,7 @@ export default function ExplainableAIPage() {
       {/* SECTION 2: SHAP PREDICTION ATTRIBUTION (SOLAR & DEFICIT) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 20, minWidth: 0, maxWidth: '100%' }}>
         {/* Solar Forecast SHAP Breakdown */}
-        <div style={{ background: '#ffffff', border: '1px solid var(--border-subtle)', padding: 22, borderRadius: 'var(--radius-lg)', minWidth: 0, maxWidth: '100%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+        <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(148, 163, 184, 0.15)', padding: 22, borderRadius: 'var(--radius-lg)', minWidth: 0, maxWidth: '100%', overflow: 'hidden', backdropFilter: 'blur(12px)', boxShadow: '0 8px 32px rgba(6, 17, 31, 0.4)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -474,7 +474,7 @@ export default function ExplainableAIPage() {
                 <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{t('xai.solar_title')}</h3>
               </div>
               <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: 4 }}>
-                {t('xai.base_value')}: <strong>{solarShap.base_value_mw} MW</strong> ➔ {t('xai.predicted_value')}: <strong style={{ color: 'var(--amber-flow)' }}>{solarShap.predicted_value_mw} MW</strong>
+                {t('xai.base_value')}: <strong style={{ color: '#94a3b8' }}>{solarShap.base_value_mw} MW</strong> ➔ {t('xai.predicted_value')}: <strong style={{ color: '#fbbf24', textShadow: '0 0 12px rgba(251, 191, 36, 0.3)' }}>{solarShap.predicted_value_mw} MW</strong>
               </p>
             </div>
             <ProvenanceBadge classification="forecast" sourceName="NASA POWER + XGBoost" mode="cached" />
@@ -485,33 +485,33 @@ export default function ExplainableAIPage() {
             display: 'flex',
             alignItems: 'center',
             gap: 10,
-            background: '#ecfdf5',
-            border: '1px solid #a7f3d0',
+            background: 'rgba(16, 185, 129, 0.12)',
+            border: '1px solid rgba(16, 185, 129, 0.25)',
             padding: '10px 14px',
             borderRadius: 8,
             marginBottom: 14,
             fontSize: '0.82rem',
-            color: '#065f46'
+            color: '#34d399'
           }}>
             <CheckCircle2 size={16} />
             <span>
-              <strong>TreeSHAP Additivity Enforced:</strong> Base ({solarShap.base_value_mw} MW) + Σ contributions ({solarCheck.sum >= 0 ? `+${solarCheck.sum}` : solarCheck.sum} MW) = <strong>{solarShap.predicted_value_mw} MW</strong> (Exact Match)
+              <strong>TreeSHAP Additivity Enforced:</strong> Base ({solarShap.base_value_mw} MW) + Σ contributions ({solarCheck.sum >= 0 ? `+${solarCheck.sum}` : solarCheck.sum} MW) = <strong style={{ color: '#34d399' }}>{solarShap.predicted_value_mw} MW</strong> (Exact Match)
             </span>
           </div>
 
           {/* Explanation Box */}
           <div style={{
-            background: '#fefce8',
-            border: '1px solid #fde047',
+            background: 'rgba(245, 158, 11, 0.1)',
+            border: '1px solid rgba(245, 158, 11, 0.25)',
             padding: '12px 16px',
             borderRadius: 'var(--radius-md)',
             marginBottom: 16,
             fontSize: '0.86rem',
-            color: '#713f12',
+            color: '#fbbf24',
             lineHeight: 1.55
           }}>
-            <Sparkles size={16} style={{ color: '#ca8a04', verticalAlign: 'middle', marginRight: 6 }} />
-            <strong style={{ color: '#854d0e' }}>Physics Explanation:</strong> {solarShap.plain_english_summary}
+            <Sparkles size={16} style={{ color: '#fbbf24', verticalAlign: 'middle', marginRight: 6 }} />
+            <strong style={{ color: '#f59e0b' }}>Physics Explanation:</strong> {solarShap.plain_english_summary}
           </div>
 
           {/* Feature Bar Chart */}
@@ -522,16 +522,16 @@ export default function ExplainableAIPage() {
                 layout="vertical" 
                 margin={{ top: 5, right: 15, left: 0, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
-                <XAxis type="number" stroke="#64748b" tick={{ fill: '#475569', fontSize: 11 }} unit=" MW" />
-                <YAxis type="category" dataKey="feature" stroke="#64748b" tick={{ fill: '#1e293b', fontSize: 11, fontWeight: 500 }} width={105} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.15)" horizontal={false} />
+                <XAxis type="number" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} unit=" MW" />
+                <YAxis type="category" dataKey="feature" stroke="#64748b" tick={{ fill: '#cbd5e1', fontSize: 11, fontWeight: 500 }} width={105} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#ffffff', 
-                    border: '1px solid var(--border-subtle)',
+                    backgroundColor: 'rgba(10, 27, 45, 0.95)', 
+                    border: '1px solid rgba(148, 163, 184, 0.2)',
                     borderRadius: '8px',
-                    color: '#0f172a',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                    color: '#f8fafc',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
                   }}
                   formatter={(val: any, _name: any, item: any) => [`${val} MW`, item.payload.label || item.payload.feature]}
                 />
@@ -539,7 +539,7 @@ export default function ExplainableAIPage() {
                   {solarShap.features.map((entry: any, index: number) => (
                     <Cell 
                       key={`cell-${index}`} 
-                      fill={entry.contribution_mw >= 0 ? '#059669' : '#dc2626'} 
+                      fill={entry.contribution_mw >= 0 ? '#10b981' : '#f87171'} 
                     />
                   ))}
                 </Bar>
@@ -549,7 +549,7 @@ export default function ExplainableAIPage() {
         </div>
 
         {/* Evening Deficit SHAP Breakdown */}
-        <div style={{ background: '#ffffff', border: '1px solid var(--border-subtle)', padding: 22, borderRadius: 'var(--radius-lg)', minWidth: 0, maxWidth: '100%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+        <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(148, 163, 184, 0.15)', padding: 22, borderRadius: 'var(--radius-lg)', minWidth: 0, maxWidth: '100%', overflow: 'hidden', backdropFilter: 'blur(12px)', boxShadow: '0 8px 32px rgba(6, 17, 31, 0.4)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -557,7 +557,7 @@ export default function ExplainableAIPage() {
                 <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{t('xai.deficit_title')}</h3>
               </div>
               <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: 4 }}>
-                {t('xai.base_value')}: <strong>{deficitShap.base_value_mw} MW</strong> ➔ {t('xai.predicted_value')}: <strong style={{ color: 'var(--red-risk)' }}>{deficitShap.predicted_value_mw} MW</strong>
+                {t('xai.base_value')}: <strong style={{ color: '#94a3b8' }}>{deficitShap.base_value_mw} MW</strong> ➔ {t('xai.predicted_value')}: <strong style={{ color: '#f87171', textShadow: '0 0 12px rgba(248, 113, 113, 0.3)' }}>{deficitShap.predicted_value_mw} MW</strong>
               </p>
             </div>
             <ProvenanceBadge classification="forecast" sourceName="Grid-India Scaled Profile + LightGBM" mode="cached" />
@@ -568,33 +568,33 @@ export default function ExplainableAIPage() {
             display: 'flex',
             alignItems: 'center',
             gap: 10,
-            background: '#ecfdf5',
-            border: '1px solid #a7f3d0',
+            background: 'rgba(16, 185, 129, 0.12)',
+            border: '1px solid rgba(16, 185, 129, 0.25)',
             padding: '10px 14px',
             borderRadius: 8,
             marginBottom: 14,
             fontSize: '0.82rem',
-            color: '#065f46'
+            color: '#34d399'
           }}>
             <CheckCircle2 size={16} />
             <span>
-              <strong>TreeSHAP Additivity Enforced:</strong> Base ({deficitShap.base_value_mw} MW) + Σ contributions ({deficitCheck.sum >= 0 ? `+${deficitCheck.sum}` : deficitCheck.sum} MW) = <strong>{deficitShap.predicted_value_mw} MW</strong> (Exact Match)
+              <strong>TreeSHAP Additivity Enforced:</strong> Base ({deficitShap.base_value_mw} MW) + Σ contributions ({deficitCheck.sum >= 0 ? `+${deficitCheck.sum}` : deficitCheck.sum} MW) = <strong style={{ color: '#34d399' }}>{deficitShap.predicted_value_mw} MW</strong> (Exact Match)
             </span>
           </div>
 
           {/* Explanation Box */}
           <div style={{
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
             padding: '12px 16px',
             borderRadius: 'var(--radius-md)',
             marginBottom: 16,
             fontSize: '0.86rem',
-            color: '#991b1b',
+            color: '#f87171',
             lineHeight: 1.55
           }}>
-            <Sparkles size={16} style={{ color: '#dc2626', verticalAlign: 'middle', marginRight: 6 }} />
-            <strong style={{ color: '#7f1d1d' }}>Duck Curve Explanation:</strong> {deficitShap.plain_english_summary}
+            <Sparkles size={16} style={{ color: '#f87171', verticalAlign: 'middle', marginRight: 6 }} />
+            <strong style={{ color: '#ef4444' }}>Duck Curve Explanation:</strong> {deficitShap.plain_english_summary}
           </div>
 
           {/* Feature Bar Chart */}
@@ -605,16 +605,16 @@ export default function ExplainableAIPage() {
                 layout="vertical" 
                 margin={{ top: 5, right: 15, left: 0, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
-                <XAxis type="number" stroke="#64748b" tick={{ fill: '#475569', fontSize: 11 }} unit=" MW" />
-                <YAxis type="category" dataKey="feature" stroke="#64748b" tick={{ fill: '#1e293b', fontSize: 11, fontWeight: 500 }} width={105} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.15)" horizontal={false} />
+                <XAxis type="number" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} unit=" MW" />
+                <YAxis type="category" dataKey="feature" stroke="#64748b" tick={{ fill: '#cbd5e1', fontSize: 11, fontWeight: 500 }} width={105} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#ffffff', 
-                    border: '1px solid var(--border-subtle)',
+                    backgroundColor: 'rgba(10, 27, 45, 0.95)', 
+                    border: '1px solid rgba(148, 163, 184, 0.2)',
                     borderRadius: '8px',
-                    color: '#0f172a',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                    color: '#f8fafc',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
                   }}
                   formatter={(val: any, _name: any, item: any) => [`${val} MW`, item.payload.label || item.payload.feature]}
                 />
@@ -622,7 +622,7 @@ export default function ExplainableAIPage() {
                   {deficitShap.features.map((entry: any, index: number) => (
                     <Cell 
                       key={`cell-${index}`} 
-                      fill={entry.contribution_mw >= 0 ? '#059669' : '#dc2626'} 
+                      fill={entry.contribution_mw >= 0 ? '#10b981' : '#f87171'} 
                     />
                   ))}
                 </Bar>
@@ -633,7 +633,7 @@ export default function ExplainableAIPage() {
       </div>
 
       {/* SECTION 3: INTERACTIVE WHAT-IF COUNTERFACTUAL SANDBOX */}
-      <div style={{ background: '#ffffff', border: '1px solid var(--border-subtle)', padding: 26, borderRadius: 'var(--radius-lg)', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div style={{ background: 'rgba(13, 33, 53, 0.75)', border: '1px solid rgba(148, 163, 184, 0.15)', padding: 26, borderRadius: 'var(--radius-lg)', backdropFilter: 'blur(12px)', boxShadow: '0 8px 32px rgba(6, 17, 31, 0.4)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
           <div>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-primary)', margin: 0 }}>
@@ -651,7 +651,7 @@ export default function ExplainableAIPage() {
           <div>
             <label style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
               <span>Battery Fleet State-of-Charge (SoC)</span>
-              <strong style={{ color: 'var(--cyan-primary)' }}>{batterySocSlider}%</strong>
+              <strong style={{ color: '#22d3ee' }}>{batterySocSlider}%</strong>
             </label>
             <input 
               type="range" 
@@ -659,7 +659,7 @@ export default function ExplainableAIPage() {
               max="100" 
               value={batterySocSlider} 
               onChange={(e) => setBatterySocSlider(Number(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--cyan-primary)', cursor: 'pointer' }}
+              style={{ width: '100%', accentColor: '#22d3ee', cursor: 'pointer' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-tertiary)', marginTop: 4 }}>
               <span>15% (Depleted)</span>
@@ -668,20 +668,20 @@ export default function ExplainableAIPage() {
             </div>
           </div>
 
-          <div style={{ background: '#f8fafc', padding: 18, borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+          <div style={{ background: 'rgba(10, 27, 45, 0.65)', padding: 18, borderRadius: 'var(--radius-md)', border: '1px solid rgba(148, 163, 184, 0.15)' }}>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 6, fontWeight: 600 }}>Dynamic AI Recalculation:</div>
             <div style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.55 }}>
               {batterySocSlider < 30 ? (
-                <span style={{ color: '#dc2626' }}>
-                  BESS depleted below 30%. Solver shifts <strong>8.8 MW</strong> to Aggregated Demand Response and increases P2P prosumer clearing to <strong>5.4 MW</strong> to avoid blackout.
+                <span style={{ color: '#f87171' }}>
+                  BESS depleted below 30%. Solver shifts <strong style={{ color: '#fbbf24' }}>8.8 MW</strong> to Aggregated Demand Response and increases P2P prosumer clearing to <strong style={{ color: '#38bdf8' }}>5.4 MW</strong> to avoid blackout.
                 </span>
               ) : batterySocSlider < 70 ? (
-                <span style={{ color: '#d97706' }}>
-                  Balanced Flexibility: BESS dispatches <strong>7.2 MW</strong>, DR sheds <strong>6.5 MW</strong>, and P2P covers remaining <strong>4.5 MW</strong>.
+                <span style={{ color: '#fbbf24' }}>
+                  Balanced Flexibility: BESS dispatches <strong style={{ color: '#38bdf8' }}>7.2 MW</strong>, DR sheds <strong style={{ color: '#fbbf24' }}>6.5 MW</strong>, and P2P covers remaining <strong style={{ color: '#34d399' }}>4.5 MW</strong>.
                 </span>
               ) : (
-                <span style={{ color: '#059669' }}>
-                  High Battery Headroom: BESS dispatches full <strong>9.5 MW</strong> primary reserve at lowest levelized cost (₹5,166/MWh). Zero consumer curtailment.
+                <span style={{ color: '#34d399' }}>
+                  High Battery Headroom: BESS dispatches full <strong style={{ color: '#34d399' }}>9.5 MW</strong> primary reserve at lowest levelized cost (₹5,166/MWh). Zero consumer curtailment.
                 </span>
               )}
             </div>

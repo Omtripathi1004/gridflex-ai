@@ -26,15 +26,15 @@ export function parseMarkdown(text: string): string {
 
   // Code blocks (``` ... ```)
   html = html.replace(/```([\s\S]*?)```/g, (_, code) => {
-    return `<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;overflow-x:auto;margin:8px 0;font-size:0.82rem;color:#0f172a;line-height:1.5;font-family:monospace;">${code.trim()}</pre>`;
+    return `<pre style="background:rgba(10, 27, 45, 0.85);border:1px solid rgba(34, 211, 238, 0.25);border-radius:8px;padding:10px 14px;overflow-x:auto;margin:8px 0;font-size:0.82rem;color:#38bdf8;line-height:1.5;font-family:monospace;">${code.trim()}</pre>`;
   });
 
   // Inline code (`...`)
   html = html.replace(/`([^`]+)`/g, (_, code) => {
-    return `<code style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:2px 6px;font-size:0.84em;color:#0284c7;font-family:monospace;font-weight:600;">${code}</code>`;
+    return `<code style="background:rgba(34, 211, 238, 0.12);border:1px solid rgba(34, 211, 238, 0.3);border-radius:4px;padding:2px 6px;font-size:0.84em;color:#22d3ee;font-family:monospace;font-weight:600;">${code}</code>`;
   });
 
-  // Bold (**text**) - High contrast in light mode
+  // Bold (**text**) - High contrast in dark mode
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--text-primary);font-weight:700;">$1</strong>');
 
   // Italic (*text*)
@@ -42,12 +42,12 @@ export function parseMarkdown(text: string): string {
 
   // Math Blocks Restoration
   html = html.replace(/:::MATH_BLOCK:::([\s\S]*?):::END_MATH:::/g, (_, math) => {
-    return `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #6366f1;border-radius:6px;padding:8px 12px;margin:8px 0;font-family:monospace,sans-serif;font-size:0.84rem;color:#0f172a;overflow-x:auto;line-height:1.5;">${math.trim()}</div>`;
+    return `<div class="math-block" style="background:rgba(10, 27, 45, 0.85);border:1px solid rgba(168, 85, 247, 0.3);border-left:3px solid #a855f7;border-radius:6px;padding:8px 12px;margin:8px 0;font-family:monospace,sans-serif;font-size:0.84rem;color:#c084fc;overflow-x:auto;line-height:1.5;">${math.trim()}</div>`;
   });
 
   // Inline Math Restoration
   html = html.replace(/:::INLINE_MATH:::([\s\S]*?):::END_INLINE:::/g, (_, math) => {
-    return `<span style="background:#f1f5f9;border:1px solid #e2e8f0;padding:1px 5px;border-radius:4px;font-family:monospace,sans-serif;font-size:0.84em;color:#4f46e5;font-weight:600;">${math.trim()}</span>`;
+    return `<span style="background:rgba(168, 85, 247, 0.15);border:1px solid rgba(168, 85, 247, 0.3);padding:1px 5px;border-radius:4px;font-family:monospace,sans-serif;font-size:0.84em;color:#c084fc;font-weight:600;">${math.trim()}</span>`;
   });
 
   // Process lines into structured paragraphs, headers, and lists
@@ -110,7 +110,7 @@ export function parseMarkdown(text: string): string {
     }
 
     // Math block already rendered
-    if (line.startsWith('<div style="background:#f8fafc')) {
+    if (line.startsWith('<div class="math-block"') || line.startsWith('<div style="background:#f8fafc')) {
       flushParagraph();
       closeLists();
       result.push(line);

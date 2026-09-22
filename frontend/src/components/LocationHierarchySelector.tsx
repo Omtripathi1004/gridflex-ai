@@ -55,12 +55,12 @@ export const LocationHierarchySelector: React.FC<Props> = ({
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85))',
-      border: '1px solid rgba(0, 240, 255, 0.25)',
+      background: 'rgba(13, 33, 53, 0.75)',
+      border: '1px solid rgba(148, 163, 184, 0.15)',
       borderRadius: '16px',
-      padding: '20px',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-      backdropFilter: 'blur(12px)',
+      padding: '22px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
+      backdropFilter: 'blur(16px)',
       marginBottom: '24px'
     }}>
       {/* Top Bar: Breadcrumb + Mode Switcher */}
@@ -70,13 +70,13 @@ export const LocationHierarchySelector: React.FC<Props> = ({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '16px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        borderBottom: '1px solid rgba(148, 163, 184, 0.12)',
         paddingBottom: '16px',
         marginBottom: '16px'
       }}>
         {/* Breadcrumb path */}
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', fontSize: '13px' }}>
-          <span style={{ color: '#00f0ff', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
+          <span style={{ color: '#22d3ee', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 700 }}>
             <Compass size={15} /> India
           </span>
           <ChevronRight size={14} color="#64748b" />
@@ -84,13 +84,13 @@ export const LocationHierarchySelector: React.FC<Props> = ({
           <ChevronRight size={14} color="#64748b" />
           <span style={{ color: '#94a3b8' }}>{selectedLocation.district}</span>
           <ChevronRight size={14} color="#64748b" />
-          <span style={{ color: '#38bdf8', fontWeight: 600, background: 'rgba(56, 189, 248, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>
+          <span style={{ color: '#22d3ee', fontWeight: 700, background: 'rgba(34, 211, 238, 0.1)', border: '1px solid rgba(34, 211, 238, 0.25)', padding: '2px 8px', borderRadius: '4px' }}>
             {selectedLocation.locality}
           </span>
         </div>
 
         {/* District vs Neighbourhood Mode Switcher */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(2, 6, 23, 0.6)', padding: '4px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(10, 27, 45, 0.85)', padding: '4px', borderRadius: '10px', border: '1px solid rgba(148, 163, 184, 0.15)' }}>
           <button
             onClick={() => onToggleMode('neighbourhood')}
             style={{
@@ -103,8 +103,8 @@ export const LocationHierarchySelector: React.FC<Props> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: operatingMode === 'neighbourhood' ? 'linear-gradient(135deg, #00f0ff, #0284c7)' : 'transparent',
-              color: operatingMode === 'neighbourhood' ? '#070b14' : '#94a3b8',
+              background: operatingMode === 'neighbourhood' ? 'linear-gradient(135deg, #22d3ee, #3b82f6)' : 'transparent',
+              color: operatingMode === 'neighbourhood' ? '#06111f' : '#94a3b8',
               transition: 'all 0.2s ease'
             }}
           >
@@ -123,7 +123,7 @@ export const LocationHierarchySelector: React.FC<Props> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: operatingMode === 'district' ? 'linear-gradient(135deg, #a855f7, #6366f1)' : 'transparent',
+              background: operatingMode === 'district' ? 'linear-gradient(135deg, #3b82f6, #6366f1)' : 'transparent',
               color: operatingMode === 'district' ? '#ffffff' : '#94a3b8',
               transition: 'all 0.2s ease'
             }}
@@ -143,7 +143,7 @@ export const LocationHierarchySelector: React.FC<Props> = ({
       }}>
         {/* State Select */}
         <div>
-          <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', marginBottom: '6px', fontWeight: 700 }}>
+          <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '6px', fontWeight: 700 }}>
             1. State / Region
           </label>
           <select
@@ -152,9 +152,9 @@ export const LocationHierarchySelector: React.FC<Props> = ({
             style={{
               width: '100%',
               padding: '10px 12px',
-              background: '#070b14',
-              color: '#e2e8f0',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: '#0A1B2D',
+              color: '#f8fafc',
+              border: '1px solid rgba(148, 163, 184, 0.2)',
               borderRadius: '8px',
               fontSize: '13px',
               fontWeight: 600,
@@ -170,7 +170,7 @@ export const LocationHierarchySelector: React.FC<Props> = ({
 
         {/* District Select */}
         <div>
-          <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', marginBottom: '6px', fontWeight: 700 }}>
+          <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '6px', fontWeight: 700 }}>
             2. District
           </label>
           <select
@@ -179,9 +179,9 @@ export const LocationHierarchySelector: React.FC<Props> = ({
             style={{
               width: '100%',
               padding: '10px 12px',
-              background: '#070b14',
-              color: '#e2e8f0',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: '#0A1B2D',
+              color: '#f8fafc',
+              border: '1px solid rgba(148, 163, 184, 0.2)',
               borderRadius: '8px',
               fontSize: '13px',
               fontWeight: 600,
@@ -197,7 +197,7 @@ export const LocationHierarchySelector: React.FC<Props> = ({
 
         {/* Locality / Feeder Cluster Select */}
         <div>
-          <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', marginBottom: '6px', fontWeight: 700 }}>
+          <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '6px', fontWeight: 700 }}>
             3. Locality / Feeder Cluster
           </label>
           <select
@@ -206,9 +206,9 @@ export const LocationHierarchySelector: React.FC<Props> = ({
             style={{
               width: '100%',
               padding: '10px 12px',
-              background: '#070b14',
-              color: '#e2e8f0',
-              border: '1px solid rgba(0, 240, 255, 0.4)',
+              background: '#0A1B2D',
+              color: '#f8fafc',
+              border: '1px solid rgba(34, 211, 238, 0.4)',
               borderRadius: '8px',
               fontSize: '13px',
               fontWeight: 600,
@@ -227,8 +227,8 @@ export const LocationHierarchySelector: React.FC<Props> = ({
 
       {/* Quick Presets (Including Prompt-Mandated UP -> Lucknow -> Gomti Nagar Demo Path) */}
       <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-        <span style={{ fontSize: '11px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
-          <Sparkles size={12} color="#f59e0b" /> Quick Demo Paths:
+        <span style={{ fontSize: '11px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
+          <Sparkles size={12} color="#22d3ee" /> Quick Demo Paths:
         </span>
         {HIERARCHY_LOCATIONS.map(loc => {
           const isSelected = loc.feeder_id === selectedLocation.feeder_id;
@@ -238,20 +238,22 @@ export const LocationHierarchySelector: React.FC<Props> = ({
               key={loc.feeder_id}
               onClick={() => onSelectLocation(loc)}
               style={{
-                padding: '5px 11px',
+                padding: '5px 12px',
                 borderRadius: '6px',
-                border: isSelected ? '1px solid #00f0ff' : '1px solid rgba(255, 255, 255, 0.12)',
-                background: isSelected ? 'rgba(0, 240, 255, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-                color: isSelected ? '#00f0ff' : '#cbd5e1',
+                border: isSelected ? '1px solid #22d3ee' : '1px solid rgba(148, 163, 184, 0.15)',
+                background: isSelected ? 'rgba(34, 211, 238, 0.15)' : 'rgba(10, 27, 45, 0.6)',
+                color: isSelected ? '#22d3ee' : '#cbd5e1',
                 cursor: 'pointer',
                 fontSize: '11px',
                 fontWeight: isSelected ? 700 : 500,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '5px'
+                gap: '5px',
+                transition: 'all 0.2s ease',
+                boxShadow: isSelected ? '0 0 12px rgba(34, 211, 238, 0.2)' : 'none'
               }}
             >
-              {isSelected && <CheckCircle2 size={11} color="#00f0ff" />}
+              {isSelected && <CheckCircle2 size={11} color="#22d3ee" />}
               {isPromptMandated ? '⭐ ' : ''}{loc.state} → {loc.district}: {loc.locality.split('/')[0].trim()}
             </button>
           );

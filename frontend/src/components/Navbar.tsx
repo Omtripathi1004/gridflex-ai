@@ -189,14 +189,15 @@ export const Navbar: React.FC = () => {
       position: 'sticky',
       top: 0,
       zIndex: 1000,
-      background: 'var(--bg-secondary)',
-      borderBottom: '1px solid var(--border-subtle)',
+      background: 'rgba(6, 17, 31, 0.85)',
+      backdropFilter: 'blur(16px)',
+      borderBottom: '1px solid rgba(148, 163, 184, 0.12)',
       height: 64,
       display: 'flex',
       alignItems: 'center'
     }}>
       <div style={{
-        maxWidth: 1380,
+        maxWidth: 1400,
         width: '100%',
         margin: '0 auto',
         padding: '0 16px',
@@ -209,45 +210,58 @@ export const Navbar: React.FC = () => {
         <Link to="/" style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
+          gap: 10,
           textDecoration: 'none',
-          color: 'var(--text-primary)',
-          fontWeight: 700,
-          fontSize: '1.05rem',
+          color: '#F8FAFC',
+          fontWeight: 800,
+          fontSize: '1.1rem',
+          letterSpacing: '-0.02em',
           flexShrink: 0
         }}>
           <div style={{
             width: 32,
             height: 32,
-            borderRadius: 6,
-            background: 'var(--cyan-primary)',
-            color: '#ffffff',
+            borderRadius: 8,
+            background: 'linear-gradient(135deg, #22D3EE, #3B82F6)',
+            color: '#06111F',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: '0 0 14px rgba(34, 211, 238, 0.35)'
           }}>
             <Zap size={18} />
           </div>
-          <span>GridFlex AI</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            GridFlex AI
+            <span style={{
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: '#10B981',
+              boxShadow: '0 0 8px #10B981'
+            }} />
+          </span>
         </Link>
 
         {/* Centre: Desktop Navigation */}
         <nav className="desktop-only" style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 4
+          gap: 6
         }}>
           {/* 1. About */}
           <Link
             to="/about"
             style={{
-              padding: '7px 11px',
-              borderRadius: 6,
+              padding: '6px 12px',
+              borderRadius: 8,
               textDecoration: 'none',
               fontSize: '0.86rem',
-              color: (pathname === '/about' || pathname === '/') ? 'var(--brand)' : 'var(--text-secondary)',
-              background: (pathname === '/about' || pathname === '/') ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
-              fontWeight: (pathname === '/about' || pathname === '/') ? 600 : 500
+              color: (pathname === '/about' || pathname === '/') ? '#22D3EE' : '#94A3B8',
+              background: (pathname === '/about' || pathname === '/') ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
+              border: (pathname === '/about' || pathname === '/') ? '1px solid rgba(34, 211, 238, 0.25)' : '1px solid transparent',
+              fontWeight: (pathname === '/about' || pathname === '/') ? 600 : 500,
+              transition: 'all 0.15s ease'
             }}
           >
             {language === 'hi' ? 'परिचय' : 'About'}
@@ -257,13 +271,15 @@ export const Navbar: React.FC = () => {
           <Link
             to="/command-center"
             style={{
-              padding: '7px 11px',
-              borderRadius: 6,
+              padding: '6px 12px',
+              borderRadius: 8,
               textDecoration: 'none',
               fontSize: '0.86rem',
-              color: pathname === '/command-center' ? 'var(--brand)' : 'var(--text-secondary)',
-              background: pathname === '/command-center' ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
-              fontWeight: pathname === '/command-center' ? 600 : 500
+              color: pathname === '/command-center' ? '#22D3EE' : '#94A3B8',
+              background: pathname === '/command-center' ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
+              border: pathname === '/command-center' ? '1px solid rgba(34, 211, 238, 0.25)' : '1px solid transparent',
+              fontWeight: pathname === '/command-center' ? 600 : 500,
+              transition: 'all 0.15s ease'
             }}
           >
             {language === 'hi' ? 'कमांड सेंटर' : 'Command Center'}
@@ -282,17 +298,18 @@ export const Navbar: React.FC = () => {
                 setOpenDropdown(prev => prev === 'forecasts' ? null : 'forecasts');
               }}
               style={{
-                padding: '7px 11px',
-                borderRadius: 6,
-                border: 'none',
-                background: isForecastActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
-                color: isForecastActive ? 'var(--brand)' : 'var(--text-secondary)',
+                padding: '6px 12px',
+                borderRadius: 8,
+                border: isForecastActive ? '1px solid rgba(34, 211, 238, 0.25)' : '1px solid transparent',
+                background: isForecastActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
+                color: isForecastActive ? '#22D3EE' : '#94A3B8',
                 cursor: 'pointer',
                 fontSize: '0.86rem',
                 fontWeight: isForecastActive ? 600 : 500,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 4
+                gap: 4,
+                transition: 'all 0.15s ease'
               }}
             >
               <span>{language === 'hi' ? 'पूर्वानुमान' : 'Forecasts'}</span>
@@ -309,16 +326,17 @@ export const Navbar: React.FC = () => {
                   position: 'absolute',
                   top: '100%',
                   left: 0,
-                  minWidth: 260,
-                  background: '#ffffff',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 10,
-                  padding: 6,
-                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
+                  minWidth: 280,
+                  background: 'rgba(10, 27, 45, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(34, 211, 238, 0.25)',
+                  borderRadius: 12,
+                  padding: 8,
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(34, 211, 238, 0.1)',
                   zIndex: 1100,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 2
+                  gap: 3
                 }}
               >
                 {forecastItems.map(item => {
@@ -333,20 +351,21 @@ export const Navbar: React.FC = () => {
                         window.scrollTo(0, 0);
                       }}
                       style={{
-                        padding: '8px 12px',
-                        borderRadius: 6,
+                        padding: '9px 12px',
+                        borderRadius: 8,
                         textDecoration: 'none',
-                        color: isActive ? 'var(--brand)' : 'var(--text-primary)',
-                        background: isActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
+                        color: isActive ? '#22D3EE' : '#F8FAFC',
+                        background: isActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
                         display: 'flex',
                         alignItems: 'flex-start',
-                        gap: 10
+                        gap: 10,
+                        transition: 'background 0.15s ease'
                       }}
                     >
-                      <Icon size={16} style={{ color: isActive ? 'var(--brand)' : 'var(--text-secondary)', marginTop: 2, flexShrink: 0 }} />
+                      <Icon size={16} style={{ color: isActive ? '#22D3EE' : '#38BDF8', marginTop: 2, flexShrink: 0 }} />
                       <div>
-                        <div style={{ fontSize: '0.84rem', fontWeight: isActive ? 600 : 500 }}>{item.label}</div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>{item.desc}</div>
+                        <div style={{ fontSize: '0.86rem', fontWeight: isActive ? 600 : 500 }}>{item.label}</div>
+                        <div style={{ fontSize: '0.74rem', color: '#94A3B8' }}>{item.desc}</div>
                       </div>
                     </Link>
                   );
@@ -368,17 +387,18 @@ export const Navbar: React.FC = () => {
                 setOpenDropdown(prev => prev === 'gridtools' ? null : 'gridtools');
               }}
               style={{
-                padding: '7px 11px',
-                borderRadius: 6,
-                border: 'none',
-                background: isGridToolsActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
-                color: isGridToolsActive ? 'var(--brand)' : 'var(--text-secondary)',
+                padding: '6px 12px',
+                borderRadius: 8,
+                border: isGridToolsActive ? '1px solid rgba(34, 211, 238, 0.25)' : '1px solid transparent',
+                background: isGridToolsActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
+                color: isGridToolsActive ? '#22D3EE' : '#94A3B8',
                 cursor: 'pointer',
                 fontSize: '0.86rem',
                 fontWeight: isGridToolsActive ? 600 : 500,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 4
+                gap: 4,
+                transition: 'all 0.15s ease'
               }}
             >
               <span>{language === 'hi' ? 'ग्रिड टूल्स' : 'Grid Tools'}</span>
@@ -395,16 +415,17 @@ export const Navbar: React.FC = () => {
                   position: 'absolute',
                   top: '100%',
                   left: 0,
-                  minWidth: 260,
-                  background: '#ffffff',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 10,
-                  padding: 6,
-                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
+                  minWidth: 280,
+                  background: 'rgba(10, 27, 45, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(34, 211, 238, 0.25)',
+                  borderRadius: 12,
+                  padding: 8,
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(34, 211, 238, 0.1)',
                   zIndex: 1100,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 2
+                  gap: 3
                 }}
               >
                 {gridToolItems.map(item => {
@@ -419,20 +440,21 @@ export const Navbar: React.FC = () => {
                         window.scrollTo(0, 0);
                       }}
                       style={{
-                        padding: '8px 12px',
-                        borderRadius: 6,
+                        padding: '9px 12px',
+                        borderRadius: 8,
                         textDecoration: 'none',
-                        color: isActive ? 'var(--brand)' : 'var(--text-primary)',
-                        background: isActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
+                        color: isActive ? '#22D3EE' : '#F8FAFC',
+                        background: isActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
                         display: 'flex',
                         alignItems: 'flex-start',
-                        gap: 10
+                        gap: 10,
+                        transition: 'background 0.15s ease'
                       }}
                     >
-                      <Icon size={16} style={{ color: isActive ? 'var(--brand)' : 'var(--text-secondary)', marginTop: 2, flexShrink: 0 }} />
+                      <Icon size={16} style={{ color: isActive ? '#22D3EE' : '#38BDF8', marginTop: 2, flexShrink: 0 }} />
                       <div>
-                        <div style={{ fontSize: '0.84rem', fontWeight: isActive ? 600 : 500 }}>{item.label}</div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>{item.desc}</div>
+                        <div style={{ fontSize: '0.86rem', fontWeight: isActive ? 600 : 500 }}>{item.label}</div>
+                        <div style={{ fontSize: '0.74rem', color: '#94A3B8' }}>{item.desc}</div>
                       </div>
                     </Link>
                   );
@@ -454,17 +476,18 @@ export const Navbar: React.FC = () => {
                 setOpenDropdown(prev => prev === 'airesilience' ? null : 'airesilience');
               }}
               style={{
-                padding: '7px 11px',
-                borderRadius: 6,
-                border: 'none',
-                background: isAIActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
-                color: isAIActive ? 'var(--brand)' : 'var(--text-secondary)',
+                padding: '6px 12px',
+                borderRadius: 8,
+                border: isAIActive ? '1px solid rgba(34, 211, 238, 0.25)' : '1px solid transparent',
+                background: isAIActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
+                color: isAIActive ? '#22D3EE' : '#94A3B8',
                 cursor: 'pointer',
                 fontSize: '0.86rem',
                 fontWeight: isAIActive ? 600 : 500,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 4
+                gap: 4,
+                transition: 'all 0.15s ease'
               }}
             >
               <span>{language === 'hi' ? 'AI व विश्वसनीयता' : 'AI & Resilience'}</span>
@@ -481,16 +504,17 @@ export const Navbar: React.FC = () => {
                   position: 'absolute',
                   top: '100%',
                   left: -20,
-                  minWidth: 280,
-                  background: '#ffffff',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 10,
-                  padding: 6,
-                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.09)',
+                  minWidth: 290,
+                  background: 'rgba(10, 27, 45, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(34, 211, 238, 0.25)',
+                  borderRadius: 12,
+                  padding: 8,
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(34, 211, 238, 0.1)',
                   zIndex: 1100,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 2
+                  gap: 3
                 }}
               >
                 {aiResilienceItems.map(item => {
@@ -505,20 +529,21 @@ export const Navbar: React.FC = () => {
                         window.scrollTo(0, 0);
                       }}
                       style={{
-                        padding: '8px 12px',
-                        borderRadius: 6,
+                        padding: '9px 12px',
+                        borderRadius: 8,
                         textDecoration: 'none',
-                        color: isActive ? 'var(--brand)' : 'var(--text-primary)',
-                        background: isActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
+                        color: isActive ? '#22D3EE' : '#F8FAFC',
+                        background: isActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
                         display: 'flex',
                         alignItems: 'flex-start',
-                        gap: 10
+                        gap: 10,
+                        transition: 'background 0.15s ease'
                       }}
                     >
-                      <Icon size={16} style={{ color: isActive ? 'var(--brand)' : 'var(--text-secondary)', marginTop: 2, flexShrink: 0 }} />
+                      <Icon size={16} style={{ color: isActive ? '#22D3EE' : '#38BDF8', marginTop: 2, flexShrink: 0 }} />
                       <div>
-                        <div style={{ fontSize: '0.84rem', fontWeight: isActive ? 600 : 500 }}>{item.label}</div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>{item.desc}</div>
+                        <div style={{ fontSize: '0.86rem', fontWeight: isActive ? 600 : 500 }}>{item.label}</div>
+                        <div style={{ fontSize: '0.74rem', color: '#94A3B8' }}>{item.desc}</div>
                       </div>
                     </Link>
                   );
@@ -533,20 +558,20 @@ export const Navbar: React.FC = () => {
           {/* Simple EN | HI toggle */}
           <div style={{
             display: 'inline-flex',
-            borderRadius: 6,
-            border: '1px solid var(--border-subtle)',
-            background: '#f1f5f9',
+            borderRadius: 8,
+            border: '1px solid rgba(148, 163, 184, 0.2)',
+            background: 'rgba(13, 33, 53, 0.75)',
             overflow: 'hidden'
           }}>
             <button
               type="button"
               onClick={() => setLanguage('en')}
               style={{
-                padding: '4px 9px',
+                padding: '5px 10px',
                 border: 'none',
-                background: language === 'en' ? 'var(--brand)' : 'transparent',
-                color: language === 'en' ? '#ffffff' : 'var(--text-secondary)',
-                fontWeight: 600,
+                background: language === 'en' ? '#22D3EE' : 'transparent',
+                color: language === 'en' ? '#06111F' : '#94A3B8',
+                fontWeight: 700,
                 fontSize: '0.76rem',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
@@ -558,11 +583,11 @@ export const Navbar: React.FC = () => {
               type="button"
               onClick={() => setLanguage('hi')}
               style={{
-                padding: '4px 9px',
+                padding: '5px 10px',
                 border: 'none',
-                background: language === 'hi' ? 'var(--brand)' : 'transparent',
-                color: language === 'hi' ? '#ffffff' : 'var(--text-secondary)',
-                fontWeight: 600,
+                background: language === 'hi' ? '#22D3EE' : 'transparent',
+                color: language === 'hi' ? '#06111F' : '#94A3B8',
+                fontWeight: 700,
                 fontSize: '0.76rem',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
@@ -577,20 +602,20 @@ export const Navbar: React.FC = () => {
             to="/judge-mode"
             className="desktop-only"
             style={{
-              padding: '6px 11px',
-              borderRadius: 6,
-              border: '1px solid var(--border-subtle)',
-              color: pathname === '/judge-mode' ? 'var(--brand)' : 'var(--text-primary)',
+              padding: '6px 12px',
+              borderRadius: 8,
+              border: pathname === '/judge-mode' ? '1px solid #F59E0B' : '1px solid rgba(245, 158, 11, 0.35)',
+              color: '#FBBF24',
               textDecoration: 'none',
               fontSize: '0.80rem',
-              fontWeight: 600,
-              background: pathname === '/judge-mode' ? 'rgba(79, 70, 229, 0.08)' : '#ffffff',
+              fontWeight: 700,
+              background: pathname === '/judge-mode' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.08)',
               display: 'flex',
               alignItems: 'center',
               gap: 5
             }}
           >
-            <Award size={14} style={{ color: 'var(--brand)' }} />
+            <Award size={14} style={{ color: '#F59E0B' }} />
             <span>{language === 'hi' ? 'जज मोड' : 'Judge Mode'}</span>
           </Link>
 
@@ -599,20 +624,20 @@ export const Navbar: React.FC = () => {
             to="/data-audit"
             className="desktop-only"
             style={{
-              padding: '6px 11px',
-              borderRadius: 6,
-              border: '1px solid var(--border-subtle)',
-              color: pathname === '/data-audit' ? 'var(--cyan-primary)' : 'var(--text-primary)',
+              padding: '6px 12px',
+              borderRadius: 8,
+              border: pathname === '/data-audit' ? '1px solid #10B981' : '1px solid rgba(16, 185, 129, 0.35)',
+              color: '#34D399',
               textDecoration: 'none',
               fontSize: '0.80rem',
-              fontWeight: 600,
-              background: pathname === '/data-audit' ? 'rgba(0, 240, 255, 0.08)' : '#ffffff',
+              fontWeight: 700,
+              background: pathname === '/data-audit' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.08)',
               display: 'flex',
               alignItems: 'center',
               gap: 5
             }}
           >
-            <ShieldCheck size={14} style={{ color: '#10b981' }} />
+            <ShieldCheck size={14} style={{ color: '#10B981' }} />
             <span>{language === 'hi' ? 'डेटा ऑडिट' : 'Data Audit'}</span>
           </Link>
 
@@ -620,18 +645,18 @@ export const Navbar: React.FC = () => {
           <Link
             to="/login"
             style={{
-              padding: '6px 12px',
-              borderRadius: 6,
-              border: '1px solid var(--brand)',
-              background: pathname === '/login' ? 'var(--brand)' : '#ffffff',
-              color: pathname === '/login' ? '#ffffff' : 'var(--brand)',
+              padding: '6px 14px',
+              borderRadius: 8,
+              border: '1px solid rgba(34, 211, 238, 0.4)',
+              background: pathname === '/login' ? 'linear-gradient(135deg, #22D3EE, #3B82F6)' : 'rgba(13, 33, 53, 0.75)',
+              color: pathname === '/login' ? '#06111F' : '#F8FAFC',
               textDecoration: 'none',
-              fontSize: '0.80rem',
-              fontWeight: 600,
+              fontSize: '0.82rem',
+              fontWeight: 700,
               display: 'flex',
               alignItems: 'center',
-              gap: 5,
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
+              gap: 6,
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
             }}
           >
             <User size={13} />
@@ -647,10 +672,10 @@ export const Navbar: React.FC = () => {
               padding: 8,
               minWidth: 40,
               minHeight: 40,
-              borderRadius: 6,
-              border: '1px solid var(--border-subtle)',
-              background: '#f8fafc',
-              color: 'var(--text-primary)',
+              borderRadius: 8,
+              border: '1px solid rgba(148, 163, 184, 0.2)',
+              background: 'rgba(13, 33, 53, 0.75)',
+              color: '#F8FAFC',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -663,7 +688,7 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer (Guaranteed Scrollable Container with Body Scroll Lock & Over-scroll Containment) */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div 
           style={{
@@ -674,9 +699,10 @@ export const Navbar: React.FC = () => {
             bottom: 0,
             height: 'calc(100vh - 64px)',
             maxHeight: 'calc(100dvh - 64px)',
-            background: '#ffffff',
-            borderTop: '1px solid var(--border-subtle)',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+            background: 'rgba(6, 17, 31, 0.96)',
+            backdropFilter: 'blur(20px)',
+            borderTop: '1px solid rgba(148, 163, 184, 0.15)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8)',
             zIndex: 9999,
             padding: '16px 20px 120px 20px',
             display: 'flex',

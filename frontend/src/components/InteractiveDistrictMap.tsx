@@ -28,11 +28,12 @@ export const InteractiveDistrictMap: React.FC<Props> = ({
 }) => {
   return (
     <div style={{
-      background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85))',
-      border: '1px solid rgba(0, 240, 255, 0.25)',
+      background: 'rgba(13, 33, 53, 0.75)',
+      border: '1px solid rgba(148, 163, 184, 0.15)',
       borderRadius: '16px',
-      padding: '20px',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      padding: '24px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
+      backdropFilter: 'blur(16px)',
       marginBottom: '24px'
     }}>
       <div style={{
@@ -43,23 +44,26 @@ export const InteractiveDistrictMap: React.FC<Props> = ({
         gap: '12px',
         marginBottom: '16px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <MapPin size={18} color="#00f0ff" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(34, 211, 238, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <MapPin size={16} color="#22d3ee" />
+          </div>
           <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#f8fafc' }}>
             {operatingMode === 'district' ? 'District Energy Topology & Feeder Map' : 'Neighbourhood Distributed Asset Map'}
           </h3>
           <span style={{
             fontSize: '11px',
-            background: 'rgba(56, 189, 248, 0.15)',
-            color: '#38bdf8',
+            background: 'rgba(34, 211, 238, 0.12)',
+            color: '#22d3ee',
+            border: '1px solid rgba(34, 211, 238, 0.25)',
             padding: '2px 8px',
             borderRadius: '4px',
-            fontWeight: 600
+            fontWeight: 700
           }}>
             Representative GIS Demo
           </span>
         </div>
-        <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+        <span style={{ fontSize: '12px', color: '#94a3b8' }}>
           Click any locality pin to inspect local grid & balance telemetry
         </span>
       </div>

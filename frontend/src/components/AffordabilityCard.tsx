@@ -37,11 +37,12 @@ export const AffordabilityCard: React.FC<Props> = ({
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85))',
-      border: '1px solid rgba(16, 185, 129, 0.3)',
+      background: 'rgba(13, 33, 53, 0.75)',
+      border: '1px solid rgba(148, 163, 184, 0.15)',
       borderRadius: '16px',
-      padding: '22px',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      padding: '24px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
+      backdropFilter: 'blur(16px)',
       marginBottom: '24px'
     }}>
       {/* Header */}

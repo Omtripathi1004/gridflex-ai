@@ -74,7 +74,12 @@ export const GlobalChatWidget: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('gridflex_gemini_key') || localStorage.getItem('gemini_api_key') || '';
+    }
+    return '';
+  });
   const [showApiKey, setShowApiKey] = useState(false);
   
   // Current active session
@@ -213,8 +218,8 @@ export const GlobalChatWidget: React.FC = () => {
         text: m.text
       }));
 
-      // Call our rich multi-topic RAG & domain reasoning engine
-      const data = await queryCopilot(textToSend, historyPayload);
+      // Call our rich multi-topic RAG & domain reasoning engine (or live Gemini LLM if key present)
+      const data = await queryCopilot(textToSend, historyPayload, apiKey || undefined);
       const botMessage: Message = {
         id: 'assistant_' + Date.now(),
         sender: 'assistant',
@@ -398,6 +403,28 @@ export const GlobalChatWidget: React.FC = () => {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              {/* Gemini AI Key Toggle */}
+              <button
+                onClick={() => setShowApiKey(!showApiKey)}
+                title="Connect Gemini or OpenAI API Key"
+                style={{
+                  background: apiKey ? 'rgba(16, 185, 129, 0.2)' : showApiKey ? 'rgba(34, 211, 238, 0.2)' : 'rgba(10, 27, 45, 0.8)',
+                  border: `1px solid ${apiKey ? '#10b981' : 'rgba(148, 163, 184, 0.2)'}`,
+                  color: apiKey ? '#10b981' : '#F8FAFC',
+                  cursor: 'pointer',
+                  padding: '5px 8px',
+                  borderRadius: 6,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  fontSize: '0.78rem',
+                  fontWeight: 600
+                }}
+              >
+                <Key size={13} color={apiKey ? '#10b981' : '#22d3ee'} />
+                <span>{apiKey ? 'Gemini On' : 'API Key'}</span>
+              </button>
+
               {/* History Toggle Button */}
               <button
                 onClick={() => {
@@ -462,6 +489,79 @@ export const GlobalChatWidget: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {/* Gemini API Key Drawer */}
+          {showApiKey && (
+            <div style={{
+              padding: '10px 14px',
+              background: '#071626',
+              borderBottom: '1px solid rgba(34, 211, 238, 0.25)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.76rem', color: '#22d3ee', fontWeight: 600 }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <Sparkles size={13} />
+                  <span>Google Gemini 1.5 Flash Grounding (Optional)</span>
+                </span>
+                {apiKey && (
+                  <button
+                    onClick={() => {
+                      setApiKey('');
+                      localStorage.removeItem('gridflex_gemini_key');
+                    }}
+                    style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.72rem' }}
+                  >
+                    Clear Key
+                  </button>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <input
+                  type="password"
+                  placeholder="Paste Gemini API Key (AIzaSy...)"
+                  value={apiKey}
+                  onChange={e => {
+                    setApiKey(e.target.value);
+                    if (e.target.value.trim()) {
+                      localStorage.setItem('gridflex_gemini_key', e.target.value.trim());
+                    } else {
+                      localStorage.removeItem('gridflex_gemini_key');
+                    }
+                  }}
+                  style={{
+                    flex: 1,
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    border: '1px solid rgba(148, 163, 184, 0.3)',
+                    borderRadius: 6,
+                    padding: '6px 10px',
+                    color: '#fff',
+                    fontSize: '0.78rem',
+                    fontFamily: 'monospace'
+                  }}
+                />
+                <button
+                  onClick={() => setShowApiKey(false)}
+                  style={{
+                    background: 'rgba(34, 211, 238, 0.15)',
+                    border: '1px solid rgba(34, 211, 238, 0.3)',
+                    color: '#22d3ee',
+                    borderRadius: 6,
+                    padding: '6px 10px',
+                    fontSize: '0.76rem',
+                    cursor: 'pointer',
+                    fontWeight: 600
+                  }}
+                >
+                  Done
+                </button>
+              </div>
+              <span style={{ fontSize: '0.68rem', color: '#94a3b8' }}>
+                {apiKey ? '✓ Gemini connected: Every query calls live Gemini 1.5 Flash.' : 'No key needed: High-speed local RAG handles all grid queries with 0 latency.'}
+              </span>
+            </div>
+          )}
 
           {/* VIEW A: CHAT HISTORY PANEL */}
           {showHistory ? (

@@ -34,7 +34,18 @@ export default function DigitalTwinPage() {
   const [batteryPct, setBatteryPct] = useState<number>(initBess);
   const [flexPct, setFlexPct] = useState<number>(initFlex);
   const [weather, setWeather] = useState<string>(initWx);
-  const [activePreset, setActivePreset] = useState<'evening_gap' | 'solar_surge' | 'heatwave' | null>(null);
+  const [activePreset, setActivePreset] = useState<
+    | 'solar_minus_30'
+    | 'solar_minus_40'
+    | 'wind_minus_50'
+    | 'demand_plus_20'
+    | 'evening_peak'
+    | 'bess_zero'
+    | 'feeder_outage'
+    | 'uncertainty_spike'
+    | 'combined_shortfall'
+    | null
+  >('evening_peak');
 
   const [simResult, setSimResult] = useState<any>(null);
 
@@ -56,29 +67,81 @@ export default function DigitalTwinPage() {
     executeSimulation();
   }, [solarMult, windMult, demandMult, batteryPct, flexPct, weather]);
 
-  const applyPreset = (preset: 'evening_gap' | 'solar_surge' | 'heatwave') => {
+  const applyPreset = (preset: 
+    | 'solar_minus_30'
+    | 'solar_minus_40'
+    | 'wind_minus_50'
+    | 'demand_plus_20'
+    | 'evening_peak'
+    | 'bess_zero'
+    | 'feeder_outage'
+    | 'uncertainty_spike'
+    | 'combined_shortfall'
+  ) => {
     setActivePreset(preset);
-    if (preset === 'evening_gap') {
+    if (preset === 'solar_minus_30') {
+      setSolarMult(0.70);
+      setWindMult(1.0);
+      setDemandMult(1.0);
+      setBatteryPct(100);
+      setFlexPct(100);
+      setWeather('NORMAL');
+    } else if (preset === 'solar_minus_40') {
+      setSolarMult(0.60);
+      setWindMult(0.95);
+      setDemandMult(1.05);
+      setBatteryPct(100);
+      setFlexPct(100);
+      setWeather('NORMAL');
+    } else if (preset === 'wind_minus_50') {
+      setSolarMult(1.0);
+      setWindMult(0.50);
+      setDemandMult(1.0);
+      setBatteryPct(95);
+      setFlexPct(90);
+      setWeather('NORMAL');
+    } else if (preset === 'demand_plus_20') {
+      setSolarMult(1.0);
+      setWindMult(1.0);
+      setDemandMult(1.20);
+      setBatteryPct(100);
+      setFlexPct(95);
+      setWeather('HEATWAVE');
+    } else if (preset === 'evening_peak') {
       setSolarMult(0.65);
-      setWindMult(0.9);
-      setDemandMult(1.2);
+      setWindMult(0.85);
+      setDemandMult(1.25);
       setBatteryPct(90);
       setFlexPct(85);
       setWeather('NORMAL');
-    } else if (preset === 'solar_surge') {
-      setSolarMult(1.4);
-      setWindMult(1.2);
-      setDemandMult(0.9);
-      setBatteryPct(100);
-      setFlexPct(90);
+    } else if (preset === 'bess_zero') {
+      setSolarMult(0.80);
+      setWindMult(0.80);
+      setDemandMult(1.15);
+      setBatteryPct(0);
+      setFlexPct(100);
       setWeather('NORMAL');
-    } else if (preset === 'heatwave') {
-      setSolarMult(1.1);
-      setWindMult(0.6);
-      setDemandMult(1.35);
-      setBatteryPct(70);
-      setFlexPct(75);
-      setWeather('HEATWAVE');
+    } else if (preset === 'feeder_outage') {
+      setSolarMult(0.55);
+      setWindMult(0.70);
+      setDemandMult(1.30);
+      setBatteryPct(85);
+      setFlexPct(80);
+      setWeather('STORM_FRONT');
+    } else if (preset === 'uncertainty_spike') {
+      setSolarMult(0.75);
+      setWindMult(0.65);
+      setDemandMult(1.15);
+      setBatteryPct(90);
+      setFlexPct(85);
+      setWeather('NORMAL');
+    } else if (preset === 'combined_shortfall') {
+      setSolarMult(0.40);
+      setWindMult(0.35);
+      setDemandMult(1.25);
+      setBatteryPct(60);
+      setFlexPct(70);
+      setWeather('STORM_FRONT');
     }
   };
 
@@ -263,90 +326,134 @@ export default function DigitalTwinPage() {
         </p>
       </div>
 
-      {/* 2. Scenario Presets */}
+      {/* 2. GridFlex Stress Test Pipeline Banner */}
       <div style={{
+        background: 'linear-gradient(135deg, rgba(13, 33, 53, 0.9), rgba(10, 27, 45, 0.8))',
+        border: '1px solid rgba(34, 211, 238, 0.25)',
+        borderRadius: 12,
+        padding: '16px 20px',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 12
+        flexDirection: 'column',
+        gap: 12,
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)'
       }}>
-        {/* Segmented Control */}
-        <div style={{
-          display: 'inline-flex',
-          borderRadius: 6,
-          border: '1px solid var(--border-subtle)',
-          background: 'var(--bg-secondary)',
-          padding: 2,
-          gap: 2,
-          flexWrap: 'wrap'
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--cyan-primary)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              ⚡ GridFlex Stress Test Pipeline
+            </span>
+            <span style={{ fontSize: '0.72rem', background: 'rgba(34, 211, 238, 0.15)', color: '#38bdf8', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>
+              CLOSED-LOOP CONTINGENCY VERIFICATION
+            </span>
+          </div>
           <button
             type="button"
-            onClick={() => applyPreset('evening_gap')}
+            onClick={resetSliders}
             style={{
-              padding: '6px 12px',
-              borderRadius: 4,
+              background: 'transparent',
               border: 'none',
-              background: activePreset === 'evening_gap' ? 'var(--cyan-primary)' : 'transparent',
-              color: activePreset === 'evening_gap' ? '#070b14' : 'var(--text-secondary)',
-              fontWeight: activePreset === 'evening_gap' ? 600 : 500,
-              fontSize: '0.82rem',
-              cursor: 'pointer'
+              color: 'var(--text-secondary)',
+              fontSize: '0.8rem',
+              cursor: 'pointer',
+              textDecoration: 'underline'
             }}
           >
-            {language === 'hi' ? 'शाम का नवीकरणीय अंतर' : 'Evening Renewable Gap'}
-          </button>
-          <button
-            type="button"
-            onClick={() => applyPreset('solar_surge')}
-            style={{
-              padding: '6px 12px',
-              borderRadius: 4,
-              border: 'none',
-              background: activePreset === 'solar_surge' ? 'var(--cyan-primary)' : 'transparent',
-              color: activePreset === 'solar_surge' ? '#070b14' : 'var(--text-secondary)',
-              fontWeight: activePreset === 'solar_surge' ? 600 : 500,
-              fontSize: '0.82rem',
-              cursor: 'pointer'
-            }}
-          >
-            {language === 'hi' ? 'दोपहर का सौर उछाल' : 'Midday Solar Surge'}
-          </button>
-          <button
-            type="button"
-            onClick={() => applyPreset('heatwave')}
-            style={{
-              padding: '6px 12px',
-              borderRadius: 4,
-              border: 'none',
-              background: activePreset === 'heatwave' ? 'var(--cyan-primary)' : 'transparent',
-              color: activePreset === 'heatwave' ? '#070b14' : 'var(--text-secondary)',
-              fontWeight: activePreset === 'heatwave' ? 600 : 500,
-              fontSize: '0.82rem',
-              cursor: 'pointer'
-            }}
-          >
-            {language === 'hi' ? 'हीटवेव और ग्रिड तनाव' : 'Heatwave and Grid Stress'}
+            {language === 'hi' ? 'रीसेट' : 'Reset Sliders'}
           </button>
         </div>
 
-        {/* Reset text button */}
-        <button
-          type="button"
-          onClick={resetSliders}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-secondary)',
-            fontSize: '0.82rem',
-            cursor: 'pointer',
-            padding: '6px 10px',
-            textDecoration: 'underline'
-          }}
-        >
-          {language === 'hi' ? 'रीसेट' : 'Reset'}
-        </button>
+        {/* Dynamic Pipeline Progression Steps */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          flexWrap: 'wrap',
+          fontSize: '0.78rem'
+        }}>
+          <span style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '4px 10px', borderRadius: 6, fontWeight: 700 }}>
+            1. Disturbance: {activePreset ? activePreset.replace(/_/g, ' ').toUpperCase() : 'MANUAL SLIDERS'}
+          </span>
+          <span style={{ color: '#64748b' }}>➔</span>
+          <span style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.3)', padding: '4px 10px', borderRadius: 6, fontWeight: 700 }}>
+            2. Energy Gap: {summary.peak_deficit_mw} MW
+          </span>
+          <span style={{ color: '#64748b' }}>➔</span>
+          <span style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: '1px solid rgba(168, 85, 247, 0.3)', padding: '4px 10px', borderRadius: 6, fontWeight: 700 }}>
+            3. MILP Optimization
+          </span>
+          <span style={{ color: '#64748b' }}>➔</span>
+          <span style={{ background: 'rgba(34, 211, 238, 0.15)', color: '#22d3ee', border: '1px solid rgba(34, 211, 238, 0.3)', padding: '4px 10px', borderRadius: 6, fontWeight: 700 }}>
+            4. BESS & DR Dispatch
+          </span>
+          <span style={{ color: '#64748b' }}>➔</span>
+          <span style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '4px 10px', borderRadius: 6, fontWeight: 700 }}>
+            5. Deficit Neutralized: {shortageHoursEliminated}h saved
+          </span>
+          <span style={{ color: '#64748b' }}>➔</span>
+          <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '4px 10px', borderRadius: 6, fontWeight: 700 }}>
+            6. Resilience: {summary.composite_resilience_score}/100
+          </span>
+        </div>
+      </div>
+
+      {/* 2b. 9 Stress Test Contingency Scenarios */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8
+      }}>
+        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          Select Stress Test Scenario (9 Controlled Contingencies):
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))',
+          gap: 6
+        }}>
+          {[
+            { id: 'solar_minus_30' as const, label: 'Solar -30%', badge: 'RE DIP' },
+            { id: 'solar_minus_40' as const, label: 'Solar -40%', badge: 'STORM' },
+            { id: 'wind_minus_50' as const, label: 'Wind -50%', badge: 'WIND LULL' },
+            { id: 'demand_plus_20' as const, label: 'Demand +20%', badge: 'HEATWAVE' },
+            { id: 'evening_peak' as const, label: 'Evening Peak', badge: 'DUCK CURVE' },
+            { id: 'bess_zero' as const, label: 'BESS 0%', badge: 'NO BATTERY' },
+            { id: 'feeder_outage' as const, label: 'Feeder Outage', badge: 'F-02 TRIP' },
+            { id: 'uncertainty_spike' as const, label: 'Uncertainty', badge: '35% RESERVE' },
+            { id: 'combined_shortfall' as const, label: 'Combined', badge: 'CRITICAL' }
+          ].map(scen => {
+            const isSelected = activePreset === scen.id;
+            return (
+              <button
+                key={scen.id}
+                type="button"
+                onClick={() => applyPreset(scen.id)}
+                style={{
+                  padding: '8px 10px',
+                  borderRadius: 6,
+                  border: isSelected ? '1px solid var(--cyan-primary)' : '1px solid var(--border-subtle)',
+                  background: isSelected ? 'rgba(34, 211, 238, 0.15)' : 'var(--bg-secondary)',
+                  color: isSelected ? 'var(--cyan-primary)' : 'var(--text-primary)',
+                  fontWeight: isSelected ? 700 : 500,
+                  fontSize: '0.78rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 3,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span style={{ fontSize: '0.65rem', color: isSelected ? '#38bdf8' : '#64748b', fontWeight: 700 }}>
+                  {scen.badge}
+                </span>
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {scen.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* 3. Main Area: twin-layout-wrapper (2-col grid on laptop, custom order on mobile) */}

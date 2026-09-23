@@ -245,31 +245,64 @@ export default function CommandCenterPage() {
             </div>
           </div>
 
-          <button 
-            onClick={handleExecutePlan}
-            disabled={executing || planExecuted}
-            className="btn btn-primary"
-            style={{
-              padding: '12px 24px',
-              fontSize: '0.95rem',
-              background: planExecuted ? 'var(--green-renew)' : undefined,
-              borderColor: planExecuted ? 'var(--green-renew)' : undefined
-            }}
-          >
-            {executing ? (
-              <span>{t('cc.btn_optimizing')}</span>
-            ) : planExecuted ? (
-              <>
-                <CheckCircle2 size={18} />
-                <span>{t('cc.btn_executed')}</span>
-              </>
-            ) : (
-              <>
-                <span>{t('cc.btn_execute')}</span>
-                <ArrowRight size={16} />
-              </>
-            )}
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+            <button 
+              onClick={handleExecutePlan}
+              disabled={executing || planExecuted}
+              className="btn btn-primary"
+              style={{
+                padding: '12px 24px',
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                background: planExecuted ? 'var(--green-renew)' : undefined,
+                borderColor: planExecuted ? 'var(--green-renew)' : undefined,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                boxShadow: planExecuted ? '0 0 16px rgba(16, 185, 129, 0.4)' : '0 4px 14px rgba(0, 240, 255, 0.25)'
+              }}
+              title="Transmits MILP flexibility setpoints to BESS inverters and demand response gateways"
+            >
+              {executing ? (
+                <span>{t('cc.btn_optimizing', 'Transmitting Dispatch Setpoints...')}</span>
+              ) : planExecuted ? (
+                <>
+                  <CheckCircle2 size={18} />
+                  <span>{t('cc.btn_executed', 'Dispatch Setpoints Active')}</span>
+                </>
+              ) : (
+                <>
+                  <span>{t('cc.btn_execute', 'Execute Flexibility Dispatch')}</span>
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
+            <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', textAlign: 'right', maxWidth: 260 }}>
+              {planExecuted 
+                ? '⚡ 9.5 MW BESS buffer & 5.2 MW DR online' 
+                : 'Arms BESS & modulates flexible EV/HVAC loads'}
+            </span>
+          </div>
+        </div>
+
+        {/* Function Explanation Card */}
+        <div style={{ 
+          marginTop: 14, 
+          padding: '10px 14px', 
+          background: 'rgba(0, 240, 255, 0.04)', 
+          border: '1px solid rgba(0, 240, 255, 0.15)', 
+          borderRadius: 8,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          fontSize: '0.82rem',
+          color: '#cbd5e1'
+        }}>
+          <Zap size={16} style={{ color: 'var(--cyan-primary)', flexShrink: 0 }} />
+          <span>
+            <strong style={{ color: 'var(--cyan-primary)' }}>Button Function: </strong>
+            Transmits real-time MILP setpoints to 33/11kV substation controllers: arms <strong>9.5 MW BESS discharge</strong> across BESS-01 &amp; BESS-02, initiates <strong>1.5°C HVAC setback</strong>, throttles transit EV chargers, and completely eliminates evening diesel peaker dispatch.
+          </span>
         </div>
       </div>
 

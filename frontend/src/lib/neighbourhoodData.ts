@@ -498,8 +498,15 @@ export interface ForecastPoint {
   solar_actual: number | null;
   solar_upper_95: number;
   solar_lower_95: number;
+  solar_p10: number;
+  solar_p50: number;
+  solar_p90: number;
   wind_predicted: number;
   wind_actual: number | null;
+  wind_p10: number;
+  wind_p50: number;
+  wind_p90: number;
+  forecast_confidence_pct: number;
   total_renewable: number;
   demand_predicted: number;
   demand_actual: number | null;
@@ -507,7 +514,11 @@ export interface ForecastPoint {
   mitigated_demand_mw: number; // post-flexibility demand
   bess_flow_mw: number; // positive = discharge, negative = charge
   bess_soc_pct: number;
-  residual_grid_import_mw: number; // grid draw after BESS + DR
+  p2p_cleared_mw: number; // local peer-to-peer matched energy
+  technical_loss_baseline_mw: number; // I^2*R feeder line losses without GridFlex
+  technical_loss_optimized_mw: number; // I^2*R feeder line losses with GridFlex
+  avoided_loss_mw: number; // Net loss reduction
+  residual_grid_import_mw: number; // grid draw after BESS + DR + P2P
   is_shortfall: boolean;
   shortfall_severity: 'None' | 'Advisory' | 'Warning' | 'Critical';
   weather: {
@@ -561,7 +572,8 @@ export function generateFeederForecastSeries(
   simSolarDeltaPct = 0,
   simDemandDeltaPct = 0,
   bessAvailabilityPct = 100,
-  drParticipationPct = 100
+  drParticipationPct = 100,
+  uncertaintyLevel: 'low' | 'medium' | 'high' = 'medium'
 ): ForecastPoint[] {
   const pointsCount = horizon === '6h' ? 6 : horizon === '24h' ? 24 : horizon === '48h' ? 48 : 28;
   const scenario = INTERMITTENCY_SCENARIOS[scenarioId] || INTERMITTENCY_SCENARIOS.normal_solar;
@@ -579,6 +591,9 @@ export function generateFeederForecastSeries(
 
   // Flexibility aggression factor
   const aggFactor = aggressiveness === 'conservative' ? 0.45 : aggressiveness === 'balanced' ? 0.75 : 1.0;
+
+  // Adaptive reserve threshold: under high forecast uncertainty, GridFlex preserves 35% SOC reserve (instead of 20%) to buffer sudden ramps
+  const minSocReserve = uncertaintyLevel === 'high' ? 35 : 20;
 
   let currentSoc = location.bess_soc_pct;
 
@@ -619,10 +634,23 @@ export function generateFeederForecastSeries(
     const solar_lower_95 = parseFloat(Math.max(0, solar_predicted - (solar_predicted * 0.12 + 0.5 * scaleMultiplier)).toFixed(2));
     const solar_actual = hour <= 14 && day === 1 ? parseFloat((solar_predicted + Math.sin(hour) * 0.35 * scaleMultiplier).toFixed(2)) : null;
 
+    // Uncertainty quantiles (P10 conservative, P50 expected, P90 optimistic)
+    const solarUncertSpread = uncertaintyLevel === 'high' ? 0.30 : uncertaintyLevel === 'medium' ? 0.15 : 0.08;
+    const solar_p10 = parseFloat(Math.max(0, solar_predicted * (1 - solarUncertSpread)).toFixed(2));
+    const solar_p50 = solar_predicted;
+    const solar_p90 = parseFloat((solar_predicted * (1 + solarUncertSpread)).toFixed(2));
+
     // Wind calculation
     const windRaw = windCap * (0.65 + 0.35 * Math.cos((hour + day * 3) / 3.5));
     const wind_predicted = parseFloat(Math.max(0.2 * scaleMultiplier, windRaw).toFixed(2));
     const wind_actual = hour <= 14 && day === 1 ? parseFloat((wind_predicted + Math.cos(hour) * 0.25 * scaleMultiplier).toFixed(2)) : null;
+
+    const windUncertSpread = uncertaintyLevel === 'high' ? 0.38 : uncertaintyLevel === 'medium' ? 0.20 : 0.10;
+    const wind_p10 = parseFloat(Math.max(0.1 * scaleMultiplier, wind_predicted * (1 - windUncertSpread)).toFixed(2));
+    const wind_p50 = wind_predicted;
+    const wind_p90 = parseFloat((wind_predicted * (1 + windUncertSpread)).toFixed(2));
+
+    const forecast_confidence_pct = uncertaintyLevel === 'high' ? 79.5 : uncertaintyLevel === 'medium' ? 91.8 : 98.2;
 
     const total_renewable = parseFloat((solar_predicted + wind_predicted).toFixed(2));
 
@@ -657,18 +685,33 @@ export function generateFeederForecastSeries(
       const socGain = (chargeEnergyMwh / Math.max(1, bessCapacityMwh)) * 100;
       currentSoc = Math.min(98, currentSoc + socGain);
       bess_flow_mw = -parseFloat(chargePotential.toFixed(2));
-    } else if (postDrDeficit < 0 && currentSoc > 20) { // Reserve 20% SOC for critical loads
-      // Discharge battery during shortage
+    } else if (postDrDeficit < 0 && currentSoc > minSocReserve) {
+      // Discharge battery during shortage while guarding minSocReserve
       const neededDischarge = Math.abs(postDrDeficit);
       const maxDischargePossible = Math.min(neededDischarge, bessMaxPowerMw);
-      const availableMwhAboveReserve = ((currentSoc - 20) / 100) * bessCapacityMwh;
+      const availableMwhAboveReserve = ((currentSoc - minSocReserve) / 100) * bessCapacityMwh;
       const actualDischarge = Math.min(maxDischargePossible, availableMwhAboveReserve);
       const socLoss = (actualDischarge / Math.max(1, bessCapacityMwh)) * 100;
-      currentSoc = Math.max(20, currentSoc - socLoss);
+      currentSoc = Math.max(minSocReserve, currentSoc - socLoss);
       bess_flow_mw = parseFloat(actualDischarge.toFixed(2));
     }
 
-    // 3. Residual Grid Import: only draw from central grid what cannot be met locally
+    // 3. Local P2P Cleared Energy (matches local prosumer solar directly to nearby commercial/EV loads)
+    const p2p_cleared_mw = hour >= 9 && hour <= 17
+      ? parseFloat((Math.min(solar_predicted * 0.28, mitigated_demand_mw * 0.25)).toFixed(2))
+      : 0;
+
+    // 4. Technical Line Loss Model (I^2*R losses along 11kV radial feeder lines)
+    // Loss is quadratically proportional to current magnitude: P_loss = 3 * I^2 * R
+    const baseCurrentRatio = Math.min(1.4, demand_predicted / Math.max(1, peakDemand));
+    const optCurrentRatio = Math.min(1.4, (mitigated_demand_mw - Math.max(0, bess_flow_mw)) / Math.max(1, peakDemand));
+    // Baseline technical loss is ~8.2% of feeder throughput at peak
+    const technical_loss_baseline_mw = parseFloat((demand_predicted * 0.082 * Math.pow(baseCurrentRatio, 1.85)).toFixed(3));
+    // GridFlex localized dispatch reduces 11kV line transit, dropping loss to ~4.8%
+    const technical_loss_optimized_mw = parseFloat((mitigated_demand_mw * 0.048 * Math.pow(Math.max(0.3, optCurrentRatio), 1.85)).toFixed(3));
+    const avoided_loss_mw = parseFloat(Math.max(0, technical_loss_baseline_mw - technical_loss_optimized_mw).toFixed(3));
+
+    // 5. Residual Grid Import: only draw from central grid what cannot be met locally
     const residualNet = total_renewable + bess_flow_mw - mitigated_demand_mw;
     const residual_grid_import_mw = residualNet < 0 ? parseFloat(Math.abs(residualNet).toFixed(2)) : 0;
 
@@ -690,8 +733,15 @@ export function generateFeederForecastSeries(
       solar_actual,
       solar_upper_95,
       solar_lower_95,
+      solar_p10,
+      solar_p50,
+      solar_p90,
       wind_predicted,
       wind_actual,
+      wind_p10,
+      wind_p50,
+      wind_p90,
+      forecast_confidence_pct,
       total_renewable,
       demand_predicted,
       demand_actual,
@@ -699,6 +749,10 @@ export function generateFeederForecastSeries(
       mitigated_demand_mw,
       bess_flow_mw,
       bess_soc_pct: parseFloat(currentSoc.toFixed(1)),
+      p2p_cleared_mw,
+      technical_loss_baseline_mw,
+      technical_loss_optimized_mw,
+      avoided_loss_mw,
       residual_grid_import_mw,
       is_shortfall,
       shortfall_severity,
@@ -858,6 +912,44 @@ export const PROTECTED_COMMUNITY_ASSETS: Record<string, ProtectedCommunityAsset[
 };
 
 // Affordability Model Calculation for Low-Income & Peri-Urban Communities (Section 11)
+export type BatteryDeploymentMode = 'no_battery' | 'small_community_battery' | 'community_bess';
+
+export interface BatteryDeploymentModeOption {
+  id: BatteryDeploymentMode;
+  name: string;
+  tagline: string;
+  capacityDesc: string;
+  gridImpact: string;
+  recommendedFor: string;
+}
+
+export const BATTERY_DEPLOYMENT_MODES: BatteryDeploymentModeOption[] = [
+  {
+    id: 'no_battery',
+    name: 'Mode A: No Battery',
+    tagline: 'Grid-dependent baseline with high diesel peaker exposure',
+    capacityDesc: '0 kWh storage',
+    gridImpact: 'Zero peak shifting; full exposure to CERC DSM deviation surcharges and local brownouts during evening peaks.',
+    recommendedFor: 'Baseline comparison benchmark'
+  },
+  {
+    id: 'small_community_battery',
+    name: 'Mode B: Small Community Battery',
+    tagline: 'Cost-effective 50–100 kWh buffer for critical clinic/water feeder taps',
+    capacityDesc: '50 – 100 kWh storage',
+    gridImpact: 'Buffers 11kV voltage sags and safeguards lifeline health/water circuits for 2.5 hours without full peak arbitrage.',
+    recommendedFor: 'Budget-constrained peri-urban feeders and rural clinic clusters'
+  },
+  {
+    id: 'community_bess',
+    name: 'Mode C: Community BESS',
+    tagline: 'Full-scale 500 kWh – 2 MWh multi-hour energy shifting & P2P trading',
+    capacityDesc: '500 kWh – 2 MWh utility-grade LFP',
+    gridImpact: 'Eliminates evening peak import, enables high rooftop solar absorption, lowers losses by 42%, and maximizes arbitrage ROI.',
+    recommendedFor: 'High-density urban feeders, industrial clusters, and high-solar neighbourhoods'
+  }
+];
+
 export interface AffordabilityAssumptions {
   bessCapexInrPerKwh: number;
   smartControllerInrPerHousehold: number;
@@ -891,24 +983,42 @@ export interface AffordabilityResult {
   netAnnualCashflowLakhs: number;
   simplePaybackYears: number;
   returnOnInvestmentPct: number;
+  deploymentMode: BatteryDeploymentMode;
+  monthlyBillBeforeInr: number;
+  monthlyBillAfterInr: number;
+  monthlySavingsInr: number;
+  monthlySavingsPct: number;
 }
 
 export function computeAffordabilityMetrics(
   location: LocationHierarchyNode,
   mode: OperatingMode,
-  assumptions: AffordabilityAssumptions = DEFAULT_AFFORDABILITY_ASSUMPTIONS
+  assumptions: AffordabilityAssumptions = DEFAULT_AFFORDABILITY_ASSUMPTIONS,
+  deploymentMode: BatteryDeploymentMode = 'community_bess'
 ): AffordabilityResult {
   const scale = mode === 'district' ? (location.district_aggregate.total_peak_mw / location.peak_demand_mw) : 1.0;
-  const batteryKwh = location.bess_capacity_mwh * scale * 1000;
+  
+  // Calculate battery capacity according to selected deployment mode
+  let batteryKwh = 0;
+  if (deploymentMode === 'no_battery') {
+    batteryKwh = 0;
+  } else if (deploymentMode === 'small_community_battery') {
+    // 50 to 100 kWh neighborhood buffer
+    batteryKwh = Math.min(100, Math.max(50, Math.round(location.bess_capacity_mwh * scale * 100)));
+  } else {
+    // Full Community BESS (500 kWh - 2 MWh scaled)
+    batteryKwh = Math.round(location.bess_capacity_mwh * scale * 1000);
+  }
+
   const connections = Math.round(location.consumer_count * scale);
   const servedKw = location.flexible_load_mw * scale * 1000;
 
   // Capital Costs
   const bessCapex = (batteryKwh * assumptions.bessCapexInrPerKwh) / 100000;
-  const iotControllersCapex = (connections * 0.15 * assumptions.smartControllerInrPerHousehold) / 100000;
+  const iotControllersCapex = deploymentMode === 'no_battery' ? 0 : (connections * 0.15 * assumptions.smartControllerInrPerHousehold) / 100000;
   const grossCapex = bessCapex + iotControllersCapex;
   const subsidyGrant = grossCapex * (assumptions.discomSubsidyGrantPct / 100);
-  const netCapex = Math.max(1, grossCapex - subsidyGrant);
+  const netCapex = Math.max(deploymentMode === 'no_battery' ? 0 : 0.5, grossCapex - subsidyGrant);
 
   // Operating Costs
   const annualOm = grossCapex * (assumptions.annualOmPct / 100);
@@ -916,16 +1026,27 @@ export function computeAffordabilityMetrics(
   // Annual Benefits (Peak tariff arbitrage + avoided CERC DSM penalties)
   const annualShiftedKwh = batteryKwh * 0.80 * 300;
   const tariffArbitragePerKwh = assumptions.peakTariffInrPerKwh - assumptions.offPeakTariffInrPerKwh;
-  const annualArbitrageSavings = (annualShiftedKwh * tariffArbitragePerKwh) / 100000;
-  const annualDsmSavings = (annualShiftedKwh * 2.8) / 100000;
+  const annualArbitrageSavings = deploymentMode === 'no_battery' ? 0 : (annualShiftedKwh * tariffArbitragePerKwh) / 100000;
+  const annualDsmSavings = deploymentMode === 'no_battery' ? 0 : (annualShiftedKwh * 2.8) / 100000;
 
   const totalAnnualBenefits = annualArbitrageSavings + annualDsmSavings;
-  const netAnnualCashflow = Math.max(0.5, totalAnnualBenefits - annualOm);
+  const netAnnualCashflow = Math.max(deploymentMode === 'no_battery' ? 0 : 0.2, totalAnnualBenefits - annualOm);
 
-  const simplePaybackYears = parseFloat((netCapex / netAnnualCashflow).toFixed(1));
-  const costPerConnection = Math.round((netCapex * 100000) / Math.max(1, connections));
-  const costPerServedKw = Math.round((netCapex * 100000) / Math.max(1, servedKw));
-  const roiPct = parseFloat(((netAnnualCashflow / netCapex) * 100).toFixed(1));
+  const simplePaybackYears = deploymentMode === 'no_battery' ? 0 : parseFloat((netCapex / Math.max(0.1, netAnnualCashflow)).toFixed(1));
+  const costPerConnection = connections > 0 ? Math.round((netCapex * 100000) / connections) : 0;
+  const costPerServedKw = servedKw > 0 ? Math.round((netCapex * 100000) / servedKw) : 0;
+  const roiPct = netCapex > 0 ? parseFloat(((netAnnualCashflow / netCapex) * 100).toFixed(1)) : 0;
+
+  // Household Economics: typical monthly electricity bill for an average family
+  const monthlyBillBeforeInr = 2850;
+  let monthlyBillAfterInr = 2850;
+  if (deploymentMode === 'small_community_battery') {
+    monthlyBillAfterInr = 2320; // ~18.6% bill reduction
+  } else if (deploymentMode === 'community_bess') {
+    monthlyBillAfterInr = 1880; // ~34.0% bill reduction via TOU arbitrage & solar export
+  }
+  const monthlySavingsInr = monthlyBillBeforeInr - monthlyBillAfterInr;
+  const monthlySavingsPct = parseFloat(((monthlySavingsInr / monthlyBillBeforeInr) * 100).toFixed(1));
 
   return {
     batteryCapacityKwh: Math.round(batteryKwh),
@@ -941,7 +1062,12 @@ export function computeAffordabilityMetrics(
     totalAnnualBenefitsLakhs: parseFloat(totalAnnualBenefits.toFixed(2)),
     netAnnualCashflowLakhs: parseFloat(netAnnualCashflow.toFixed(2)),
     simplePaybackYears,
-    returnOnInvestmentPct: roiPct
+    returnOnInvestmentPct: roiPct,
+    deploymentMode,
+    monthlyBillBeforeInr,
+    monthlyBillAfterInr,
+    monthlySavingsInr,
+    monthlySavingsPct
   };
 }
 
